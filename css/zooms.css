@@ -1,0 +1,32 @@
+.curved-zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+    z-index:101;
+    margin: 10px; 
+    border-radius: 15px; 
+}
+.curved-zoom:hover {
+    transform: translateY(-8px); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    z-index:102;
+}
+.curved-zoom-404 {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+    z-index:101;
+    margin: 10px; 
+    border-radius: 15px; 
+}
+.curved-zoom-404:hover {
+    transform: translateY(-5px); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    z-index:102;
+}
+.icon-zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+    z-index:101;
+    margin: 10px; 
+}
+.icon-zoom:hover {
+    transform: translateY(-6px); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    z-index:102;
+}

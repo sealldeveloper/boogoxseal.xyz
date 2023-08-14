@@ -1,0 +1,34 @@
+.topnav {
+    display: flex;
+    transition: 1s;
+    position: absolute;
+    z-index: 0;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(29, 8, 49);
+    overflow:auto;
+    align-content: center;
+    float: center;
+    font-family: monospace;
+}
+.topnav a {
+    transition: 1s;
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: monospace;
+}
+.topnav a:hover {
+    transition: 0.2s;
+    opacity: 0.6;
+    color: #db20c2;
+    font-family: monospace;
+}
+.topnav a.active {
+    color: rgb(128, 128, 128);
+    font-family: monospace;
+}

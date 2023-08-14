@@ -1,0 +1,78 @@
+.typewriter {
+    font-family: monospace;
+    font-weight: 300;
+    letter-spacing: .11em;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: .11em solid #0c9dc9;
+    animation: typing 3.5s steps(50, end), blinking-cursor .5s step-end infinite;
+    z-index:100;
+}
+.subtypewriter {
+    font-family: monospace;
+    font-weight: 300;
+    letter-spacing: .11em;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: .11em solid #0c9dc9;
+    opacity:0%;
+    animation: typing2 3.5s steps(50, end), blinking-cursor .5s step-end infinite;
+    animation-delay: 1.5s;
+    z-index:100;
+}
+@keyframes typing2 {
+    from {
+        opacity:100%;
+        width: 0;
+        z-index:100;
+   }
+    to {
+        opacity: 100%;
+        width: 100%;
+        z-index:100;
+   }
+}
+@keyframes typing {
+    from {
+        opacity:100%;
+        width: 0;
+        z-index:100;
+   }
+    to {
+        opacity: 100%;
+        width: 100%;
+        z-index:100;
+   }
+}
+@keyframes blinking-cursor {
+    from, to {
+        opacity: 100%;
+        border-color: transparent;
+        z-index:100;
+   }
+    50% {
+        opacity: 100%;
+        border-color: #0c9dc9;
+        z-index:100;
+   }
+}
+.titlecard {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    left:0px;
+    right:0px;
+    border: 0px solid black;
+    font-size: 40px;
+    color: white;
+    font-weight: 300;
+    font-family: monospace;
+    overflow:hidden;
+    background-color: #1c1e20;
+    transition: 0.3s;
+    text-align: center;
+}
+.titlecard:hover {
+    background-color: #757575;
+    font-family: monospace;
+}

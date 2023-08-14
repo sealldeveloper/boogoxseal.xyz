@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:rgb(17, 5, 29) ;">
+<head>
+	<title>Polo Template Generator - BOOGO x SEAL</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../icons/site.webmanifest">
+	<link rel="shortcut icon" href="../icons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#603cba">
+	<meta name="msapplication-config" content="../icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BOOGO x SEAL">
+	<meta property="og:title" content="BOOGO x SEAL" />
+	<meta name="twitter:card" content="summary_large_image">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/fontawesome.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/hovers.css">
+    <link rel="stylesheet" href="../css/selectable-boxes.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <style>
+        td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
+    </style>
+</head>
+
+
+
+<body style="background-color:rgb(17, 5, 29) ;">
+    <div class="topnav">
+		<a href="../">Home</a>
+		<a class="active" href="./">Tools</a>
+		<a href="../mods">Mods</a>
+		<a href="../about">About Us</a>
+	  </div>
+	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+		<h1 class="m-4">Incredibox 'Polo Template' Generator</h1>
+        <style id="button-preview">
+            ::placeholder {color: #e2e2e2 !important;}
+            :-ms-input-placeholder {color: #e2e2e2 !important;}
+            ::-ms-input-placeholder {color: #e2e2e2 !important;}
+            </style>
+        <div id="form">
+            <h3 class="m-3">Options</h3>
+            <div class="form-group col-md-5 m-3">
+                <label for="name">Name</label>
+                <input class="form-control" type="text" id="name" placeholder="Name" required="true" value="Name" required="true"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="height">Height</label>
+                <input class="form-control" type="number" id="height" placeholder="380" required="true" value="380" required="true"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="headheight">Head Height</label>
+                <input class="form-control" type="number" id="headheight" placeholder="199" required="true" value="199" required="true"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="headcount">Head Count</label>
+                <input class="form-control" type="number" id="headcount" placeholder="8" required="true" value="8" required="true"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="framecount">Frame Count</label>
+                <input class="form-control" type="number" id="framecount" placeholder="8" required="true" placeholder="1000" required="true"></input><small id="frame-comment" class="form-text text-muted">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate Template and Coordinates" id="submission"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group col-md-5 m-3">
+                <canvas id="render"></canvas>
+            </div>
+        </div>
+        <script>
+            coordinates = []
+            function resizedataURL(datas, wantedWidth, wantedHeight) {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+
+                canvas.width = wantedWidth;
+                canvas.height = wantedHeight;
+
+                ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
+
+                var dataURI = canvas.toDataURL();
+
+                return dataURI
+            }
+            function generate() {
+                var canvas = document.getElementById('render')
+                var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
+                var ctx = canvas.getContext('2d')
+                cozette.load().then(function(font){
+                    document.fonts.add(font);
+                    var name = $('#name').val()
+                    var height = $('#height').val()
+                    var headHeight = $('#headheight').val()
+                    var headCount = $('#headcount').val()
+                    if (Number(headCount) <= 3) {
+                        $('#render').attr('width',164*3)
+                        $('#render').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) == 4) {
+                        $('#render').attr('width',164*4)
+                        $('#render').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) >= 5) {
+                        $('#render').attr('width',164*5)
+                        if (Number(headCount) === 5) {
+                            $('#render').attr('height',Number(height)+Number(headHeight))
+                        } else {
+                            canvasheight=Math.ceil(Number(headCount)/5)
+                            $('#render').attr('height',Number(height)+Number(headHeight)*canvasheight)
+                        }
+                    }
+                    // Default
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(0,0,164,height)
+                    ctx.stroke()
+                    ctx.fillStyle = "black";
+                    ctx.font = "15px CozetteVector";
+                    ctx.fillText('Default',58,height/2)
+                    
+                    // Headless
+                    ctx.fillStyle = "lime";
+                    ctx.fillRect(164,0,164,height)
+                    ctx.stroke()
+                    ctx.fillStyle = "black";
+                    ctx.font = "15px CozetteVector";
+                    ctx.fillText('Headless',55+164,height/2)
+                    
+                    // Siloette
+                    ctx.fillStyle = "#348af9";
+                    ctx.fillRect(164*2,0,164,height)
+                    ctx.stroke()
+                    ctx.fillStyle = "black";
+                    ctx.font = "15px CozetteVector";
+                    ctx.fillText('Silhouette',48+164*2,height/2)
+
+                    // "Watermark"
+                    ctx.font = "13px CozetteVector";
+                    ctx.fillText(`sealldeveloper\'s Polo Template Generator`,0,12)
+                    ctx.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+
+                    // Heads
+                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
+                    count=0
+                    currentHeadPosX=0
+                    currentHeadPosY=Number(height)
+                    coordinates = []
+                    for (h in heads) {
+                        count++
+                        ctx.fillStyle = 'yellow'
+                        if ((count-1)%5==0 && count !== 1) {
+                            currentHeadPosY=currentHeadPosY+Number(headHeight)
+                            currentHeadPosX=0
+                        }
+                        if (count%2 == 0) {
+                            ctx.fillStyle='cyan'
+                        }
+                        ctx.fillRect(currentHeadPosX,currentHeadPosY,164,Number(headHeight))
+                        ctx.stroke()
+                        ctx.fillStyle = "black";
+                        ctx.font = "15px CozetteVector";
+                        ctx.fillText('Head '+count,currentHeadPosX,currentHeadPosY+10)
+                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
+                        currentHeadPosX=currentHeadPosX+164
+                    }
+                })
+            }
+            $('.form-control').on('change', function(){
+                generate()
+            })
+            $('.form-control').on('change', function(){
+                generate()
+            })
+            generate()
+            function download(filename, text) {
+                var pom = document.createElement('a');
+                pom.setAttribute('href', text);
+                pom.setAttribute('download', filename);
+
+                if (document.createEvent) {
+                    var event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    pom.dispatchEvent(event);
+                }
+                else {
+                    pom.click();
+                }
+            }
+            $('#submission').on('click', function(){
+                var zip = new JSZip();
+                name=$('#name').val()
+                totalframe=$('#framecount').val()
+                height=$('#height').val()
+                headheight=$('#headheight').val()
+                arrayframes=Array.apply(null, Array(Number(totalframe))).map(function (x, i) { return i; })
+                af=[]
+                for (x in arrayframes) {
+                    af.push(`{"prop":"0,${Number(height)},0,1"}`)
+                }
+                coordinates_compiled=` === sealldeveloper's Polo Template Generator - Coordinates Sheet - ${name} === \n\n`+coordinates.join('\n')+"\n\n === End of Coordinates Sheet === "
+                zip.file(`${name}-coordinates.txt`,coordinates_compiled)
+                json_data=JSON.parse(`{"animeName":"${name}","percentageMax":"0.2","totalFrame":"${totalframe}","width":"164","height":"${height}","headHeight":"${headheight}","arrayFrame":[`+af.join(',')+`]}`)
+                json_data=JSON.stringify(json_data, null,"\t")
+                zip.file(`${name}-json.json`,json_data)
+                var canvas = document.getElementById('render')
+                var datauri = canvas.toDataURL('image/png')
+                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
+                zip.file(`${name}-template.png`, data, {base64:true})
+                var hddatauri = resizedataURL(datauri, Number($('#render').attr('width'))*2, Number($('#render').attr('height'))*2)
+                var hddata = hddatauri.replace(/^data:image\/\w+;base64,/, "");
+                zip.file(`${name}-hd-template.png`, hddata, {base64:true})
+                zip.generateAsync({type:"base64"}).then(function (base64) {
+                    location.href="data:application/zip;base64," + base64;
+                });
+
+            })
+        </script>
+    </div>
+    <h3 style="padding-bottom:5px"></h3>
+    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+</body>
+</html>

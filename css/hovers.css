@@ -1,0 +1,7 @@
+.justhover{
+    width:auto;
+    transition: transform .2s
+}
+.justhover:hover {
+    transform: translateY(-6px);
+}
