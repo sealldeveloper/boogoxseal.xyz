@@ -77,6 +77,7 @@
             <div class="form-group col-md-5 m-3">
                 <canvas id="render"></canvas>
                 <canvas id="render-hd" class="visually-hidden"></canvas>
+                <canvas id="render-mini" class="visually-hidden"></canvas>
             </div>
         </div>
         <script>
@@ -236,6 +237,81 @@
                         currentHeadPosX=currentHeadPosX+164*2
                     }
                     
+
+                    var can = document.getElementById('render-mini')
+                    var ctx3 = can.getContext('2d')
+                    height=Number(height)/4
+                    headHeight=Number(headHeight)/4
+                    if (Number(headCount) <= 3) {
+                        $('#render-mini').attr('width',(164*3)/2)
+                        $('#render-mini').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) == 4) {
+                        $('#render-mini').attr('width',164*2)
+                        $('#render').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) >= 5) {
+                        $('#render-mini').attr('width',(164*5)/2)
+                        if (Number(headCount) === 5) {
+                            $('#render-mini').attr('height',Number(height)+Number(headHeight))
+                        } else {
+                            canvasheight=Math.ceil(Number(headCount)/5)
+                            $('#render-mini').attr('height',Number(height)+Number(headHeight)*canvasheight)
+                        }
+                    }
+                    // Default
+                    ctx3.fillStyle = "red";
+                    ctx3.fillRect(0,0,164/2,height)
+                    ctx3.stroke()
+                    ctx3.fillStyle = "black";
+                    ctx3.font = "7px CozetteVector";
+                    ctx3.fillText('Default',64/2,height/2)
+                    
+                    // Headless
+                    ctx3.fillStyle = "lime";
+                    ctx3.fillRect(164/2,0,164/2,height)
+                    ctx3.stroke()
+                    ctx3.fillStyle = "black";
+                    ctx3.font = "7px CozetteVector";
+                    ctx3.fillText('Headless',(64+164)/2,height/2)
+                    
+                    // Siloette
+                    ctx3.fillStyle = "#348af9";
+                    ctx3.fillRect(164,0,164/2,height)
+                    ctx3.stroke()
+                    ctx3.fillStyle = "black";
+                    ctx3.font = "7px CozetteVector";
+                    ctx3.fillText('Silhouette',(64+164*2)/2,height/2)
+
+                    // "Watermark"
+                    ctx3.font = "5px CozetteVector";
+                    ctx3.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
+                    ctx3.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+
+                    // Heads
+                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
+                    count=0
+                    currentHeadPosX=0
+                    currentHeadPosY=Number(height)
+                    coordinates = []
+                    for (h in heads) {
+                        count++
+                        ctx3.fillStyle = 'yellow'
+                        if ((count-1)%5==0 && count !== 1) {
+                            currentHeadPosY=currentHeadPosY+Number(headHeight)
+                            currentHeadPosX=0
+                        }
+                        if (count%2 == 0) {
+                            ctx3.fillStyle='cyan'
+                        }
+                        ctx3.fillRect(currentHeadPosX,currentHeadPosY,164/2,Number(headHeight))
+                        ctx3.stroke()
+                        ctx3.fillStyle = "black";
+                        ctx3.font = "7px CozetteVector";
+                        ctx3.fillText('Head '+count,currentHeadPosX,currentHeadPosY+5)
+                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
+                        currentHeadPosX=currentHeadPosX+164/2
+                    }
                 })
             }
             $('.form-control').on('change', function(){
@@ -283,6 +359,10 @@
                 var datauri = canvas.toDataURL('image/png')
                 var data = datauri.replace(/^data:image\/\w+;base64,/, "");
                 zip.file(`${name}-hd-template.png`, data, {base64:true})
+                var canvas = document.getElementById('render-mini')
+                var datauri = canvas.toDataURL('image/png')
+                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
+                zip.file(`${name}-mini-template.png`, data, {base64:true})
                 zip.generateAsync({type:"base64"}).then(function (base64) {
                     location.href="data:application/zip;base64," + base64;
                 });
