@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="../css/selectable-boxes.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
     </style>
@@ -71,10 +72,13 @@
             </div>
             <div class="form-group col-md-5 m-3">
                 <label for="framecount">Frame Count</label>
-                <input class="form-control" type="number" id="framecount" placeholder="8" required="true" placeholder="1000" required="true"></input><small id="frame-comment" class="form-text text-muted">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
+                <input class="form-control" type="number" id="framecount" placeholder="8" required="true" placeholder="1000" required="true"></input>
+                <small id="frame-comment" class="form-text text-muted">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate Template and Coordinates" id="submission"></input>
+                <br>
+                <small id="frame-comment" class="form-text text-muted">Note: HD Sprite sheets are not made, just double the size of the existing spritesheet manually.</small>
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group col-md-5 m-3">
@@ -83,19 +87,6 @@
         </div>
         <script>
             coordinates = []
-            function resizedataURL(datas, wantedWidth, wantedHeight) {
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-
-                canvas.width = wantedWidth;
-                canvas.height = wantedHeight;
-
-                ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
-
-                var dataURI = canvas.toDataURL();
-
-                return dataURI
-            }
             function generate() {
                 var canvas = document.getElementById('render')
                 var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
@@ -219,9 +210,6 @@
                 var datauri = canvas.toDataURL('image/png')
                 var data = datauri.replace(/^data:image\/\w+;base64,/, "");
                 zip.file(`${name}-template.png`, data, {base64:true})
-                var hddatauri = resizedataURL(datauri, Number($('#render').attr('width'))*2, Number($('#render').attr('height'))*2)
-                var hddata = hddatauri.replace(/^data:image\/\w+;base64,/, "");
-                zip.file(`${name}-hd-template.png`, hddata, {base64:true})
                 zip.generateAsync({type:"base64"}).then(function (base64) {
                     location.href="data:application/zip;base64," + base64;
                 });
