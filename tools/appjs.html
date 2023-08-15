@@ -958,11 +958,7 @@
                     color=$('#polocolor'+i).val()
                     color=color.replace('#','')
                     uniqsnd=$('#polouniqsnd'+i).find(':selected').val()
-                    if ($('#appjs-import').val()){
-                        polos.push(`{name:"${name}",color:"${color}",uniqsnd:${uniqsnd}}`)
-                    } else {
-                        polos.push(`{name:"${(i).toString().padStart(2,0)}_${name}",color:"${color}",uniqsnd:${uniqsnd}}`)
-                    }
+                    polos.push(`{name:"${name}",color:"${color}",uniqsnd:${uniqsnd}}`)
                     
                 }
                 bonuses=[]
