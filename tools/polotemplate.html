@@ -72,12 +72,11 @@
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate Template and Coordinates" id="submission"></input>
-                <br>
-                <small id="frame-comment" class="form-text text-muted">Note: HD Sprite sheets are not made, just double the size of the existing spritesheet manually.</small>
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group col-md-5 m-3">
                 <canvas id="render"></canvas>
+                <canvas id="render-hd" class="visually-hidden"></canvas>
             </div>
         </div>
         <script>
@@ -162,6 +161,81 @@
                         coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
                         currentHeadPosX=currentHeadPosX+164
                     }
+                    var can = document.getElementById('render-hd')
+                    var ctx2 = can.getContext('2d')
+                    height=Number(height)*2
+                    headHeight=Number(headHeight)*2
+                    if (Number(headCount) <= 3) {
+                        $('#render-hd').attr('width',164*6)
+                        $('#render-hd').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) == 4) {
+                        $('#render-hd').attr('width',164*8)
+                        $('#render').attr('height',Number(height)+Number(headHeight))
+                    } 
+                    if (Number(headCount) >= 5) {
+                        $('#render-hd').attr('width',164*10)
+                        if (Number(headCount) === 5) {
+                            $('#render-hd').attr('height',Number(height)+Number(headHeight))
+                        } else {
+                            canvasheight=Math.ceil(Number(headCount)/5)
+                            $('#render-hd').attr('height',Number(height)+Number(headHeight)*canvasheight)
+                        }
+                    }
+                    // Default
+                    ctx2.fillStyle = "red";
+                    ctx2.fillRect(0,0,164*2,height)
+                    ctx2.stroke()
+                    ctx2.fillStyle = "black";
+                    ctx2.font = "15px CozetteVector";
+                    ctx2.fillText('Default',64*2,height/2)
+                    
+                    // Headless
+                    ctx2.fillStyle = "lime";
+                    ctx2.fillRect(164*2,0,164*2,height)
+                    ctx2.stroke()
+                    ctx2.fillStyle = "black";
+                    ctx2.font = "15px CozetteVector";
+                    ctx2.fillText('Headless',(64+164)*2,height/2)
+                    
+                    // Siloette
+                    ctx2.fillStyle = "#348af9";
+                    ctx2.fillRect(164*4,0,164*2,height)
+                    ctx2.stroke()
+                    ctx2.fillStyle = "black";
+                    ctx2.font = "15px CozetteVector";
+                    ctx2.fillText('Silhouette',(64+164*2)*2,height/2)
+
+                    // "Watermark"
+                    ctx2.font = "13px CozetteVector";
+                    ctx2.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
+                    ctx2.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+
+                    // Heads
+                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
+                    count=0
+                    currentHeadPosX=0
+                    currentHeadPosY=Number(height)
+                    coordinates = []
+                    for (h in heads) {
+                        count++
+                        ctx2.fillStyle = 'yellow'
+                        if ((count-1)%5==0 && count !== 1) {
+                            currentHeadPosY=currentHeadPosY+Number(headHeight)
+                            currentHeadPosX=0
+                        }
+                        if (count%2 == 0) {
+                            ctx2.fillStyle='cyan'
+                        }
+                        ctx2.fillRect(currentHeadPosX,currentHeadPosY,164*2,Number(headHeight))
+                        ctx2.stroke()
+                        ctx2.fillStyle = "black";
+                        ctx2.font = "15px CozetteVector";
+                        ctx2.fillText('Head '+count,currentHeadPosX,currentHeadPosY+20)
+                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
+                        currentHeadPosX=currentHeadPosX+164*2
+                    }
+                    
                 })
             }
             $('.form-control').on('change', function(){
@@ -194,7 +268,7 @@
                 arrayframes=Array.apply(null, Array(Number(totalframe))).map(function (x, i) { return i; })
                 af=[]
                 for (x in arrayframes) {
-                    af.push(`{"prop":"0,${Number(height)},0,1"}`)
+                    af.push(`{"prop":"0,${Number(height)},0,0"}`)
                 }
                 coordinates_compiled=` === sealldeveloper's Polo Template Generator - Coordinates Sheet - ${name} === \n\n`+coordinates.join('\n')+"\n\n === End of Coordinates Sheet === "
                 zip.file(`${name}-coordinates.txt`,coordinates_compiled)
@@ -205,6 +279,10 @@
                 var datauri = canvas.toDataURL('image/png')
                 var data = datauri.replace(/^data:image\/\w+;base64,/, "");
                 zip.file(`${name}-template.png`, data, {base64:true})
+                var canvas = document.getElementById('render-hd')
+                var datauri = canvas.toDataURL('image/png')
+                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
+                zip.file(`${name}-hd-template.png`, data, {base64:true})
                 zip.generateAsync({type:"base64"}).then(function (base64) {
                     location.href="data:application/zip;base64," + base64;
                 });
