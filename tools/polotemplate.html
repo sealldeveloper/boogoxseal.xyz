@@ -172,7 +172,7 @@
                     } 
                     if (Number(headCount) == 4) {
                         $('#render-hd').attr('width',164*8)
-                        $('#render').attr('height',Number(height)+Number(headHeight))
+                        $('#render-hd').attr('height',Number(height)+Number(headHeight))
                     } 
                     if (Number(headCount) >= 5) {
                         $('#render-hd').attr('width',164*10)
@@ -217,7 +217,6 @@
                     count=0
                     currentHeadPosX=0
                     currentHeadPosY=Number(height)
-                    coordinates = []
                     for (h in heads) {
                         count++
                         ctx2.fillStyle = 'yellow'
@@ -233,7 +232,6 @@
                         ctx2.fillStyle = "black";
                         ctx2.font = "15px CozetteVector";
                         ctx2.fillText('Head '+count,currentHeadPosX,currentHeadPosY+20)
-                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
                         currentHeadPosX=currentHeadPosX+164*2
                     }
                     
@@ -248,7 +246,7 @@
                     } 
                     if (Number(headCount) == 4) {
                         $('#render-mini').attr('width',164*2)
-                        $('#render').attr('height',Number(height)+Number(headHeight))
+                        $('#render-mini').attr('height',Number(height)+Number(headHeight))
                     } 
                     if (Number(headCount) >= 5) {
                         $('#render-mini').attr('width',(164*5)/2)
@@ -293,7 +291,6 @@
                     count=0
                     currentHeadPosX=0
                     currentHeadPosY=Number(height)
-                    coordinates = []
                     for (h in heads) {
                         count++
                         ctx3.fillStyle = 'yellow'
@@ -309,7 +306,6 @@
                         ctx3.fillStyle = "black";
                         ctx3.font = "7px CozetteVector";
                         ctx3.fillText('Head '+count,currentHeadPosX,currentHeadPosY+5)
-                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
                         currentHeadPosX=currentHeadPosX+164/2
                     }
                 })
