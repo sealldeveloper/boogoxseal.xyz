@@ -23,6 +23,7 @@
     <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
     <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -72,6 +73,27 @@
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
+            </div>
+            <br>
+            <hr class="hr hr-blurry" />
+            <br>
+            <div class="m-4">
+                <h3>How to export to Spritesheet and JSON from Adobe Animate?</h3>
+                <span>
+                    1. After you've finished your symbol, right click on it and select the 'Generate Sprite Sheet...' button.<br><br>
+                    2. A menu will appear, the follow settings should be set:<br>
+                        - Image Dimensions: Auto size<br>
+                        - Image format: PNG 32 bit<br>
+                        - Background Color: Transparent<br>
+                        - Algorithm: Basic<br>
+                        - Data format: JSON<br>
+                        - Rotate: Disabled<br>
+                        - Trim: Disabled<br>
+                        - Stack frames: Enabled<br>
+                        - Border padding: 0px<br>
+                        - Shape padding: 0px<br><br>
+                    3. Press 'Export' ion the bottom right corner of the menu, a PNG and a JSON should be outputted to the output directory. <br>These are the files that should be used
+                </span>
             </div>
             <canvas id="spritesheetcanvas" class="visually-hidden"></canvas>
             <canvas id="fixedspritesheetcanvas" class="visually-hidden"></canvas>
@@ -217,8 +239,7 @@
                     newjsondata={"animeName":"generated-from-fla-using-sealldevelopers-tools","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
-                    var canvas = document.getElementById('fixedspritesheetcanvas')
-                    var datauri = canvas.toDataURL('image/png')
+                    var datauri = newcanvas.toDataURL('image/png')
                     var data = datauri.replace(/^data:image\/\w+;base64,/, "");
                     zip.file(`generated-sprite.png`, data, {base64:true})
                     zip.generateAsync({type:"base64"}).then(function (base64) {
