@@ -66,6 +66,14 @@
                 <input class="form-control" type="number" id="headcount" placeholder="8" required="true" value="8" required="true"></input>
             </div>
             <div class="form-group col-md-5 m-3">
+                <label for="headrowcount">Heads per row</label>
+                <input class="form-control" type="number" id="headrowcount" placeholder="5" required="true" value="5" required="true"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="headwidth">Head Width (optional)</label>
+                <input class="form-control" type="number" id="headwidth" placeholder="164" required="true" value="164"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
                 <label for="framecount">Frame Count</label>
                 <input class="form-control" type="number" id="framecount" placeholder="8" required="true" placeholder="1000" required="true"></input>
                 <small id="frame-comment" class="form-text text-muted">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
@@ -92,20 +100,22 @@
                     var height = $('#height').val()
                     var headHeight = $('#headheight').val()
                     var headCount = $('#headcount').val()
-                    if (Number(headCount) <= 3) {
+                    var headrowCount = $('#headrowcount').val()
+                    var headWidth = $('#headwidth').val()
+                    var totalframe=$('#framecount').val()
+                    if (Number(headrowCount) < 3) {
                         $('#render').attr('width',164*3)
+                    } else {
+                        $('#render').attr('width',164*Number(headrowCount))
+                    }
+                    if (Number(headCount) < Number(headrowCount)) {
                         $('#render').attr('height',Number(height)+Number(headHeight))
                     } 
-                    if (Number(headCount) == 4) {
-                        $('#render').attr('width',164*4)
-                        $('#render').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= 5) {
-                        $('#render').attr('width',164*5)
-                        if (Number(headCount) === 5) {
+                    if (Number(headCount) >= Number(headrowCount)) {
+                        if (Number(headCount) === Number(headrowCount)) {
                             $('#render').attr('height',Number(height)+Number(headHeight))
                         } else {
-                            canvasheight=Math.ceil(Number(headCount)/5)
+                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
                             $('#render').attr('height',Number(height)+Number(headHeight)*canvasheight)
                         }
                     }
@@ -136,7 +146,7 @@
                     // "Watermark"
                     ctx.font = "13px CozetteVector";
                     ctx.fillText(`sealldeveloper\'s Polo Template Generator`,0,12)
-                    ctx.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+                    ctx.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
 
                     // Heads
                     heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
@@ -147,7 +157,7 @@
                     for (h in heads) {
                         count++
                         ctx.fillStyle = 'yellow'
-                        if ((count-1)%5==0 && count !== 1) {
+                        if ((count-1)%Number(headrowCount)==0 && count !== 1) {
                             currentHeadPosY=currentHeadPosY+Number(headHeight)
                             currentHeadPosX=0
                         }
@@ -156,6 +166,17 @@
                         }
                         ctx.fillRect(currentHeadPosX,currentHeadPosY,164,Number(headHeight))
                         ctx.stroke()
+                        if (Number(headWidth) < 164) {
+                            gaps=164-Number(headWidth)
+                            ctx.fillStyle='brown'
+                            if (count%2 == 0) {
+                                ctx.fillStyle='orange'
+                            }
+                            ctx.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx.stroke()
+                            ctx.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx.stroke()
+                        }
                         ctx.fillStyle = "black";
                         ctx.font = "15px CozetteVector";
                         ctx.fillText('Head '+count,currentHeadPosX,currentHeadPosY+10)
@@ -166,23 +187,24 @@
                     var ctx2 = can.getContext('2d')
                     height=Number(height)*2
                     headHeight=Number(headHeight)*2
-                    if (Number(headCount) <= 3) {
-                        $('#render-hd').attr('width',164*6)
+                    headWidth=Number(headWidth)*2
+                    if (Number(headrowCount) < 3) {
+                        $('#render-hd').attr('width',164*3*2)
+                    } else {
+                        $('#render-hd').attr('width',164*Number(headrowCount)*2)
+                    }
+                    if (Number(headCount) < Number(headrowCount)) {
                         $('#render-hd').attr('height',Number(height)+Number(headHeight))
                     } 
-                    if (Number(headCount) == 4) {
-                        $('#render-hd').attr('width',164*8)
-                        $('#render-hd').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= 5) {
-                        $('#render-hd').attr('width',164*10)
-                        if (Number(headCount) === 5) {
+                    if (Number(headCount) >= Number(headrowCount)) {
+                        if (Number(headCount) === Number(headrowCount)) {
                             $('#render-hd').attr('height',Number(height)+Number(headHeight))
                         } else {
-                            canvasheight=Math.ceil(Number(headCount)/5)
+                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
                             $('#render-hd').attr('height',Number(height)+Number(headHeight)*canvasheight)
                         }
                     }
+                    
                     // Default
                     ctx2.fillStyle = "red";
                     ctx2.fillRect(0,0,164*2,height)
@@ -210,7 +232,7 @@
                     // "Watermark"
                     ctx2.font = "13px CozetteVector";
                     ctx2.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
-                    ctx2.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+                    ctx2.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
 
                     // Heads
                     heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
@@ -229,6 +251,17 @@
                         }
                         ctx2.fillRect(currentHeadPosX,currentHeadPosY,164*2,Number(headHeight))
                         ctx2.stroke()
+                        if (Number(headWidth) < 164*2) {
+                            gaps=164*2-Number(headWidth)
+                            ctx2.fillStyle='brown'
+                            if (count%2 == 0) {
+                                ctx2.fillStyle='orange'
+                            }
+                            ctx2.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx2.stroke()
+                            ctx2.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx2.stroke()
+                        }
                         ctx2.fillStyle = "black";
                         ctx2.font = "15px CozetteVector";
                         ctx2.fillText('Head '+count,currentHeadPosX,currentHeadPosY+20)
@@ -240,20 +273,20 @@
                     var ctx3 = can.getContext('2d')
                     height=Number(height)/4
                     headHeight=Number(headHeight)/4
-                    if (Number(headCount) <= 3) {
-                        $('#render-mini').attr('width',(164*3)/2)
+                    headWidth=Number(headWidth)/4
+                    if (Number(headrowCount) < 3) {
+                        $('#render-mini').attr('width',164*3/2)
+                    } else {
+                        $('#render-mini').attr('width',164*Number(headrowCount)/2)
+                    }
+                    if (Number(headCount) < Number(headrowCount)) {
                         $('#render-mini').attr('height',Number(height)+Number(headHeight))
                     } 
-                    if (Number(headCount) == 4) {
-                        $('#render-mini').attr('width',164*2)
-                        $('#render-mini').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= 5) {
-                        $('#render-mini').attr('width',(164*5)/2)
-                        if (Number(headCount) === 5) {
+                    if (Number(headCount) >= Number(headrowCount)) {
+                        if (Number(headCount) === Number(headrowCount)) {
                             $('#render-mini').attr('height',Number(height)+Number(headHeight))
                         } else {
-                            canvasheight=Math.ceil(Number(headCount)/5)
+                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
                             $('#render-mini').attr('height',Number(height)+Number(headHeight)*canvasheight)
                         }
                     }
@@ -284,7 +317,7 @@
                     // "Watermark"
                     ctx3.font = "5px CozetteVector";
                     ctx3.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
-                    ctx3.fillText(`${name},${height},${headHeight},${headCount}`,0,25)
+                    ctx3.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
 
                     // Heads
                     heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
@@ -303,6 +336,17 @@
                         }
                         ctx3.fillRect(currentHeadPosX,currentHeadPosY,164/2,Number(headHeight))
                         ctx3.stroke()
+                        if (Number(headWidth) < 164/2) {
+                            gaps=164/2-Number(headWidth)
+                            ctx3.fillStyle='brown'
+                            if (count%2 == 0) {
+                                ctx3.fillStyle='orange'
+                            }
+                            ctx3.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx3.stroke()
+                            ctx3.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
+                            ctx3.stroke()
+                        }
                         ctx3.fillStyle = "black";
                         ctx3.font = "7px CozetteVector";
                         ctx3.fillText('Head '+count,currentHeadPosX,currentHeadPosY+5)
