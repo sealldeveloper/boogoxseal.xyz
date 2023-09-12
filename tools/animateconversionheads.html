@@ -76,6 +76,8 @@
                 <input class="form-control" type="file" id="motionxml" required="true"></input>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
+                <small>NOTE: This will automatically resize the width of your polo to fit, so if incorrectly sized the polo may come out taller/shorter than expected to fix centering.</small>
+                <br>
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
             </div>
             <br>
@@ -212,6 +214,9 @@
                     
                     frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
                     frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
+                    widthfix = 164/frame0width
+                    frame0height = frame0height*widthfix
+                    frame0width=164
                     defaultwidth=164
                     defaultheight=380
 

@@ -71,7 +71,10 @@
                     </optgroup>
                 </select>
             </div>
+            
             <div class="form-group m-4 mt-4" id="submit">
+                <small>NOTE: This will automatically resize the width of your polo to fit, so if incorrectly sized the polo may come out taller/shorter than expected to fix centering.</small>
+                <br>
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
             </div>
             <br>
@@ -191,6 +194,9 @@
                     heads=[]
                     prev=[]
                     headcount=0
+                    widthfix = 164/frame0width
+                    frame0height = frame0height*widthfix
+                    frame0width=164
                     for (i in Object.keys(jsondata.frames)) {
                         frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
                         if (!prev.includes(JSON.stringify(frame))) {
