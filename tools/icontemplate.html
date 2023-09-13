@@ -74,18 +74,15 @@
                 currentIconPosX=0
                 for (i in icons) {
                     count++
-                    ctx.fillStyle = 'red'
-                    ctx.fillRect(currentIconPosX,0,120,120)
-                    ctx.stroke()
                     ctx.fillStyle = 'lime'
-                    ctx.fillRect(currentIconPosX,126,120,152)
+                    ctx.fillRect(currentIconPosX,0,120,152)
                     ctx.stroke()
                     ctx.fillStyle = "black";
                     ctx.font = "15px CozetteVector";
                     ctx.fillText('Icon '+count,currentIconPosX,12)
                     ctx.fillStyle = "black";
                     ctx.font = "15px CozetteVector";
-                    ctx.fillText('Text '+count,currentIconPosX,138)
+                    ctx.fillText('asset-v'+count,currentIconPosX,24)
                     currentIconPosX=currentIconPosX+130
                 }
             })
