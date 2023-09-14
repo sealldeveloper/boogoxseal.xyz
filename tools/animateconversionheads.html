@@ -110,7 +110,6 @@
                 </span>
             </div>
             <canvas id="spritesheetcanvas" class="visually-hidden"></canvas>
-            <canvas id="fixedspritesheetcanvas" class="visually-hidden"></canvas>
             <div id="jsoncontent" class="visually-hidden"></div>
             <div id="spritesheetcontent" class="visually-hidden"></div>
         </div>
@@ -365,7 +364,7 @@
                             currentx=currentx+(defaultwidth-frame0width)+frame0width
                         }
                     }
-                    newjsondata={"_generated-by-sealldevelopers-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
+                    newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
                     var datauri = newcanvas.toDataURL('image/png')
