@@ -43,6 +43,7 @@
 	  </div>
 	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
 		<h1 class="m-4 mt-3">Adobe Animate to Incredibox Converter - Heads</h1>
+        <small class="m-4" style="color:#fac769">WARNING: This tool was designed to work on <b>Firefox</b> so errors on Chromium based browsers are expected.</small>
         <div id="form">
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-4">
@@ -76,8 +77,6 @@
                 <input class="form-control" type="file" id="motionxml" required="true"></input>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
-                <small>NOTE: This will automatically resize the width of your polo to fit, so if incorrectly sized the polo may come out taller/shorter than expected to fix centering.</small>
-                <br>
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
             </div>
             <br>
@@ -86,8 +85,10 @@
             <div class="m-4">
                 <h3>How to export to Spritesheet, JSON and Motion XML from Adobe Animate?</h3>
                 <span>
+                    <p style="color:#fac769">NOTE: 'Tweening' seems to effect the motion XML, please refrain from it.</p>
+                    <br>
                     1. Select all the moving frames of your head alone, delete the body layer. Then at the top of the window, click 'Commands', then 'Export Motion as XML'.<br><br>
-                    2. After exporting the motion, remove all keyframes moving the head from the head layer. Then, right click on the symbol and select the 'Generate Sprite Sheet...' button.<br><br>
+                    2. After exporting the motion, remove all keyframes moving the head from the head layer <b>except the first one</b>, and expand that first one to be the length of the animation. Then, right click on the symbol and select the 'Generate Sprite Sheet...' button.<br><br>
                     3. A menu will appear, the follow settings should be set:<br>
                         - Image Dimensions: Auto size<br>
                         - Image format: PNG 32 bit<br>
@@ -205,7 +206,7 @@
                     fc=0
                     for (i in Object.keys(xmlframes)) {
                         if (xmlframes[i].attributes && fc != 1) {
-                            if (xmlframes[i].attributes['firstFrame']) {
+                            if (xmlframes[i].attributes['y'] || xmlframes[i].attributes['x']) {
                                 validframes.push(xmlframes[i])
                             }
                         }
@@ -221,7 +222,7 @@
                     for (i in validframes) {
                         x=validframes[i].attributes['x']
                         y=validframes[i].attributes['y']
-                        ff=validframes[i].attributes['firstFrame']
+                        ff=validframes[i].attributes['index']
                         if (Number(ff.nodeValue)){
                             if (x && y) motion[ff.nodeValue] = {"x":x.nodeValue,"y":y.nodeValue}
                             if (!x && y) motion[ff.nodeValue] = {"x":undefined,"y":y.nodeValue}
@@ -335,6 +336,13 @@
                                     } else {
                                         ym=ym
                                     }
+                                    if (xm % 1 != 0) {
+                                        xm=Number(xm).toFixed(2)
+                                    }
+                                    if (ym % 1 != 0) {
+                                        ym=Number(ym).toFixed(2)
+                                    }
+                                    console.log(xm,ym)
                                     newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},${xm},${ym}`
                                 } catch (e){
                                     newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},0,0`

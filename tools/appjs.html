@@ -371,7 +371,7 @@
             <div class="form-group" id="advanced">
                 <h3 class="m-3">Advanced Options</h3>
                 <div class="form-check m-3" >
-                    <label class="form-check-label" for="enableadvanced"><b>OPTIONAL:</b> I understand these options are not typically needed to be changed and can mess with shit</label>
+                    <label class="form-check-label" for="enableadvanced"><b style="color:lightcoral">OPTIONAL:</b> I understand these options are not typically needed to be changed and can mess with shit</label>
                     <input class="form-check-input" type="checkbox" id="enableadvanced"></input>
                 </div>
                 <div class="form-group col-md-5 m-4 visually-hidden advanced-option">
@@ -451,30 +451,68 @@
                 ctx.fill()
                 ctx.stroke();
             }
-            loadbar('#000000')
-            $('#col3').on('change', function(){
-                loadbar($(this).val())
-            })
     
             $('#looptime').on('change', function(){
                 totalframecalc=Math.floor(Number($(this).val())*0.024)*2
                 $('#totalframe').val(totalframecalc)
             })
-            
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+            if ($(''))
+            $(colBck).val(getRandomColor())
+            $(col0).val(getRandomColor())
+            $(col1).val(getRandomColor())
+            $(col2).val(getRandomColor())
+            $(col3).val(getRandomColor())
+            $(col4).val(getRandomColor())
+            $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+            $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+            $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
+            $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+            $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+            loadbar($(col3).val())
+            $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
+
             $('#col1').on('change', function(){
                 $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
                 $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
                 $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
                 $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                loadbar($(col3).val())
+                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
             })
             $('#col2').on('change', function(){
                 $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
                 $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                loadbar($(col3).val())
+                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
             })
             $('#col3').on('change', function(){
-                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$('#col3').val()};color:#ffffff`)
+                $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
+                $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                loadbar($(col3).val())
+                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
             })
             $('#col4').on('change', function(){
+                $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
+                $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                loadbar($(col3).val())
                 $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
             })
             $('#playbutton').on('click', function(){
@@ -769,17 +807,19 @@
                         document.querySelector('#col1').dispatchEvent(new Event('input', { bubbles: true }));
                         $('#col2').val(data.split('this.col2="')[1].split('",')[0])
                         document.querySelector('#col2').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
-                        $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
-                        $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
-                        $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
-                        $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$('#col3').val()};color:#ffffff`)
-                        $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
                         $('#col3').val(data.split('this.col3="')[1].split('",')[0])
                         document.querySelector('#col3').dispatchEvent(new Event('input', { bubbles: true }));
                         loadbar($('#col3').val())
                         $('#col4').val(data.split('this.col4="')[1].split('",')[0])
                         document.querySelector('#col4').dispatchEvent(new Event('input', { bubbles: true }));
+                        $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+                        $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+                        $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
+                        $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                        $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                        loadbar($(col3).val())
+                        $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
+                        
             
                         polos=data.split('this.animearray=[')[1].split('],this.bonusarray')[0]
                         polos=polos.split('},')
@@ -900,17 +940,18 @@
                 document.querySelector('#col1').dispatchEvent(new Event('input', { bubbles: true }));
                 $('#col2').val("#000000")
                 document.querySelector('#col2').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
-                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
-                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
-                $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
-                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$('#col3').val()};color:#ffffff`)
-                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
                 $('#col3').val("#000000")
                 document.querySelector('#col3').dispatchEvent(new Event('input', { bubbles: true }));
                 loadbar($('#col3').val())
                 $('#col4').val("#000000")
                 document.querySelector('#col4').dispatchEvent(new Event('input', { bubbles: true }));
+                $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
+                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
+                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
+                $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
+                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
+                loadbar($(col3).val())
+                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
                 $('#polocount').val('')
                 $('#bonusescontent-comment').removeClass('visually-hidden')
                 $('#bonuses-content').addClass('visually-hidden')
