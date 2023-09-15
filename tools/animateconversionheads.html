@@ -48,7 +48,7 @@
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheet">Spritesheet</label>
-                <input class="form-control" type="file" id="spritesheet" required="true"></input>
+                <input class="form-control" type="file" id="spritesheet" required="true" accept=".png"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
@@ -61,7 +61,7 @@
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="json">JSON</label>
-                <input class="form-control" type="file" id="json" required="true"></input>
+                <input class="form-control" type="file" id="json" required="true" accept=".json"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
@@ -74,7 +74,7 @@
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="motionxml">Motion XML</label>
-                <input class="form-control" type="file" id="motionxml" required="true"></input>
+                <input class="form-control" type="file" id="motionxml" required="true" accept=".xml"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="buffer">Buffer</label><br>
@@ -117,15 +117,6 @@
 	</div>
     <script>
         seperate_count=0
-        function download(uri, name) {
-            var link = document.createElement("a");
-            link.download = name;
-            link.href = uri;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link;
-        }
         function range(start, stop, step) {
             if (typeof stop == 'undefined') {
                 // one param defined
@@ -149,7 +140,7 @@
             return result;
         };
 
-        function submit() {
+        async function submit() {
             if ( ! window.FileReader ) {
                 return alert( 'FileReader API is not supported by your browser.' );
             }
@@ -176,7 +167,7 @@
                 fr.readAsDataURL( file );
             } else {
                 // Handle errors here
-                alert( "JSON not selected" )
+                return alert( "JSON not selected" )
             }
             if ( inputk.files && inputk.files[0] ) {
                 filek = inputk.files[0]; // The file
@@ -190,7 +181,7 @@
                 frk.readAsDataURL( filek );
             } else {
                 // Handle errors here
-                alert( "XML not selected" )
+                return alert( "XML not selected" )
             }
             if ( inputj.files && inputj.files[0] ) {
                 filej = inputj.files[0]; // The file
@@ -235,7 +226,6 @@
                             if (!x && !y) motion[ff.nodeValue] = {"x":undefined,"y":undefined}
                         }
                     }
-                    console.log(motion)
 
                     canvas=$('#spritesheetcanvas')[0]
                     ctx= canvas.getContext('2d')
@@ -348,7 +338,6 @@
                                     if (ym % 1 != 0) {
                                         ym=Number(ym).toFixed(2)
                                     }
-                                    console.log(xm,ym)
                                     newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},${xm},${ym}`
                                 } catch (e){
                                     newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},0,0`
@@ -366,32 +355,52 @@
                         }
                     }
                     newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
-                    var zip = new JSZip();
-                    zip.file(`generated.json`,JSON.stringify(newjsondata))
-                    var datauri = newcanvas.toDataURL('image/png')
-                    var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                    zip.file(`generated-sprite.png`, data, {base64:true})
-                    zip.generateAsync({type:"base64"}).then(function (base64) {
-                        window.open("data:application/zip;base64," + base64);
-                    });
+                    if (seperate_count == 2){
+                        var zip = new JSZip();
+                        zip.file(`generated.json`,JSON.stringify(newjsondata))
+                        var datauri = newcanvas.toDataURL('image/png')
+                        var data = datauri.replace(/^data:image\/\w+;base64,/, "");
+                        zip.file(`generated-sprite.png`, data, {base64:true})
+                        zip.generateAsync({type:"base64"}).then(function (base64) {
+                            window.open("data:application/zip;base64," + base64);
+                        });
+                    }
+                    seperate_count++
+                    return true
                 };
                 //fr.readAsText( file );
                 frj.readAsDataURL( filej );
             } else {
                 // Handle errors here
-                alert( "Spritesheet not selected" )
+                return alert( "Spritesheet not selected" )
             }
         }
+        function waitFor(conditionFunction) {
 
-        $('#submission').on('click', function(){
-            seperate_count++
-            if (seperate_count == 1){
-                submit()
-                alert('If your sprite-sheet fails, please re-submit. This is an ongoing issue...')
-            } else {
-                submit()
+            const poll = resolve => {
+                if(conditionFunction()) resolve();
+                else setTimeout(_ => poll(resolve), 400);
             }
-                
+
+            return new Promise(poll);
+        }
+
+        $('#submission').on('click', async function(){
+            seperate_count=0
+            seperate_count++
+            await submit()
+            await waitFor(_ => seperate_count === 2);
+            await submit()
+            $.ajax({
+                url: window.location.href,
+                headers: {
+                    "Pragma": "no-cache",
+                    "Expires": -1,
+                    "Cache-Control": "no-cache"
+                }
+            }).done(function () {
+                window.location.reload(true);
+            });
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
