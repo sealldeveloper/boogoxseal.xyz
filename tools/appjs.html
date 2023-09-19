@@ -858,11 +858,13 @@
                                 $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
                             }
                         })
-            
-                        bonuses=data.split('this.bonusarray=[')[1].split('],this.unlockerarray')[0]
+                        bonus_split=data.split('this.bonusarray=[')[1]
+                        console.log(bonus_split)
+                        bonuses=bonus_split.split('];')[0].length > 0 ? bonus_split.split('],this')[0] : bonus_split.split('];')[0]
                         bonuses=bonuses.split('},')
                         q=0
                         if (bonuses[0] !== ""){
+                            $('#bonusselector').removeClass('visually-hidden')
                             for (var bonus in bonuses) {
                                 bonus=bonuses[bonus]
                                 q++
@@ -897,7 +899,6 @@
                             $('#0bonuses').prop('checked',false)
                             $(`#${q}bonuses`).prop('checked',true)
                         }
-                        $('#bonusselector').removeClass('visually-hidden')
                         choices=Array.from({length: Number(q)}, (_, i) => i + 1)
                         for (const c in choices){
                             $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
