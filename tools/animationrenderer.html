@@ -251,7 +251,6 @@
         function AssignSettings() {
             $("#color").val(image_background_color);
             $("#image").attr("src", decodeURIComponent(image_src));
-            $("#frameCount").val(frame_index_count);
             $("#frameStart").val(frame_index_start + 1); // 0 based index (logic) to 1 based index (UI)
             if (image_src !== "")
                 SetFrameStep(1);
@@ -372,7 +371,6 @@
         // get default variable values from form inputs
         image_background_color = $("#color").val();
         frame_time_total = parseInt($("#fps").val())/3;
-        frame_index_count = parseInt($("#frameCount").val());
         frame_index_start = parseInt($("#frameStart").val()) - 1; // 1 based index (UI) to 0 based index (logic)
         sheet_spacing_horizontal = sheet_sprite_width * res;
         sheet_padding_top = sheet_sprite_height * res;
