@@ -110,6 +110,8 @@
                     <a class="btn coolButton" role="button" id="frameStepForward">Frame &gt;</a>
                 </div>
             </div>
+		<audio id="audFile1" hidden src=""></audio>
+		<audio id="audFile2" hidden src=""></audio>
         </div>
 	</div>
     <script>
@@ -135,7 +137,10 @@
         var image_background_color = "#000000";
         var border_bool = false;
         var image_src;
-        var json_src;
+        var json_src;	    
+	var aud_src = [];
+	var aud_len;
+	var current_aud;
         var ui_framenum = true;
         var ui_framecontrols = true;
         var gif_loop = true;
@@ -186,6 +191,11 @@
             }
             }
         }
+
+	function UpdateAudio() {
+		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile1" : "audFile2";
+  		$("#"+current_aud).currentTime = (aud_len*frame_index_current)/frame_index_count
+	}
 
         function encode64(input) {
             var output = "", i = 0, l = input.length,
@@ -309,6 +319,7 @@
 		imgName = this.files.item(0).name;
 		splitName = imgName.split("-");
 		res = splitName[splitName.length-1] === "hd.png" ? 2 : 1;
+		$("res").val(res);
         });
         
         $("#jsonInp").change(function() {
@@ -319,6 +330,7 @@
             sheet_sprite_height = jsonInp.height;
             head_height = jsonInp.headHeight;
             arr = jsonInp.arrayFrame;
+	    aud_len = Math.ceil((frame_index_count/2)/(fps === 125 ? 0.024 : 0.030));
             anime_name = jsonInp.animeName;
             
             for (len = arr.length, i = 0; i < len; i++) {
@@ -342,6 +354,15 @@
         aud = Number($(this).val());
         $("#audInp2").attr("style", (aud === 2 ? "display:block" : "display:none"));
         });
+
+	$("#audInp1, #audInp2").change(function() {
+		aud_src = (aud === 2 ? [$("#audInp1").val(), $("#audInp2").val()] : [$("#audInp1").val(), $("#audInp1").val()]) || [];
+      
+		$("#audFile1").src = aud_src[0];
+		$("#audFile2").src = aud_src[1];
+	      
+		UpdateAudio();
+	});
         
         $("#color").change(function() {
         image_background_color = $("#color").val();
@@ -362,9 +383,20 @@
                 frame_index_current = frame_index_count - 1;
             UpdateSprite();
         });
-        $("#frameStop").click(function() { SetFrameStep(0); });
-        $("#framePlayForward").click(function() { SetFrameStep(1); });
-        $("#framePlayBack").click(function() { SetFrameStep(-1);  });
+        
+	$("#frameStop").click(function() { 
+	    SetFrameStep(0); 
+	});
+        
+	$("#framePlayForward").click(function() { 
+	    SetFrameStep(1);
+      	    UpdateAudio();
+            document.getElementById(current_aud).play();
+	});
+        
+	$("#framePlayBack").click(function() { 
+	    SetFrameStep(-1);  
+	});
         
         $("#gif").click(function(){
             GenerateGif();
@@ -386,6 +418,6 @@
         setInterval(Update,16)
     </script>
     <h3 style="padding-bottom:5px"></h3>
-    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+    <h3 style="text-align:center;font-size:10px">Made by a <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and a bae ;)</h3>
 </body>
 </html>
