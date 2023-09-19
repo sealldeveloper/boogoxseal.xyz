@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="../assets/canvas-funcs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
@@ -290,29 +291,15 @@
                 newctx = newcanvas.getContext('2d')
                 newctx.canvas.width = defaultwidth*5
                 newctx.canvas.height = defaultheight+(frame0height+buffer)*(Math.ceil(headcount/5))
+
                 // Default
-                newctx.fillStyle = "red";
-                newctx.fillRect(0,0,defaultwidth,defaultheight)
-                newctx.stroke()
-                newctx.fillStyle = "black";
-                newctx.font = "15px CozetteVector";
-                newctx.fillText('Default',58,defaultheight/2)
+                drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default")
                 
                 // Headless
-                newctx.fillStyle = "lime";
-                newctx.fillRect(defaultwidth,0,defaultwidth,defaultheight)
-                newctx.stroke()
-                newctx.fillStyle = "black";
-                newctx.font = "15px CozetteVector";
-                newctx.fillText('Headless',55+defaultwidth,defaultheight/2)
+                drawLabelledBox(newctx,"lime",defaultwidth,0,defaultwidth,defaultheight,55+defaultwidth,defaultheight/2,"Headless")
                 
                 // Siloette
-                newctx.fillStyle = "#348af9";
-                newctx.fillRect(defaultwidth*2,0,defaultwidth,defaultheight)
-                newctx.stroke()
-                newctx.fillStyle = "black";
-                newctx.font = "15px CozetteVector";
-                newctx.fillText('Silhouette',48+defaultwidth*2,defaultheight/2)
+                drawLabelledBox(newctx,"#348af9",defaultwidth*2,0,defaultwidth,defaultheight,48+defaultwidth*2,defaultheight/2,"Silhouette")
 
                 // "Watermark"
                 newctx.font = "13px CozetteVector";

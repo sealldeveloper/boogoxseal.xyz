@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="../assets/canvas-funcs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
@@ -121,28 +122,13 @@
                         }
                     }
                     // Default
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0,0,164,height)
-                    ctx.stroke()
-                    ctx.fillStyle = "black";
-                    ctx.font = "15px CozetteVector";
-                    ctx.fillText('Default',58,height/2)
+                    drawLabelledBox(ctx,"red",0,0,164,height,58,height/2,"Default")
                     
                     // Headless
-                    ctx.fillStyle = "lime";
-                    ctx.fillRect(164,0,164,height)
-                    ctx.stroke()
-                    ctx.fillStyle = "black";
-                    ctx.font = "15px CozetteVector";
-                    ctx.fillText('Headless',55+164,height/2)
+                    drawLabelledBox(ctx,"lime",164,0,164,height,55+164,height/2,"Headless")
                     
                     // Siloette
-                    ctx.fillStyle = "#348af9";
-                    ctx.fillRect(164*2,0,164,height)
-                    ctx.stroke()
-                    ctx.fillStyle = "black";
-                    ctx.font = "15px CozetteVector";
-                    ctx.fillText('Silhouette',48+164*2,height/2)
+                    drawLabelledBox(ctx,"#348af9",164*2,0,164,height,48+164*2,height/2,"Silhouette")
 
                     // "Watermark"
                     ctx.font = "13px CozetteVector";
