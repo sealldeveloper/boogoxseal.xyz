@@ -89,8 +89,8 @@
             </div>
 	    <div class="form-group col-md-5 m-3">
                 <label for="audInp">Audio</label>
-                <input class="form-control" type="file" id="audInp1" accept="audio/*"></input>
-		<input class="form-control" type="file" id="audInp2" accept="audio/*" style="display:none;"></input>
+                <input class="form-control audio-inputs" type="file" id="audInp1" accept="audio/*"></input>
+		        <input class="form-control audio-inputs" type="file" id="audInp2" accept="audio/*" style="display:none;"></input>
             </div>
             <div class="form-group col-md-5 m-3">
                 <input class="btn btn-primary" type="button" value="Generate GIF" id="gif"></input>
@@ -110,8 +110,8 @@
                     <a class="btn coolButton" role="button" id="frameStepForward">Frame &gt;</a>
                 </div>
             </div>
-		<audio id="audFile1" hidden src=""></audio>
-		<audio id="audFile2" hidden src=""></audio>
+		<audio id="audFile1" hidden><source id="audFileSource1" src="" type=""></audio>
+		<audio id="audFile2" hidden><source id="audFileSource2" src="" type=""></audio>
         </div>
 	</div>
     <script>
@@ -221,12 +221,22 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-            $('#image').attr('src', e.target.result);
-            $('#imgsrc').val(encodeURIComponent(e.target.result));
-            UpdateCanvasSize();
-            SetFrameStep(1);
+                $('#image').attr('src', e.target.result);
+                $('#imgsrc').val(encodeURIComponent(e.target.result));
+                UpdateCanvasSize();
             };
             reader.readAsDataURL(input.files[0]);
+        }
+        }
+
+        function LoadAudioFromDisk(input, callback) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (e) {
+                callback(reader.result);
+            };
+            
         }
         }
 
@@ -235,7 +245,7 @@
             var reader = new FileReader();
             reader.readAsText(input.files[0]);
             reader.onload = () => {
-            callback(reader.result);
+                callback(reader.result);
             };
         }
         }
@@ -264,8 +274,6 @@
             $("#color").val(image_background_color);
             $("#image").attr("src", decodeURIComponent(image_src));
             $("#frameStart").val(frame_index_start + 1); // 0 based index (logic) to 1 based index (UI)
-            if (image_src !== "")
-                SetFrameStep(1);
             UpdateCanvasSize();
             UpdateSprite();
         }
@@ -355,11 +363,16 @@
         $("#audInp2").attr("style", (aud === 2 ? "display:block" : "display:none"));
         });
 
-	$("#audInp1, #audInp2").change(function() {
+	$(".audio-inputs").change(function() {
 		aud_src = (aud === 2 ? [$("#audInp1").val(), $("#audInp2").val()] : [$("#audInp1").val(), $("#audInp1").val()]) || [];
-      
-		$("#audFile1").src = aud_src[0];
-		$("#audFile2").src = aud_src[1];
+        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
+        for (name in aud_names) {
+            name=aud_names[name]
+            LoadAudioFromDisk(this, (new_src)=>{
+                $(name).attr('src',new_src)
+                $(name).attr('type',new_src.split('data:')[1].split(';')[0])
+            })
+        }
 	      
 		UpdateAudio();
 	});
@@ -386,12 +399,13 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
+        $("#"+current_aud)[0].pause();
 	});
         
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
-      	    UpdateAudio();
-            document.getElementById(current_aud).play();
+        UpdateAudio();
+        $("#"+current_aud)[0].play();
 	});
         
 	$("#framePlayBack").click(function() { 
@@ -415,9 +429,11 @@
         AssignSettings();
         $('#imgInp').val('')
         $('#jsonInp').val('')
+        $('#audInp1').val('')
+        $('#audInp2').val('')
         setInterval(Update,16)
     </script>
     <h3 style="padding-bottom:5px"></h3>
-    <h3 style="text-align:center;font-size:10px">Made by a <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and a bae ;)</h3>
+    <h3 style="text-align:center;font-size:10px">Made by a <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and bae ;&rpar;</h3>
 </body>
 </html>
