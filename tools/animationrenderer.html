@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:rgb(17, 5, 29) ;">
+<head>
+	<title>Animation Renderer - BOOGO x SEAL & LeBaeBea</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../icons/site.webmanifest">
+	<link rel="shortcut icon" href="../icons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#603cba">
+	<meta name="msapplication-config" content="../icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BOOGO x SEAL">
+	<meta property="og:title" content="Animation Renderer" />
+	    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
+    <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
+	<meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <script src="../assets/GIFEncoder.js"></script>
+    <script src="../assets/LZWEncoder.js"></script>
+    <script src="../assets/NeuQuant.js"></script>
+    <style>
+        td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}.coolButton{font-size:15px;margin-right:10px;transition:all .2s linear;border-style:solid;color:var(--color);border-width:2px;border-color:#7023b8;font-family:monospace}.coolButton:hover{transform:translateY(-3px);border-radius:28px;border-bottom-right-radius:28px;border-top-right-radius:28px;border-top-left-radius:28px;border-bottom-left-radius:28px;border-color:#7023b8;font-family:monospace}.parent:hover .coolButton:not(:hover){border-radius:29px;font-family:monospace}h1,h3{font-family:monospace}
+    </style>
+</head>
+
+
+
+<body style="background-color:rgb(17, 5, 29) ;">
+    <div class="topnav">
+		<a href="../">Home</a>
+		<a class="active" href="./">Tools</a>
+		<a href="../mods">Mods</a>
+		<a href="../about">About Us</a>
+		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
+	  </div>
+	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+        <div id="title" class="m-4">
+            <h1>Incredibox Animation Renderer</h1>
+            <small class="m-2">Made by LeBaeBea & seal</small>
+        </div>
+        <div id="form">
+            <h3 class="m-3">Inputs</h3>
+            <div class="form-group col-md-5 m-3">
+                <label for="imgInp">Sprite Sheet</label>
+                <input class="form-control" type="file" id="imgInp" accept="image/PNG"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="jsonInp">JSON</label>
+                <input class="form-control" type="file" id="jsonInp" accept="application/JSON"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="res">Resolution / Sprite Sheet Size</label>
+                <select class="form-control" id="res" name="res">
+                    <option value="1">Non-HD (x1)</option>
+                    <option value="2">HD (x2)</option>
+                </select>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="fps">FPS</label>
+                <select class="form-control" id="fps" name="fps">
+                    <option value="125">24 FPS</option>
+                    <option value="100">30 FPS</option>
+                </select>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="color">Background Colour</label>
+                <input class="form-control" type="text" data-coloris id="color" value="#000000"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <input class="btn btn-primary" type="button" value="Generate GIF" id="gif"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group col-md-5 m-3">
+                <canvas id="imgCanvas" width="164" height="225" style="border:1px solid black;"></canvas>
+                <br>
+                <img id="image" alt="Preview" style="display:none"/>
+                <small id="imgInfo" class="m-1"></small>
+                <br>
+                <div class="btn-group" role="group" id="frameControls">
+                    <a class="btn coolButton" role="button" id="frameStepBack">&lt; Frame</a>
+                    <a class="btn coolButton" role="button" id="framePlayBack">&lt; Play</a>
+                    <a class="btn coolButton" role="button" id="frameStop">STOP</a>
+                    <a class="btn coolButton" role="button" id="framePlayForward">Play &gt;</a>
+                    <a class="btn coolButton" role="button" id="frameStepForward">Frame &gt;</a>
+                </div>
+            </div>
+        </div>
+	</div>
+    <script>
+        var image_element = document.getElementById("image");
+        var image_file_width = 0;
+        var image_file_height = 0;
+        var sheet_sprite_count_x;
+        var sheet_sprite_width = 164;
+        var sheet_sprite_height = 380;
+        var frame_index_current = 0;
+        var frame_index_start = 0;
+        var frame_index_count;
+        var fps = Number($("#fps").val());
+        var res = Number($("#res").val());
+        var frame_time_total = fps/3;
+        var frame_time_current = 0;
+        var frame_step = 0;
+        var sheet_spacing_horizontal = sheet_sprite_width * res;
+        var sheet_padding_top = sheet_sprite_height * res;
+        var head_height = 225 * res;
+        var canvas = document.getElementById("imgCanvas");
+        var canvas_context = canvas.getContext("2d");
+        var image_background_color = "#000000";
+        var border_bool = false;
+        var image_src;
+        var json_src;
+        var ui_framenum = true;
+        var ui_framecontrols = true;
+        var gif_loop = true;
+        var gif_show = true;
+        var anime_name;
+        var arrayFrame = [[0,380,0,0],[0,380,0,0],[0,380,0,0],[0,380,0,0]];
+        var arr;
+
+        function Update() {
+        if (!image.src) return;
+        
+        frame_time_current -= 16;
+        
+        if (frame_time_current <= 0) {
+            frame_time_current += parseInt(frame_time_total);
+            frame_index_current += frame_step;
+            if (frame_index_current >= frame_index_count)
+                frame_index_current = 0;
+            else if (frame_index_current < 0)
+                frame_index_current = frame_index_count - 1;
+
+            UpdateSprite();
+        }
+        }
+
+        function UpdateSprite() {
+        // frame_index_current = 0 based index
+        if (arrayFrame[frame_index_current]) {
+            var spritePosX = arrayFrame[frame_index_current][0] * res || 1;
+            var spritePosY = arrayFrame[frame_index_current][1] * res || 1;
+
+            // sprite position on sheet in pixels
+            var x = arrayFrame[frame_index_current][2] * res || 1;
+            var y = arrayFrame[frame_index_current][3] * res || 1;
+
+            $("#imgInfo").text("Frame: "+(frame_index_current + 1));
+
+            canvas_context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            canvas_context.imageSmoothingEnabled = false;
+            canvas_context.webkitImageSmoothingEnabled = false;
+            canvas_context.mozImageSmoothingEnabled = false;
+            canvas_context.fillStyle = image_background_color;
+            canvas_context.fillRect(0, 0, canvas.width, canvas.height);
+            canvas_context.drawImage(image_element, sheet_spacing_horizontal * res, 0, sheet_sprite_width * res, sheet_sprite_height * res, 0, 0, sheet_sprite_width * res, sheet_sprite_height * res);
+            canvas_context.drawImage(image_element, spritePosX, spritePosY, sheet_sprite_width * res, head_height * res, 0 + x, 0 + y, sheet_sprite_width * res, head_height * res);
+            }
+        }
+
+        function encode64(input) {
+            var output = "", i = 0, l = input.length,
+            key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", 
+            chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            while (i < l) {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                if (isNaN(chr2)) enc3 = enc4 = 64;
+                else if (isNaN(chr3)) enc4 = 64;
+                output = output + key.charAt(enc1) + key.charAt(enc2) + key.charAt(enc3) + key.charAt(enc4);
+            }
+            return output;
+        }
+
+
+        function LoadImageFromDisk(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+            $('#image').attr('src', e.target.result);
+            $('#imgsrc').val(encodeURIComponent(e.target.result));
+            UpdateCanvasSize();
+            SetFrameStep(1);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+        }
+
+        function LoadJSONFromDisk(input, callback) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.readAsText(input.files[0]);
+            reader.onload = () => {
+            callback(reader.result);
+            };
+        }
+        }
+
+        function UpdateCanvasSize() {
+        var wMinusPadL = image_file_width;
+        sheet_sprite_count_x = Math.floor(wMinusPadL / (sheet_sprite_width + sheet_spacing_horizontal));
+        sheet_padding_right = wMinusPadL - sheet_sprite_count_x * sheet_sprite_width - (sheet_sprite_count_x - 1) * sheet_spacing_horizontal;
+        if (sheet_padding_right >= sheet_sprite_width + sheet_spacing_horizontal)
+        {
+            sheet_sprite_count_x = sheet_sprite_count_x + 1;
+            sheet_padding_right = sheet_padding_right - sheet_sprite_width - sheet_spacing_horizontal;
+        }
+
+        $("#imgCanvas").attr("width", sheet_sprite_width * res);
+        $("#imgCanvas").attr("height", sheet_sprite_height * res);
+
+        UpdateSprite();
+        }
+
+        function SetFrameStep(step) {
+            frame_step = step;
+        }
+
+        function AssignSettings() {
+            $("#color").val(image_background_color);
+            $("#image").attr("src", decodeURIComponent(image_src));
+            $("#frameCount").val(frame_index_count);
+            $("#frameStart").val(frame_index_start + 1); // 0 based index (logic) to 1 based index (UI)
+            if (image_src !== "")
+                SetFrameStep(1);
+            UpdateCanvasSize();
+            UpdateSprite();
+        }
+
+        function GenerateGif() {
+            var encoder = new GIFEncoder();
+                encoder.setRepeat(0);
+                encoder.setDelay(frame_time_total);
+                encoder.setQuality(10);
+            
+            var curframe = frame_index_current;
+            encoder.start();
+            for (var i = 0; i < frame_index_count; i++)
+            {
+                frame_index_current = i;
+                UpdateSprite();
+                encoder.addFrame(canvas_context);
+            }
+            encoder.finish();
+            frame_index_current = curframe;
+            UpdateSprite();
+
+            var binary_gif = encoder.stream().getData();
+            var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
+            encoder.download("download.gif");
+        }
+
+        // function GenerateAPNG() {
+        //   var data = [];
+        //   for (var i = 0; i < frame_index_count; i++) {
+        //     frame_index_current = i;
+        //     UpdateSprite();
+        //     data.push(canvas_context.getImageData(0,0,canvas.width,canvas.height).data);
+        //   }
+        //   var binary_apng = UPNG.encode([data.buffer], canvas.width, canvas.height, 0, frame_time_total);
+        
+        //   var data_url = 'data:image/gif;base64,'+encode64(binary_apng);
+        //   var gifimgel = document.getElementById("gifimg");
+        //   gifimgel.src = data_url;
+        //   // binary_apng.download(anime_name+".apng");
+        // }
+
+
+        // register event functions
+        image_file_width = this.naturalWidth;
+        image_file_height = this.naturalHeight;
+        UpdateCanvasSize();
+        
+        $("#imgInp").change(function() {
+        LoadImageFromDisk(this);
+        });
+        
+        $("#jsonInp").change(function() {
+        LoadJSONFromDisk(this, (text) => {
+            jsonInp = JSON.parse(text);
+            frame_index_count = jsonInp.totalFrame;
+            sheet_sprite_width = jsonInp.width;
+            sheet_sprite_height = jsonInp.height;
+            head_height = jsonInp.headHeight;
+            arr = jsonInp.arrayFrame;
+            anime_name = jsonInp.animeName;
+            
+            for (len = arr.length, i = 0; i < len; i++) {
+                var temp = arr[i].prop.split(",");
+                arrayFrame.push([Number(temp[0]), Number(temp[1]), Number(temp[2]), Number(temp[3])]);
+            }
+        });
+        });
+        
+        $("#res").change(function() {
+        res = Number($(this).val());
+        UpdateCanvasSize()
+        });
+        
+        $("#fps").change(function() {
+        fps = Number($(this).val());
+        frame_time_total = fps/3
+        });
+        
+        $("#color").change(function() {
+        image_background_color = $("#color").val();
+        UpdateSprite();
+        });
+        
+        $("#frameStepForward").click(function()
+        {
+        frame_index_current += 1;
+        if (frame_index_current >= frame_index_count)
+            frame_index_current = 0;
+        UpdateSprite();
+        });
+        $("#frameStepBack").click(function()
+        {
+            frame_index_current -= 1;
+            if (frame_index_current < 0)
+                frame_index_current = frame_index_count - 1;
+            UpdateSprite();
+        });
+        $("#frameStop").click(function() { SetFrameStep(0); });
+        $("#framePlayForward").click(function() { SetFrameStep(1); });
+        $("#framePlayBack").click(function() { SetFrameStep(-1);  });
+        
+        $("#gif").click(function(){
+            GenerateGif();
+        });
+    
+        // get default variable values from form inputs
+        image_background_color = $("#color").val();
+        frame_time_total = parseInt($("#fps").val())/3;
+        frame_index_count = parseInt($("#frameCount").val());
+        frame_index_start = parseInt($("#frameStart").val()) - 1; // 1 based index (UI) to 0 based index (logic)
+        sheet_spacing_horizontal = sheet_sprite_width * res;
+        sheet_padding_top = sheet_sprite_height * res;
+        sheet_spacing_horizontal = 164*res;
+        sheet_padding_top = 380*res;
+        
+        // apply any settings
+        AssignSettings();
+        $('#imgInp').val('')
+        $('#jsonInp').val('')
+        setInterval(Update,16)
+    </script>
+    <h3 style="padding-bottom:5px"></h3>
+    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+</body>
+</html>
