@@ -180,8 +180,10 @@
             canvas_context.mozImageSmoothingEnabled = false;
             canvas_context.fillStyle = image_background_color;
             canvas_context.fillRect(0, 0, canvas.width, canvas.height);
-            canvas_context.drawImage(image_element, sheet_spacing_horizontal * res, 0, sheet_sprite_width * res, sheet_sprite_height * res, 0, 0, sheet_sprite_width * res, sheet_sprite_height * res);
-            canvas_context.drawImage(image_element, spritePosX, spritePosY, sheet_sprite_width * res, head_height * res, 0 + x, 0 + y, sheet_sprite_width * res, head_height * res);
+            if ($('#image').attr('src') !== 'undefined') {
+                canvas_context.drawImage(image_element, sheet_spacing_horizontal * res, 0, sheet_sprite_width * res, sheet_sprite_height * res, 0, 0, sheet_sprite_width * res, sheet_sprite_height * res);
+                canvas_context.drawImage(image_element, spritePosX, spritePosY, sheet_sprite_width * res, head_height * res, 0 + x, 0 + y, sheet_sprite_width * res, head_height * res);
+            }
             }
         }
 
