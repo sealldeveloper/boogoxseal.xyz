@@ -290,7 +290,10 @@
         UpdateCanvasSize();
         
         $("#imgInp").change(function() {
-        LoadImageFromDisk(this);
+        	LoadImageFromDisk(this);
+		imgName = this.files.item(0).name;
+		splitName = imgName.split("-");
+		res = splitName[splitName.length-1] === "hd.png" ? 2 : 1;
         });
         
         $("#jsonInp").change(function() {
