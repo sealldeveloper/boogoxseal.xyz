@@ -49,7 +49,7 @@
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheet">Spritesheet</label>
-                <input class="form-control" type="file" id="spritesheet" required="true" accept=".png"></input>
+                <input class="form-control" type="file" id="spritesheet" required="true" accept="image/png"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="json">JSON</label>
-                <input class="form-control" type="file" id="json" required="true" accept=".json"></input>
+                <input class="form-control" type="file" id="json" required="true" accept="application/json"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
@@ -75,7 +75,7 @@
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="motionxml">Motion XML</label>
-                <input class="form-control" type="file" id="motionxml" required="true" accept=".xml"></input>
+                <input class="form-control" type="file" id="motionxml" required="true" accept="application/xml,text/xml"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="buffer">Buffer</label><br>
@@ -141,13 +141,60 @@
             return result;
         };
 
+        function LoadImageFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(input.files[0]);
+                    reader.onload = function (e) {
+                        callback(reader.result)
+                    };
+                } else {
+                    console.log('hi img broke')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function LoadJSONFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsText(input.files[0]);
+                    reader.onload = () => {
+                        callback(reader.result);
+                    };
+                }  else {
+                    console.log('hi json broke')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function LoadXMLFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(input.files[0]);
+                    reader.onload = () => {
+                        callback(reader.result);
+                    };
+                }  else {
+                    console.log('hi xml broke')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
         async function submit() {
             if ( ! window.FileReader ) {
                 return alert( 'FileReader API is not supported by your browser.' );
             }
             jsondata=""
-            
-            pngdata=""
+            xmldata=""
             $( '#jsoncontent' ).empty()
             $( '#spritesheetcontent' ).empty()
             var $i = $( '#json' ), // Put file input ID here
@@ -156,225 +203,197 @@
                 inputj = $j[0]; // Getting the element from jQuery
                 var $k = $( '#motionxml' ), // Put file input ID here
                 inputk = $k[0]; // Getting the element from jQuery
-            if ( inputi.files && inputi.files[0] ) {
-                file = inputi.files[0]; // The file
-                fr = new FileReader(); // FileReader instance
-                fr.onload = function () {
-                    // Do stuff on onload, use fr.result for contents of file\
-                    jsondata = JSON.parse(atob(fr.result.split(',')[1].split('/')[1]))
-                    
-                };
-                //fr.readAsText( file );
-                fr.readAsDataURL( file );
-            } else {
-                // Handle errors here
-                return alert( "JSON not selected" )
-            }
-            if ( inputk.files && inputk.files[0] ) {
-                filek = inputk.files[0]; // The file
-                frk = new FileReader(); // FileReader instance
-                frk.onload = function () {
-                    // Do stuff on onload, use fr.result for contents of file
-                    xmldata = atob(frk.result.split(',')[1])
-                    
-                };
-                //fr.readAsText( file );
-                frk.readAsDataURL( filek );
-            } else {
-                // Handle errors here
-                return alert( "XML not selected" )
-            }
-            if ( inputj.files && inputj.files[0] ) {
-                filej = inputj.files[0]; // The file
-                frj = new FileReader(); // FileReader instance
-                frj.onload = function () {
-                    // Do stuff on onload, use fr.result for contents of file
-                    if (window.DOMParser){
-                    parser = new DOMParser();
-                    xml = parser.parseFromString(xmldata, "text/xml")
-                    } else // Internet Explorer
-                    {
-                        xml = new ActiveXObject("Microsoft.XMLDOM");
-                        xml.async = false;
-                        xml.loadXML(xmldata);
+            var jsoninput = $('#json')[0];
+            var imginput = $('#spritesheet')[0];
+            var xmlinput = $('#motionxml')[0];
+            LoadJSONFromDisk(jsoninput, (text) => {
+                jsondata=JSON.parse(text)
+            })
+            LoadXMLFromDisk(xmlinput, (text) => {
+                xmldata=atob(text.split(',')[1])
+            })
+            LoadImageFromDisk(imginput, (imgdata) => {
+                if (window.DOMParser){
+                parser = new DOMParser();
+                xml = parser.parseFromString(xmldata, "text/xml")
+                } else // Internet Explorer
+                {
+                    xml = new ActiveXObject("Microsoft.XMLDOM");
+                    xml.async = false;
+                    xml.loadXML(xmldata);
+                }
+                xmlframes=xml.childNodes[0].childNodes
+                validframes=[]
+                fc=0
+                for (i in Object.keys(xmlframes)) {
+                    if (xmlframes[i].attributes && fc != 1) {
+                        if (xmlframes[i].attributes['y'] || xmlframes[i].attributes['x']) {
+                            validframes.push(xmlframes[i])
+                        }
                     }
-                    xmlframes=xml.childNodes[0].childNodes
-                    validframes=[]
-                    fc=0
-                    for (i in Object.keys(xmlframes)) {
-                        if (xmlframes[i].attributes && fc != 1) {
-                            if (xmlframes[i].attributes['y'] || xmlframes[i].attributes['x']) {
-                                validframes.push(xmlframes[i])
+                    fc++
+                }
+                
+                frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
+                frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
+                defaultwidth=164
+                defaultheight=380
+
+                motion = {}
+                for (i in validframes) {
+                    x=validframes[i].attributes['x']
+                    y=validframes[i].attributes['y']
+                    ff=validframes[i].attributes['index']
+                    if (Number(ff.nodeValue)){
+                        if (x && y) motion[ff.nodeValue] = {"x":x.nodeValue,"y":y.nodeValue}
+                        if (!x && y) motion[ff.nodeValue] = {"x":undefined,"y":y.nodeValue}
+                        if (x && !y) motion[ff.nodeValue] = {"x":x.nodeValue,"y":undefined}
+                        if (!x && !y) motion[ff.nodeValue] = {"x":undefined,"y":undefined}
+                    }
+                }
+
+                canvas=$('#spritesheetcanvas')[0]
+                ctx= canvas.getContext('2d')
+                var img = new Image;
+                
+                img.onload = function(){
+                ctx.canvas.width = this.width
+                ctx.canvas.height = this.height
+                ctx.drawImage(this,0,0); // Or at whatever offset you like
+                };
+                img.src = imgdata;
+                if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
+                    frame0width=frame0width/2, frame0height=frame0height/2;
+                }
+                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
+                    frame0width=frame0width*2, frame0height=frame0height*2;
+                }
+                buffer = Number($('#buffer').val())
+                newframes=[]
+                headcoords=[]
+                heads=[]
+                prev=[]
+                headcount=0
+                for (i in Object.keys(jsondata.frames)) {
+                    frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
+                    if (!prev.includes(JSON.stringify(frame))) {
+                        headcount++
+                        prev.push(JSON.stringify(frame))
+                        temphead = canvas.getContext('2d').getImageData(frame.x,frame.y,frame0width,frame0height)
+                        headcoords.push({"x":frame.x,"y":frame.y})
+                        heads.push(temphead)
+                    }
+                    newframes.push({"prop":`${frame.x},${frame.y},0,0`})
+                }
+                count=0
+                newcanvas=$('#fixedspritesheetcanvas')[0]
+                newctx = newcanvas.getContext('2d')
+                newctx.canvas.width = defaultwidth*5
+                newctx.canvas.height = defaultheight+(frame0height+buffer)*(Math.ceil(headcount/5))
+                // Default
+                newctx.fillStyle = "red";
+                newctx.fillRect(0,0,defaultwidth,defaultheight)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Default',58,defaultheight/2)
+                
+                // Headless
+                newctx.fillStyle = "lime";
+                newctx.fillRect(defaultwidth,0,defaultwidth,defaultheight)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Headless',55+defaultwidth,defaultheight/2)
+                
+                // Siloette
+                newctx.fillStyle = "#348af9";
+                newctx.fillRect(defaultwidth*2,0,defaultwidth,defaultheight)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Silhouette',48+defaultwidth*2,defaultheight/2)
+
+                // "Watermark"
+                newctx.font = "13px CozetteVector";
+                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
+                currentx=(defaultwidth-frame0width)/2
+                currenty=defaultheight
+                modified_indexes=[]
+                prev_motion=""
+                xm=0
+                ym=0
+                for (i in range(headcount)) {
+                    i=Number(i)
+                    count++
+                    x = headcoords[i].x
+                    y = headcoords[i].y
+                    temphead = heads[i]
+                    console.log(currenty,buffer,currenty+buffer)
+                    newcanvas.getContext('2d').putImageData(temphead,currentx,currenty+buffer)
+                    fc = 0
+                    for (f in newframes) {
+                        f=newframes[f]
+                        if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
+                            modified_indexes.push(fc)
+                            try{
+                                currentclosest=0
+                                for (i in Object.keys(motion)) {
+                                    i=Object.keys(motion)[i]
+                                    if (Number(i) <= fc) {
+                                        currentclosest=i
+                                    }
+                                }
+                                nxm = motion[currentclosest]['x']
+                                nym = motion[currentclosest]['y']
+                                if (xm != nxm && nxm != undefined) {
+                                    Number(nxm)
+                                    xm = nxm
+                                } else {
+                                    xm=xm
+                                }
+                                if (ym != nym && nym != undefined) {
+                                    Number(nym)
+                                    ym = nym
+                                } else {
+                                    ym=ym
+                                }
+                                if (xm % 1 != 0) {
+                                    xm=Number(xm).toFixed(2)
+                                }
+                                if (ym % 1 != 0) {
+                                    ym=Number(ym).toFixed(2)
+                                }
+                                newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty+buffer},${xm},${ym}`
+                            } catch (e){
+                                newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty+buffer},0,0`
+                                console.log(e)
                             }
+                            
                         }
                         fc++
                     }
-                    
-                    frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
-                    frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
-                    defaultwidth=164
-                    defaultheight=380
-
-                    motion = {}
-                    for (i in validframes) {
-                        x=validframes[i].attributes['x']
-                        y=validframes[i].attributes['y']
-                        ff=validframes[i].attributes['index']
-                        if (Number(ff.nodeValue)){
-                            if (x && y) motion[ff.nodeValue] = {"x":x.nodeValue,"y":y.nodeValue}
-                            if (!x && y) motion[ff.nodeValue] = {"x":undefined,"y":y.nodeValue}
-                            if (x && !y) motion[ff.nodeValue] = {"x":x.nodeValue,"y":undefined}
-                            if (!x && !y) motion[ff.nodeValue] = {"x":undefined,"y":undefined}
-                        }
+                    if (count%5 === 0) {
+                        currenty=currenty+frame0height+buffer
+                        currentx=(defaultwidth-frame0width)/2
+                    } else {
+                        currentx=currentx+(defaultwidth-frame0width)+frame0width
                     }
-
-                    canvas=$('#spritesheetcanvas')[0]
-                    ctx= canvas.getContext('2d')
-                    var img = new Image;
-                    
-                    img.onload = function(){
-                    ctx.canvas.width = this.width
-                    ctx.canvas.height = this.height
-                    ctx.drawImage(this,0,0); // Or at whatever offset you like
-                    };
-                    img.src = frj.result;
-                    if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
-                        frame0width=frame0width/2, frame0height=frame0height/2;
-                    }
-                    if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
-                        frame0width=frame0width*2, frame0height=frame0height*2;
-                    }
-                    buffer = Number($('#buffer').val())
-                    newframes=[]
-                    headcoords=[]
-                    heads=[]
-                    prev=[]
-                    headcount=0
-                    for (i in Object.keys(jsondata.frames)) {
-                        frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
-                        if (!prev.includes(JSON.stringify(frame))) {
-                            headcount++
-                            prev.push(JSON.stringify(frame))
-                            temphead = canvas.getContext('2d').getImageData(frame.x,frame.y,frame0width,frame0height)
-                            headcoords.push({"x":frame.x,"y":frame.y})
-                            heads.push(temphead)
-                        }
-                        newframes.push({"prop":`${frame.x},${frame.y},0,0`})
-                    }
-                    count=0
-                    newcanvas=$('#fixedspritesheetcanvas')[0]
-                    newctx = newcanvas.getContext('2d')
-                    newctx.canvas.width = defaultwidth*5
-                    newctx.canvas.height = defaultheight+(frame0height+buffer)*(Math.ceil(headcount/5))
-                    // Default
-                    newctx.fillStyle = "red";
-                    newctx.fillRect(0,0,defaultwidth,defaultheight)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Default',58,defaultheight/2)
-                    
-                    // Headless
-                    newctx.fillStyle = "lime";
-                    newctx.fillRect(defaultwidth,0,defaultwidth,defaultheight)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Headless',55+defaultwidth,defaultheight/2)
-                    
-                    // Siloette
-                    newctx.fillStyle = "#348af9";
-                    newctx.fillRect(defaultwidth*2,0,defaultwidth,defaultheight)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Silhouette',48+defaultwidth*2,defaultheight/2)
-
-                    // "Watermark"
-                    newctx.font = "13px CozetteVector";
-                    newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
-                    currentx=(defaultwidth-frame0width)/2
-                    currenty=defaultheight
-                    modified_indexes=[]
-                    prev_motion=""
-                    xm=0
-                    ym=0
-                    for (i in range(headcount)) {
-                        i=Number(i)
-                        count++
-                        x = headcoords[i].x
-                        y = headcoords[i].y
-                        temphead = heads[i]
-                        newcanvas.getContext('2d').putImageData(temphead,currentx,currenty+buffer)
-                        fc = 0
-                        for (f in newframes) {
-                            f=newframes[f]
-                            if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
-                                modified_indexes.push(fc)
-                                try{
-                                    currentclosest=0
-                                    for (i in Object.keys(motion)) {
-                                        i=Object.keys(motion)[i]
-                                        if (Number(i) <= fc) {
-                                            currentclosest=i
-                                        }
-                                    }
-                                    nxm = motion[currentclosest]['x']
-                                    nym = motion[currentclosest]['y']
-                                    if (xm != nxm && nxm != undefined) {
-                                        Number(nxm)
-                                        xm = nxm
-                                    } else {
-                                        xm=xm
-                                    }
-                                    if (ym != nym && nym != undefined) {
-                                        Number(nym)
-                                        ym = nym
-                                    } else {
-                                        ym=ym
-                                    }
-                                    if (xm % 1 != 0) {
-                                        xm=Number(xm).toFixed(2)
-                                    }
-                                    if (ym % 1 != 0) {
-                                        ym=Number(ym).toFixed(2)
-                                    }
-                                    newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},${xm},${ym}`
-                                } catch (e){
-                                    newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty},0,0`
-                                    console.log(e)
-                                }
-                               
-                            }
-                            fc++
-                        }
-                        if (count%5 === 0) {
-                            currenty=currenty+frame0height
-                            currentx=(defaultwidth-frame0width)/2
-                        } else {
-                            currentx=currentx+(defaultwidth-frame0width)+frame0width
-                        }
-                    }
-                    newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
-                    if (seperate_count == 2){
-                        var zip = new JSZip();
-                        zip.file(`generated.json`,JSON.stringify(newjsondata))
-                        var datauri = newcanvas.toDataURL('image/png')
-                        var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                        zip.file(`generated-sprite.png`, data, {base64:true})
-                        zip.generateAsync({type:"base64"}).then(function (base64) {
-                            window.open("data:application/zip;base64," + base64);
-                        });
-                    }
-                    seperate_count++
-                    return true
-                };
-                //fr.readAsText( file );
-                frj.readAsDataURL( filej );
-            } else {
-                // Handle errors here
-                return alert( "Spritesheet not selected" )
-            }
+                }
+                newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
+                if (seperate_count == 2){
+                    var zip = new JSZip();
+                    zip.file(`generated.json`,JSON.stringify(newjsondata))
+                    var datauri = newcanvas.toDataURL('image/png')
+                    var data = datauri.replace(/^data:image\/\w+;base64,/, "");
+                    zip.file(`generated-sprite.png`, data, {base64:true})
+                    zip.generateAsync({type:"base64"}).then(function (base64) {
+                        window.open("data:application/zip;base64," + base64);
+                    });
+                }
+                seperate_count++
+                return true
+            })
         }
         function waitFor(conditionFunction) {
 
@@ -392,7 +411,7 @@
             await submit()
             await waitFor(_ => seperate_count === 2);
             await submit()
-            $.ajax({
+            /*$.ajax({
                 url: window.location.href,
                 headers: {
                     "Pragma": "no-cache",
@@ -401,7 +420,7 @@
                 }
             }).done(function () {
                 window.location.reload(true);
-            });
+            });*/
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>

@@ -49,7 +49,7 @@
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheet">Spritesheet</label>
-                <input class="form-control" type="file" id="spritesheet" required="true"></input>
+                <input class="form-control" type="file" id="spritesheet" required="true" accept="image/PNG"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="json">JSON</label>
-                <input class="form-control" type="file" id="json" required="true"></input>
+                <input class="form-control" type="file" id="json" required="true" accept="application/json"></input>
             </div>
             <div class="form-group col-md-5 m-4">
                 <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
@@ -140,133 +140,160 @@
             return result;
         };
 
+
+        function LoadImageFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(input.files[0]);
+                    reader.onload = function (e) {
+                        callback(reader.result)
+                    };
+                } else {
+                    console.log('hi img broke')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function LoadJSONFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsText(input.files[0]);
+                    reader.onload = () => {
+                        callback(reader.result);
+                    };
+                }  else {
+                    console.log('hi json broke')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function waitFor(conditionFunction) {
+
+            const poll = resolve => {
+                if(conditionFunction()) resolve();
+                else setTimeout(_ => poll(resolve), 400);
+            }
+
+            return new Promise(poll);
+        }
+
         function submit() {
             if ( ! window.FileReader ) {
                 return alert( 'FileReader API is not supported by your browser.' );
             }
             jsondata=""
-            pngdata=""
             $( '#jsoncontent' ).empty()
             $( '#spritesheetcontent' ).empty()
-            var $i = $( '#json' ),
-                inputi = $i[0];
-            var $j = $( '#spritesheet' ),
-                inputj = $j[0];
-            
-            if ( inputi.files && inputi.files[0] ) {
-                file = inputi.files[0]; // The file
-                fr = new FileReader(); // FileReader instance
-                fr.onload = function () {
-                    jsondata = JSON.parse(atob(fr.result.split(',')[1].split('/')[1]))
-                    
+            var jsoninput = $('#json')[0];
+            var imginput = $('#spritesheet')[0];
+            LoadJSONFromDisk(jsoninput, (text) => {
+                jsondata=JSON.parse(text)
+            })
+            LoadImageFromDisk(imginput, (imgdata) => {
+                frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
+                frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
+                canvas=$('#spritesheetcanvas')[0]
+                ctx= canvas.getContext('2d')
+                var img = new Image;
+                
+                img.onload = function(){
+                ctx.canvas.width = this.width
+                ctx.canvas.height = this.height
+                ctx.drawImage(this,0,0); // Or at whatever offset you like
                 };
-                fr.readAsDataURL( file );
-            } else {
-                // Handle errors here
-                alert( "JSON not selected" )
-            }
-            if ( inputj.files && inputj.files[0] ) {
-                filej = inputj.files[0]; // The file
-                frj = new FileReader(); // FileReader instance
-                frj.onload = function () {
-                    // Do stuff on onload, use fr.result for contents of file
-                    frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
-                    frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
-                    canvas=$('#spritesheetcanvas')[0]
-                    ctx= canvas.getContext('2d')
-                    var img = new Image;
-                    
-                    img.onload = function(){
-                    ctx.canvas.width = this.width
-                    ctx.canvas.height = this.height
-                    ctx.drawImage(this,0,0); // Or at whatever offset you like
-                    };
-                    img.src = frj.result;
-                    if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
-                        frame0width=frame0width/2, frame0height=frame0height/2;
+                img.src = imgdata;
+                if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
+                    frame0width=frame0width/2, frame0height=frame0height/2;
+                }
+                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
+                    frame0width=frame0width*2, frame0height=frame0height*2;
+                }
+                newframes=[]
+                headcoords=[]
+                heads=[]
+                prev=[]
+                headcount=0
+                widthfix = 164/frame0width
+                frame0height = frame0height*widthfix
+                frame0width=164
+                for (i in Object.keys(jsondata.frames)) {
+                    frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
+                    if (!prev.includes(JSON.stringify(frame))) {
+                        headcount++
+                        prev.push(JSON.stringify(frame))
+                        temphead = canvas.getContext('2d').getImageData(frame.x,frame.y,frame0width,frame0height)
+                        headcoords.push({"x":frame.x,"y":frame.y})
+                        heads.push(temphead)
                     }
-                    if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
-                        frame0width=frame0width*2, frame0height=frame0height*2;
-                    }
-                    newframes=[]
-                    headcoords=[]
-                    heads=[]
-                    prev=[]
-                    headcount=0
-                    widthfix = 164/frame0width
-                    frame0height = frame0height*widthfix
-                    frame0width=164
-                    for (i in Object.keys(jsondata.frames)) {
-                        frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
-                        if (!prev.includes(JSON.stringify(frame))) {
-                            headcount++
-                            prev.push(JSON.stringify(frame))
-                            temphead = canvas.getContext('2d').getImageData(frame.x,frame.y,frame0width,frame0height)
-                            headcoords.push({"x":frame.x,"y":frame.y})
-                            heads.push(temphead)
-                        }
-                        newframes.push({"prop":`${frame.x},${frame.y},0,0`})
-                    }
-                    console.log(headcount)
+                    newframes.push({"prop":`${frame.x},${frame.y},0,0`})
+                }
+                console.log(headcount)
 
-                    count=0
-                    newcanvas=$('#fixedspritesheetcanvas')[0]
-                    newctx = newcanvas.getContext('2d')
-                    newctx.canvas.width = frame0width*5
-                    newctx.canvas.height = frame0height*(Math.ceil(headcount/5)+1)
-                    // Default
-                    newctx.fillStyle = "red";
-                    newctx.fillRect(0,0,frame0width,frame0height)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Default',58,frame0height/2)
-                    
-                    // Headless
-                    newctx.fillStyle = "lime";
-                    newctx.fillRect(frame0width,0,frame0width,frame0height)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Headless',55+frame0width,frame0height/2)
-                    
-                    // Siloette
-                    newctx.fillStyle = "#348af9";
-                    newctx.fillRect(frame0width*2,0,frame0width,frame0height)
-                    newctx.stroke()
-                    newctx.fillStyle = "black";
-                    newctx.font = "15px CozetteVector";
-                    newctx.fillText('Silhouette',48+frame0width*2,frame0height/2)
+                count=0
+                newcanvas=$('#fixedspritesheetcanvas')[0]
+                newctx = newcanvas.getContext('2d')
+                newctx.canvas.width = frame0width*5
+                newctx.canvas.height = frame0height*(Math.ceil(headcount/5)+1)
+                // Default
+                newctx.fillStyle = "red";
+                newctx.fillRect(0,0,frame0width,frame0height)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Default',58,frame0height/2)
+                
+                // Headless
+                newctx.fillStyle = "lime";
+                newctx.fillRect(frame0width,0,frame0width,frame0height)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Headless',55+frame0width,frame0height/2)
+                
+                // Siloette
+                newctx.fillStyle = "#348af9";
+                newctx.fillRect(frame0width*2,0,frame0width,frame0height)
+                newctx.stroke()
+                newctx.fillStyle = "black";
+                newctx.font = "15px CozetteVector";
+                newctx.fillText('Silhouette',48+frame0width*2,frame0height/2)
 
-                    // "Watermark"
-                    newctx.font = "13px CozetteVector";
-                    newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
-                    currentx=0
-                    currenty=frame0height
-                    modified_indexes=[]
-                    for (i in range(headcount)) {
-                        i=Number(i)
-                        count++
-                        x = headcoords[i].x
-                        y = headcoords[i].y
-                        temphead = heads[i]
-                        newcanvas.getContext('2d').putImageData(temphead,currentx,currenty)
-                        fc = 0
-                        for (f in newframes) {
-                            f=newframes[f]
-                            if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
-                                modified_indexes.push(fc)
-                                newframes[fc].prop = `${currentx},${currenty},0,0`
-                            }
-                            fc++
+                // "Watermark"
+                newctx.font = "13px CozetteVector";
+                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
+                currentx=0
+                currenty=frame0height
+                modified_indexes=[]
+                for (i in range(headcount)) {
+                    i=Number(i)
+                    count++
+                    x = headcoords[i].x
+                    y = headcoords[i].y
+                    temphead = heads[i]
+                    newcanvas.getContext('2d').putImageData(temphead,currentx,currenty)
+                    fc = 0
+                    for (f in newframes) {
+                        f=newframes[f]
+                        if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
+                            modified_indexes.push(fc)
+                            newframes[fc].prop = `${currentx},${currenty},0,0`
                         }
-                        if (count%5 === 0) {
-                            currenty=currenty+frame0height
-                            currentx=0
-                        } else {
-                            currentx=currentx+frame0width
-                        }
+                        fc++
                     }
+                    if (count%5 === 0) {
+                        currenty=currenty+frame0height
+                        currentx=0
+                    } else {
+                        currentx=currentx+frame0width
+                    }
+                }
+                if (seperate_count == 2){
                     newjsondata={"animeName":"generated-from-fla-using-sealldevelopers-tools","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
@@ -276,23 +303,27 @@
                     zip.generateAsync({type:"base64"}).then(function (base64) {
                         window.open("data:application/zip;base64," + base64);
                     });
-                };
-                //fr.readAsText( file );
-                frj.readAsDataURL( filej );
-            } else {
-                // Handle errors here
-                alert( "Spritesheet not selected" )
-            }
+                }
+                seperate_count++
+            })
         }
 
-        $('#submission').on('click', function(){
+        $('#submission').on('click', async function(){
+            seperate_count=0
             seperate_count++
-            if (seperate_count == 1){
-                submit()
-                alert('If your sprite-sheet fails, please re-submit. This is an ongoing issue...')
-            } else {
-                submit()
-            }
+            await submit()
+            await waitFor(_ => seperate_count === 2);
+            await submit()
+            /*$.ajax({
+                url: window.location.href,
+                headers: {
+                    "Pragma": "no-cache",
+                    "Expires": -1,
+                    "Cache-Control": "no-cache"
+                }
+            }).done(function () {
+                window.location.reload(true);
+            });*/
                 
         })
     </script>
