@@ -141,7 +141,7 @@
         var gif_loop = true;
         var gif_show = true;
         var anime_name;
-        var arrayFrame = [[0,380,0,0],[0,380,0,0],[0,380,0,0],[0,380,0,0]];
+        var arrayFrame = [[0,0,0,0]];
         var arr;
 
         function Update() {
@@ -171,7 +171,7 @@
             var x = arrayFrame[frame_index_current][2] * res || 1;
             var y = arrayFrame[frame_index_current][3] * res || 1;
 
-            $("#imgInfo").text("Frame: "+(frame_index_current + 1));
+            $("#imgInfo").text("Frame: "+(frame_index_current + 1)+" / "+(frame_index_count));
 
             canvas_context.clearRect(0, 0, canvas.width, canvas.height);
             
