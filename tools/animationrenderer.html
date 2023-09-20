@@ -399,8 +399,13 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
-        $("#"+current_aud)[0].pause();
+            $("#"+current_aud)[0].pause();
 	});
+
+	$("#frameStop").dblclick(function() {
+   	   SetFrameStep(0);
+   	   frame_index_current = 0;
+   	 });
         
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
