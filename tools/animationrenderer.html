@@ -301,22 +301,6 @@
             encoder.download("download.gif");
         }
 
-        // function GenerateAPNG() {
-        //   var data = [];
-        //   for (var i = 0; i < frame_index_count; i++) {
-        //     frame_index_current = i;
-        //     UpdateSprite();
-        //     data.push(canvas_context.getImageData(0,0,canvas.width,canvas.height).data);
-        //   }
-        //   var binary_apng = UPNG.encode([data.buffer], canvas.width, canvas.height, 0, frame_time_total);
-        
-        //   var data_url = 'data:image/gif;base64,'+encode64(binary_apng);
-        //   var gifimgel = document.getElementById("gifimg");
-        //   gifimgel.src = data_url;
-        //   // binary_apng.download(anime_name+".apng");
-        // }
-
-
         // register event functions
         image_file_width = this.naturalWidth;
         image_file_height = this.naturalHeight;
@@ -349,30 +333,30 @@
         });
         
         $("#res").change(function() {
-        res = Number($(this).val());
-        UpdateCanvasSize()
+            res = Number($(this).val());
+            UpdateCanvasSize()
         });
         
         $("#fps").change(function() {
-        fps = Number($(this).val());
-        frame_time_total = fps/3
+            fps = Number($(this).val());
+            frame_time_total = fps/3
         });
 
 	$("#aud").change(function() {
-        aud = Number($(this).val());
-        $("#audInp2").attr("style", (aud === 2 ? "display:block" : "display:none"));
+            aud = Number($(this).val());
+            $("#audInp2").attr("style", "display:"+(aud === 2 ? "block" : "none"));
         });
 
 	$(".audio-inputs").change(function() {
 		aud_src = (aud === 2 ? [$("#audInp1").val(), $("#audInp2").val()] : [$("#audInp1").val(), $("#audInp1").val()]) || [];
-        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
-        for (name in aud_names) {
-            name=aud_names[name]
-            LoadAudioFromDisk(this, (new_src)=>{
-                $(name).attr('src',new_src)
-                $(name).attr('type',new_src.split('data:')[1].split(';')[0])
-            })
-        }
+	        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
+	        for (name in aud_names) {
+	            name=aud_names[name]
+	            LoadAudioFromDisk(this, (new_src)=>{
+	                $(name).attr('src',new_src)
+	                $(name).attr('type',new_src.split('data:')[1].split(';')[0])
+	            })
+	        }
 	      
 		UpdateAudio();
 	});
@@ -382,15 +366,14 @@
         UpdateSprite();
         });
         
-        $("#frameStepForward").click(function()
-        {
+        $("#frameStepForward").click(function() {
         frame_index_current += 1;
         if (frame_index_current >= frame_index_count)
             frame_index_current = 0;
         UpdateSprite();
         });
-        $("#frameStepBack").click(function()
-        {
+	    
+        $("#frameStepBack").click(function() {
             frame_index_current -= 1;
             if (frame_index_current < 0)
                 frame_index_current = frame_index_count - 1;
@@ -399,7 +382,7 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
-            $("#"+current_aud)[0].pause();
+            $("#"+current_aud).pause();
 	});
 
 	$("#frameStop").dblclick(function() {
@@ -409,8 +392,8 @@
         
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
-        UpdateAudio();
-        $("#"+current_aud)[0].play();
+            UpdateAudio();
+            $("#"+current_aud).play();
 	});
         
 	$("#framePlayBack").click(function() { 
@@ -427,8 +410,6 @@
         frame_index_start = parseInt($("#frameStart").val()) - 1; // 1 based index (UI) to 0 based index (logic)
         sheet_spacing_horizontal = sheet_sprite_width * res;
         sheet_padding_top = sheet_sprite_height * res;
-        sheet_spacing_horizontal = 164*res;
-        sheet_padding_top = 380*res;
         
         // apply any settings
         AssignSettings();
