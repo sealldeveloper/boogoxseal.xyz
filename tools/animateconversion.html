@@ -272,12 +272,8 @@
                         }
                         fc++
                     }
-                    if (count%5 === 0) {
-                        currenty=currenty+frame0height
-                        currentx=0
-                    } else {
-                        currentx=currentx+frame0width
-                    }
+                    currenty = (count%5 === 0) ? currenty+frame0height : currenty
+                    currentx = (count%5 === 0) ? 0 : currentx+frame0width
                 }
                 if (seperate_count == 2){
                     newjsondata={"animeName":"generated-from-fla-using-sealldevelopers-tools","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}

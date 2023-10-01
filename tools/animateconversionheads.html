@@ -293,13 +293,13 @@
                 newctx.canvas.height = defaultheight+(frame0height+final_buffer)*(Math.ceil(headcount/5))
 
                 // Default
-                drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default")
+                drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default",15)
                 
                 // Headless
-                drawLabelledBox(newctx,"lime",defaultwidth,0,defaultwidth,defaultheight,55+defaultwidth,defaultheight/2,"Headless")
+                drawLabelledBox(newctx,"lime",defaultwidth,0,defaultwidth,defaultheight,55+defaultwidth,defaultheight/2,"Headless",15)
                 
                 // Siloette
-                drawLabelledBox(newctx,"#348af9",defaultwidth*2,0,defaultwidth,defaultheight,48+defaultwidth*2,defaultheight/2,"Silhouette")
+                drawLabelledBox(newctx,"#348af9",defaultwidth*2,0,defaultwidth,defaultheight,48+defaultwidth*2,defaultheight/2,"Silhouette",15)
 
                 // "Watermark"
                 newctx.font = "13px CozetteVector";

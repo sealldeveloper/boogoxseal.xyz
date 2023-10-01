@@ -93,257 +93,72 @@
         <script>
             coordinates = []
             function generate() {
-                var canvas = document.getElementById('render')
                 var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
-                var ctx = canvas.getContext('2d')
                 cozette.load().then(function(font){
                     document.fonts.add(font);
-                    var name = $('#name').val()
-                    var height = $('#height').val()
-                    var headHeight = $('#headheight').val()
-                    var headCount = $('#headcount').val()
-                    var headrowCount = $('#headrowcount').val()
-                    var headWidth = $('#headwidth').val()
-                    var totalframe=$('#framecount').val()
-                    if (Number(headrowCount) < 3) {
-                        $('#render').attr('width',164*3)
-                    } else {
-                        $('#render').attr('width',164*Number(headrowCount))
-                    }
-                    if (Number(headCount) < Number(headrowCount)) {
-                        $('#render').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= Number(headrowCount)) {
-                        if (Number(headCount) === Number(headrowCount)) {
-                            $('#render').attr('height',Number(height)+Number(headHeight))
-                        } else {
-                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
-                            $('#render').attr('height',Number(height)+Number(headHeight)*canvasheight)
-                        }
-                    }
-                    // Default
-                    drawLabelledBox(ctx,"red",0,0,164,height,58,height/2,"Default")
-                    
-                    // Headless
-                    drawLabelledBox(ctx,"lime",164,0,164,height,55+164,height/2,"Headless")
-                    
-                    // Siloette
-                    drawLabelledBox(ctx,"#348af9",164*2,0,164,height,48+164*2,height/2,"Silhouette")
+                    function canvas_render(canvas_name,modifier) {
+                        var name = $('#name').val()
+                        var height = Number($('#height').val())*modifier
+                        var headHeight = Number($('#headheight').val())*modifier
+                        var headCount = Number($('#headcount').val())
+                        var headrowCount = Number($('#headrowcount').val())
+                        var headWidth = Number($('#headwidth').val())*modifier
+                        var totalframe=$('#framecount').val()
+                        var canvas = document.getElementById(canvas_name)
+                        var ctx = canvas.getContext('2d')
+                        width_attr = (headrowCount < 3) ? 164*3 : 164*headrowCount
+                        $(`#${canvas_name}`).attr('width',width_attr*modifier)
+                        height_attr = height
+                        height_attr += (headCount <= headrowCount) ? headHeight : headHeight*Math.ceil(headCount/headrowCount)
+                        $(`#${canvas_name}`).attr('height',height_attr)
+                        // Default
+                        drawLabelledBox(ctx,"red",0,0,164*modifier,height,58*modifier,height/2,"Default",15*modifier)
+                        
+                        // Headless
+                        drawLabelledBox(ctx,"lime",164*modifier,0,164*modifier,height,(55+164)*modifier,height/2,"Headless",15*modifier)
+                        
+                        // Siloette
+                        drawLabelledBox(ctx,"#348af9",164*2*modifier,0,164*modifier,height,(48+164*2)*modifier,height/2,"Silhouette",15*modifier)
 
-                    // "Watermark"
-                    ctx.font = "13px CozetteVector";
-                    ctx.fillText(`sealldeveloper\'s Polo Template Generator`,0,12)
-                    ctx.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
+                        // "Watermark"
+                        ctx.font = 13*modifier+"px CozetteVector";
+                        ctx.fillText(`sealldeveloper\'s Polo Template Generator`,0,12*modifier)
+                        ctx.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25*modifier)
 
-                    // Heads
-                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
-                    count=0
-                    currentHeadPosX=0
-                    currentHeadPosY=Number(height)
-                    coordinates = []
-                    for (h in heads) {
-                        count++
-                        ctx.fillStyle = 'yellow'
-                        if ((count-1)%Number(headrowCount)==0 && count !== 1) {
-                            currentHeadPosY=currentHeadPosY+Number(headHeight)
-                            currentHeadPosX=0
-                        }
-                        if (count%2 == 0) {
-                            ctx.fillStyle='cyan'
-                        }
-                        ctx.fillRect(currentHeadPosX,currentHeadPosY,164,Number(headHeight))
-                        ctx.stroke()
-                        if (Number(headWidth) < 164) {
-                            gaps=164-Number(headWidth)
-                            ctx.fillStyle='brown'
-                            if (count%2 == 0) {
-                                ctx.fillStyle='orange'
-                            }
-                            ctx.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
+                        // Heads
+                        heads=Array.apply(null, Array(headCount)).map(function (x, i) { return i; })
+                        count=0
+                        currentHeadPosX=0
+                        currentHeadPosY=height
+                        coordinates = []
+                        for (h in heads) {
+                            count++
+                            currentHeadPosY += ((count-1)%headrowCount==0 && count !== 1) ? headHeight : 0
+                            currentHeadPosX = ((count-1)%headrowCount==0 && count !== 1) ? 0 : currentHeadPosX
+                            ctx.fillStyle = (count%2 == 0) ? 'cyan' : 'yellow'
+                            ctx.fillRect(currentHeadPosX,currentHeadPosY,164*modifier,headHeight)
                             ctx.stroke()
-                            ctx.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
-                            ctx.stroke()
-                        }
-                        ctx.fillStyle = "black";
-                        ctx.font = "15px CozetteVector";
-                        ctx.fillText('Head '+count,currentHeadPosX,currentHeadPosY+10)
-                        coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
-                        currentHeadPosX=currentHeadPosX+164
-                    }
-                    var can = document.getElementById('render-hd')
-                    var ctx2 = can.getContext('2d')
-                    height=Number(height)*2
-                    headHeight=Number(headHeight)*2
-                    headWidth=Number(headWidth)*2
-                    if (Number(headrowCount) < 3) {
-                        $('#render-hd').attr('width',164*3*2)
-                    } else {
-                        $('#render-hd').attr('width',164*Number(headrowCount)*2)
-                    }
-                    if (Number(headCount) < Number(headrowCount)) {
-                        $('#render-hd').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= Number(headrowCount)) {
-                        if (Number(headCount) === Number(headrowCount)) {
-                            $('#render-hd').attr('height',Number(height)+Number(headHeight))
-                        } else {
-                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
-                            $('#render-hd').attr('height',Number(height)+Number(headHeight)*canvasheight)
-                        }
-                    }
-                    
-                    // Default
-                    ctx2.fillStyle = "red";
-                    ctx2.fillRect(0,0,164*2,height)
-                    ctx2.stroke()
-                    ctx2.fillStyle = "black";
-                    ctx2.font = "15px CozetteVector";
-                    ctx2.fillText('Default',64*2,height/2)
-                    
-                    // Headless
-                    ctx2.fillStyle = "lime";
-                    ctx2.fillRect(164*2,0,164*2,height)
-                    ctx2.stroke()
-                    ctx2.fillStyle = "black";
-                    ctx2.font = "15px CozetteVector";
-                    ctx2.fillText('Headless',(64+164)*2,height/2)
-                    
-                    // Siloette
-                    ctx2.fillStyle = "#348af9";
-                    ctx2.fillRect(164*4,0,164*2,height)
-                    ctx2.stroke()
-                    ctx2.fillStyle = "black";
-                    ctx2.font = "15px CozetteVector";
-                    ctx2.fillText('Silhouette',(64+164*2)*2,height/2)
-
-                    // "Watermark"
-                    ctx2.font = "13px CozetteVector";
-                    ctx2.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
-                    ctx2.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
-
-                    // Heads
-                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
-                    count=0
-                    currentHeadPosX=0
-                    currentHeadPosY=Number(height)
-                    for (h in heads) {
-                        count++
-                        ctx2.fillStyle = 'yellow'
-                        if ((count-1)%5==0 && count !== 1) {
-                            currentHeadPosY=currentHeadPosY+Number(headHeight)
-                            currentHeadPosX=0
-                        }
-                        if (count%2 == 0) {
-                            ctx2.fillStyle='cyan'
-                        }
-                        ctx2.fillRect(currentHeadPosX,currentHeadPosY,164*2,Number(headHeight))
-                        ctx2.stroke()
-                        if (Number(headWidth) < 164*2) {
-                            gaps=164*2-Number(headWidth)
-                            ctx2.fillStyle='brown'
-                            if (count%2 == 0) {
-                                ctx2.fillStyle='orange'
+                            if (headWidth < 164*modifier) {
+                                gaps=164*modifier-headWidth
+                                ctx.fillStyle= (count%2 == 0) ? 'orange' : 'brown'
+                                ctx.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,headHeight)
+                                ctx.stroke()
+                                ctx.fillRect(currentHeadPosX+headWidth+gaps/2,currentHeadPosY,gaps/2,headHeight)
+                                ctx.stroke()
                             }
-                            ctx2.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
-                            ctx2.stroke()
-                            ctx2.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
-                            ctx2.stroke()
+                            ctx.fillStyle = "black";
+                            ctx.font = 15*modifier+"px CozetteVector";
+                            ctx.fillText('Head '+count,currentHeadPosX,currentHeadPosY+10*modifier)
+                            coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
+                            currentHeadPosX=currentHeadPosX+164*modifier
                         }
-                        ctx2.fillStyle = "black";
-                        ctx2.font = "15px CozetteVector";
-                        ctx2.fillText('Head '+count,currentHeadPosX,currentHeadPosY+20)
-                        currentHeadPosX=currentHeadPosX+164*2
                     }
                     
-
-                    var can = document.getElementById('render-mini')
-                    var ctx3 = can.getContext('2d')
-                    height=Number(height)/4
-                    headHeight=Number(headHeight)/4
-                    headWidth=Number(headWidth)/4
-                    if (Number(headrowCount) < 3) {
-                        $('#render-mini').attr('width',164*3/2)
-                    } else {
-                        $('#render-mini').attr('width',164*Number(headrowCount)/2)
-                    }
-                    if (Number(headCount) < Number(headrowCount)) {
-                        $('#render-mini').attr('height',Number(height)+Number(headHeight))
-                    } 
-                    if (Number(headCount) >= Number(headrowCount)) {
-                        if (Number(headCount) === Number(headrowCount)) {
-                            $('#render-mini').attr('height',Number(height)+Number(headHeight))
-                        } else {
-                            canvasheight=Math.ceil(Number(headCount)/Number(headrowCount))
-                            $('#render-mini').attr('height',Number(height)+Number(headHeight)*canvasheight)
-                        }
-                    }
-                    // Default
-                    ctx3.fillStyle = "red";
-                    ctx3.fillRect(0,0,164/2,height)
-                    ctx3.stroke()
-                    ctx3.fillStyle = "black";
-                    ctx3.font = "7px CozetteVector";
-                    ctx3.fillText('Default',64/2,height/2)
-                    
-                    // Headless
-                    ctx3.fillStyle = "lime";
-                    ctx3.fillRect(164/2,0,164/2,height)
-                    ctx3.stroke()
-                    ctx3.fillStyle = "black";
-                    ctx3.font = "7px CozetteVector";
-                    ctx3.fillText('Headless',(64+164)/2,height/2)
-                    
-                    // Siloette
-                    ctx3.fillStyle = "#348af9";
-                    ctx3.fillRect(164,0,164/2,height)
-                    ctx3.stroke()
-                    ctx3.fillStyle = "black";
-                    ctx3.font = "7px CozetteVector";
-                    ctx3.fillText('Silhouette',(64+164*2)/2,height/2)
-
-                    // "Watermark"
-                    ctx3.font = "5px CozetteVector";
-                    ctx3.fillText(`sealldeveloper\'s Polo Template Generator (HD)`,0,12)
-                    ctx3.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25)
-
-                    // Heads
-                    heads=Array.apply(null, Array(Number(headCount))).map(function (x, i) { return i; })
-                    count=0
-                    currentHeadPosX=0
-                    currentHeadPosY=Number(height)
-                    for (h in heads) {
-                        count++
-                        ctx3.fillStyle = 'yellow'
-                        if ((count-1)%5==0 && count !== 1) {
-                            currentHeadPosY=currentHeadPosY+Number(headHeight)
-                            currentHeadPosX=0
-                        }
-                        if (count%2 == 0) {
-                            ctx3.fillStyle='cyan'
-                        }
-                        ctx3.fillRect(currentHeadPosX,currentHeadPosY,164/2,Number(headHeight))
-                        ctx3.stroke()
-                        if (Number(headWidth) < 164/2) {
-                            gaps=164/2-Number(headWidth)
-                            ctx3.fillStyle='brown'
-                            if (count%2 == 0) {
-                                ctx3.fillStyle='orange'
-                            }
-                            ctx3.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,Number(headHeight))
-                            ctx3.stroke()
-                            ctx3.fillRect(currentHeadPosX+Number(headWidth)+gaps/2,currentHeadPosY,gaps/2,Number(headHeight))
-                            ctx3.stroke()
-                        }
-                        ctx3.fillStyle = "black";
-                        ctx3.font = "7px CozetteVector";
-                        ctx3.fillText('Head '+count,currentHeadPosX,currentHeadPosY+5)
-                        currentHeadPosX=currentHeadPosX+164/2
-                    }
+                    canvas_render('render',1)
+                    canvas_render('render-hd',2)
+                    canvas_render('render-mini',0.5)
                 })
             }
-            $('.form-control').on('change', function(){
-                generate()
-            })
             $('.form-control').on('change', function(){
                 generate()
             })
@@ -365,13 +180,13 @@
             $('#submission').on('click', function(){
                 var zip = new JSZip();
                 name=$('#name').val()
-                totalframe=$('#framecount').val()
-                height=$('#height').val()
-                headheight=$('#headheight').val()
-                arrayframes=Array.apply(null, Array(Number(totalframe))).map(function (x, i) { return i; })
+                totalframe=Number($('#framecount').val())
+                height=Number($('#height').val())
+                headheight=Number($('#headheight').val())
+                arrayframes=Array.apply(null, Array(totalframe)).map(function (x, i) { return i; })
                 af=[]
                 for (x in arrayframes) {
-                    af.push(`{"prop":"0,${Number(height)},0,0"}`)
+                    af.push(`{"prop":"0,${height},0,0"}`)
                 }
                 coordinates_compiled=` === sealldeveloper's Polo Template Generator - Coordinates Sheet - ${name} === \n\n`+coordinates.join('\n')+"\n\n === End of Coordinates Sheet === "
                 zip.file(`${name}-coordinates.txt`,coordinates_compiled)
