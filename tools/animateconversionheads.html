@@ -79,9 +79,9 @@
                 <input class="form-control" type="file" id="motionxml" required="true" accept="application/xml,text/xml"></input>
             </div>
             <div class="form-group col-md-5 m-4">
-                <label for="buffer">Buffer</label><br>
+                <label for="downbuffer">Downwards Buffer</label><br>
                 <small>Only use this if the head is too high up, this adds a 'buffer' to push the head down (measured in pixels).</small>
-                <input class="form-control" type="number" id="buffer" placeholder="20"></input>
+                <input class="form-control" type="number" id="downbuffer" placeholder="20"></input>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
@@ -269,7 +269,7 @@
                 if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
                     frame0width=frame0width*2, frame0height=frame0height*2;
                 }
-                buffer = Number($('#buffer').val())
+                final_buffer = Number($('#downbuffer').val())
                 newframes=[]
                 headcoords=[]
                 heads=[]
@@ -290,7 +290,7 @@
                 newcanvas=$('#fixedspritesheetcanvas')[0]
                 newctx = newcanvas.getContext('2d')
                 newctx.canvas.width = defaultwidth*5
-                newctx.canvas.height = defaultheight+(frame0height+buffer)*(Math.ceil(headcount/5))
+                newctx.canvas.height = defaultheight+(frame0height+final_buffer)*(Math.ceil(headcount/5))
 
                 // Default
                 drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default")
@@ -316,8 +316,8 @@
                     x = headcoords[i].x
                     y = headcoords[i].y
                     temphead = heads[i]
-                    console.log(currenty,buffer,currenty+buffer)
-                    newcanvas.getContext('2d').putImageData(temphead,currentx,currenty+buffer)
+                    imagedataVal = currenty+(final_buffer*(Math.ceil(count/5)))
+                    newcanvas.getContext('2d').putImageData(temphead,currentx,imagedataVal)
                     fc = 0
                     for (f in newframes) {
                         f=newframes[f]
@@ -327,47 +327,33 @@
                                 currentclosest=0
                                 for (i in Object.keys(motion)) {
                                     i=Object.keys(motion)[i]
-                                    if (Number(i) <= fc) {
-                                        currentclosest=i
-                                    }
+                                    currentclosest = (Number(i) <= fc) ? i : currentclosest;
                                 }
                                 nxm = motion[currentclosest]['x']
                                 nym = motion[currentclosest]['y']
-                                if (xm != nxm && nxm != undefined) {
-                                    Number(nxm)
-                                    xm = nxm
-                                } else {
-                                    xm=xm
-                                }
-                                if (ym != nym && nym != undefined) {
-                                    Number(nym)
-                                    ym = nym
-                                } else {
-                                    ym=ym
-                                }
-                                if (xm % 1 != 0) {
-                                    xm=Number(xm).toFixed(2)
-                                }
-                                if (ym % 1 != 0) {
-                                    ym=Number(ym).toFixed(2)
-                                }
-                                newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty+buffer},${xm},${ym}`
+                                xm = (xm != nxm && nxm != undefined) ? Number(xym) : xm
+                                ym = (ym != nym && nym != undefined) ? Number(nym) : ym
+                                xm = xm % 1 != 0 ? Number(xm).toFixed(2) : xm
+                                ym = ym % 1 != 0 ? Number(ym).toFixed(2) : ym
+                                head_y = currenty+(final_buffer*(Math.ceil(count/5)-1))
+                                propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},${xm},${ym}`
+                                newframes[fc].prop = propval
+                                
                             } catch (e){
-                                newframes[fc].prop = `${currentx-(defaultwidth-frame0width)/2},${currenty+buffer},0,0`
+                                head_y = currenty+(final_buffer*(Math.ceil(count/5)-1))
+                                propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},0,0`
+                                newframes[fc].prop = propval
                                 console.log(e)
                             }
                             
                         }
                         fc++
                     }
-                    if (count%5 === 0) {
-                        currenty=currenty+frame0height+buffer
-                        currentx=(defaultwidth-frame0width)/2
-                    } else {
-                        currentx=currentx+(defaultwidth-frame0width)+frame0width
-                    }
+                    currenty += (count%5 === 0) ? frame0height : 0;
+                    currentx = (count%5 === 0) ? (defaultwidth-frame0width)/2 : currentx+(defaultwidth-frame0width)+frame0width;
                 }
-                newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${frame0height+buffer}`,"arrayFrame":newframes}
+                headHeightVal = frame0height+final_buffer
+                newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${headHeightVal}`,"arrayFrame":newframes}
                 if (seperate_count == 2){
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
