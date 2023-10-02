@@ -321,7 +321,7 @@
                     fc = 0
                     for (f in newframes) {
                         f=newframes[f]
-                        if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
+                        if (f.prop === `${x},${y},0,0` && !modified_indexes.includes(fc)) {
                             modified_indexes.push(fc)
                             try{
                                 currentclosest=0
@@ -379,21 +379,10 @@
         }
 
         $('#submission').on('click', async function(){
-            seperate_count=0
-            seperate_count++
+            seperate_count=1
             await submit()
             await waitFor(_ => seperate_count === 2);
             await submit()
-            /*$.ajax({
-                url: window.location.href,
-                headers: {
-                    "Pragma": "no-cache",
-                    "Expires": -1,
-                    "Cache-Control": "no-cache"
-                }
-            }).done(function () {
-                window.location.reload(true);
-            });*/
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>

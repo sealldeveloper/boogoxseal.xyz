@@ -204,9 +204,9 @@
                 var img = new Image;
                 
                 img.onload = function(){
-                ctx.canvas.width = this.width
-                ctx.canvas.height = this.height
-                ctx.drawImage(this,0,0); // Or at whatever offset you like
+                    ctx.canvas.width = this.width
+                    ctx.canvas.height = this.height
+                    ctx.drawImage(this,0,0);
                 };
                 img.src = imgdata;
                 if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
@@ -234,7 +234,6 @@
                     }
                     newframes.push({"prop":`${frame.x},${frame.y},0,0`})
                 }
-                console.log(headcount)
 
                 count=0
                 newcanvas=$('#fixedspritesheetcanvas')[0]
@@ -242,17 +241,19 @@
                 newctx.canvas.width = frame0width*5
                 newctx.canvas.height = frame0height*(Math.ceil(headcount/5)+1)
                 // Default
-                drawLabelledBox(newctx,"red",0,0,frame0width,frame0height,58,frame0height/2,"Default")
+                drawLabelledBox(newctx,"red",0,0,frame0width,frame0height,58,frame0height/2,"Default",15)
                 
                 // Headless
-                drawLabelledBox(newctx,"lime",frame0width,0,frame0width,frame0height,55+frame0width,frame0height/2,"Headless")
+                drawLabelledBox(newctx,"lime",frame0width,0,frame0width,frame0height,55+frame0width,frame0height/2,"Headless",15)
                 
                 // Siloette
-                drawLabelledBox(newctx,"#348af9",frame0width*2,0,frame0width,frame0height,48+frame0width*2,frame0height/2,"Silhouette")
+                drawLabelledBox(newctx,"#348af9",frame0width*2,0,frame0width,frame0height,48+frame0width*2,frame0height/2,"Silhouette",15)
 
                 // "Watermark"
                 newctx.font = "13px CozetteVector";
                 newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
+
+
                 currentx=0
                 currenty=frame0height
                 modified_indexes=[]
@@ -291,22 +292,10 @@
         }
 
         $('#submission').on('click', async function(){
-            seperate_count=0
-            seperate_count++
+            seperate_count=1
             await submit()
             await waitFor(_ => seperate_count === 2);
-            await submit()
-            /*$.ajax({
-                url: window.location.href,
-                headers: {
-                    "Pragma": "no-cache",
-                    "Expires": -1,
-                    "Cache-Control": "no-cache"
-                }
-            }).done(function () {
-                window.location.reload(true);
-            });*/
-                
+            await submit()                
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>

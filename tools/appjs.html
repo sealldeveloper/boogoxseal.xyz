@@ -653,7 +653,7 @@
                         i++
                         if (i===r) {
                             $(this).append(`<div class="row"></div>`)
-                            r=r+5
+                            r+=5
                             a++
                         }
                         $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
