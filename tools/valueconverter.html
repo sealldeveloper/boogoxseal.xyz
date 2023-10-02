@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:rgb(17, 5, 29) ;">
+<head>
+	<title>Value Converter - BOOGO x SEAL</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../icons/site.webmanifest">
+	<link rel="shortcut icon" href="../icons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#603cba">
+	<meta name="msapplication-config" content="../icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BOOGO x SEAL">
+	<meta property="og:title" content="Value Converter" />
+	    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
+    <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
+	<meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <script src="../assets/canvas-funcs.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <style>
+        td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
+    </style>
+</head>
+
+
+
+<body style="background-color:rgb(17, 5, 29) ;">
+    <div class="topnav">
+		<a href="../">Home</a>
+		<a class="active" href="./">Tools</a>
+		<a href="../mods">Mods</a>
+		<a href="../about">About Us</a>
+		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
+	  </div>
+	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+		<h1 class="m-4 mt-3">Incredibox Value Converter</h1>
+        <div id="form">
+            <h3 class="m-3">Options</h3>
+            <div class="form-group col-md-5 m-4">
+                <label for="timesig">Time Signature</label>
+                <input class="form-control" type="number" id="timesig1" placeholder="4" required="true" value="4">
+                <hr>
+                <input class="form-control" type="number" id="timesig2" placeholder="4" required="true" value="4">
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate Template" id="submission">
+            </div>
+            <h3 class="m-3">Output</h3>
+            <div class="form-group col-md-5 m-3">
+              <p>hi :3</p>
+            </div>
+        </div>
+	</div>
+    <script>
+        function generate() {
+            var canvas = document.getElementById('render')
+            var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
+            var ctx = canvas.getContext('2d')
+            cozette.load().then(function(font){
+                document.fonts.add(font);
+                var iconCount = $('#iconcount').val()
+                $('#render').attr('width',(130*Number(iconCount))-10)
+                $('#render').attr('height',152)
+                
+
+                // Icons
+                icons=Array.apply(null, Array(Number(iconCount))).map(function (x, i) { return i; })
+                count=0
+                currentIconPosX=0
+                for (i in icons) {
+                    count++
+                    drawLabelledBox(ctx,'red',currentIconPosX,0,120,120,currentIconPosX,12,'asset-v'+count+' Icon',15)
+                    drawLabelledBox(ctx,'lime',currentIconPosX,126,120,152,currentIconPosX,138,'asset-v'+count+' Text',15)
+                    currentIconPosX+=130
+                }
+            })
+        }
+        $('.form-control').on('change', function(){
+            generate()
+        })
+        $('.form-control').on('change', function(){
+            generate()
+        })
+        generate()
+        function download(uri, name) {
+            var link = document.createElement("a");
+            link.download = name;
+            link.href = uri;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            delete link;
+        }
+        $('#submission').on('click', function(){
+            var canvas = document.getElementById('render')
+            var datauri = canvas.toDataURL('image/png')
+            download(datauri,'icon-template.png')
+
+        })
+    </script>
+    <h3 style="padding-bottom:5px"></h3>
+    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+</body>
+</html>
