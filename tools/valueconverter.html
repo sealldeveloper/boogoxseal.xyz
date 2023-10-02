@@ -52,7 +52,7 @@
                 <input class="form-control" type="number" id="timesig2" placeholder="4" required="true" value="4">
             </div>
             <div class="form-group m-4 mt-4" id="submit">
-                <input class="btn btn-primary" type="submit" value="Submit and Generate Template" id="submission">
+                <input class="btn btn-primary" type="submit" value="Submit and Convert" id="submission">
             </div>
             <h3 class="m-3">Output</h3>
             <div class="form-group col-md-5 m-3">
@@ -61,50 +61,8 @@
         </div>
 	</div>
     <script>
-        function generate() {
-            var canvas = document.getElementById('render')
-            var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
-            var ctx = canvas.getContext('2d')
-            cozette.load().then(function(font){
-                document.fonts.add(font);
-                var iconCount = $('#iconcount').val()
-                $('#render').attr('width',(130*Number(iconCount))-10)
-                $('#render').attr('height',152)
-                
-
-                // Icons
-                icons=Array.apply(null, Array(Number(iconCount))).map(function (x, i) { return i; })
-                count=0
-                currentIconPosX=0
-                for (i in icons) {
-                    count++
-                    drawLabelledBox(ctx,'red',currentIconPosX,0,120,120,currentIconPosX,12,'asset-v'+count+' Icon',15)
-                    drawLabelledBox(ctx,'lime',currentIconPosX,126,120,152,currentIconPosX,138,'asset-v'+count+' Text',15)
-                    currentIconPosX+=130
-                }
-            })
-        }
         $('.form-control').on('change', function(){
-            generate()
-        })
-        $('.form-control').on('change', function(){
-            generate()
-        })
-        generate()
-        function download(uri, name) {
-            var link = document.createElement("a");
-            link.download = name;
-            link.href = uri;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link;
-        }
-        $('#submission').on('click', function(){
-            var canvas = document.getElementById('render')
-            var datauri = canvas.toDataURL('image/png')
-            download(datauri,'icon-template.png')
-
+            // convert...
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
