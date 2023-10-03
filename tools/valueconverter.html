@@ -79,8 +79,13 @@
         </div>
 	</div>
     <script>
-        $('.form-control').on('change', function(){
-            // convert...
+        $('#submission').on('click', function(){
+            var timeSig = Number($('#timesig1').val())/Number($('#timesig2').val());
+            var bars = Number($('#bars').val());
+            var bpm = Number($('#bpm').val());
+            var convertFactor = 240000*timeSig;
+            var looptime = (convertFactor*bars)/bpm;
+            $('#looptime').innerHTML = looptime;
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
