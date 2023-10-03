@@ -50,32 +50,39 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-1">
-                            <input class="form-control inputs" type="number" id="timesig1" placeholder="4" required="true" value="4">
+                            <input class="form-control inputs" type="number" id="timesig1" placeholder="4" required="true" value="4" min="1">
                         </div>
                         <div class="col-md-1">
                             <h3 class="text-center">/</h3>
                         </div>
                         <div class="col-md-1">
-                            <input class="form-control inputs" type="number" id="timesig2" placeholder="4" required="true" value="4">
+                            <input class="form-control" type="number" id="timesig2" placeholder="4" required="true" value="4" min="1">
                         </div>
                     </div> 
                 </div>
             </div>
 	    <div class="form-group col-md-5 m-3">
                 <label for="bpm">BPM</label>
-                <input class="form-control inputs m-2" type="number" id="bpm" placeholder="120" required="true" value="120">
+                <input class="form-control inputs m-2" type="number" id="bpm" placeholder="120" required="true" value="120" min="1">
             </div>
 	    <div class="form-group col-md-5 m-3">
                 <label for="bars">Bars</label>
-                <input class="form-control inputs m-2" type="number" id="bars" placeholder="4" required="true" value="4">
+                <input class="form-control inputs m-2" type="number" id="bars" placeholder="4" required="true" value="4" min="1">
+            </div>
+	    <div class="form-group col-md-5 m-3">
+                <label for="fps">FPS</label>
+                <select class="form-control form-select" id="fps" name="fps">
+                    <option value="0.024">24 FPS</option>
+                    <option value="0.030">30 FPS</option>
+                </select>
             </div>
             <br>
             <h3 class="m-3">Output</h3>
             <div class="form-group col-md-5 m-3">
                 <label for="looptime">Looptime:</label>
                 <h3 id="looptime">8000</h3>
-                <label for="totalframe">Animation Frames (24 FPS/30 FPS):</label>
-                <h3 id="totalframe">192 / 240</h3>
+                <label for="totalframe">Animation Frames (totalFrame):</label>
+                <h3 id="totalframe">192</h3>
             </div>
         </div>
 	</div>
@@ -86,11 +93,12 @@
             var bpm = Number($('#bpm').val());
             var convertFactor = 240000*timeSig;
             var looptime = (convertFactor*bars)/bpm;
-            looptime = Math.round(looptime)
+            looptime = Math.round(looptime);
             $('#looptime').html(looptime);
-            totalframe24=Math.floor(looptime*0.024)
-            totalframe30=Math.floor(looptime*0.030)
-            $('#totalframe').html(`${totalframe24} / ${totalframe30}`)
+
+	    var fps = Number($('fps').val);
+            totalFrame = Math.floor(looptime*fps);
+            $('#totalframe').html(totalFrame);
         }
         $('.inputs').on('click', function(){
             valueUpdate()
