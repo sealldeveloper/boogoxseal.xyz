@@ -85,7 +85,7 @@
             var bpm = Number($('#bpm').val());
             var convertFactor = 240000*timeSig;
             var looptime = (convertFactor*bars)/bpm;
-            $('#looptime').innerHTML = looptime;
+            $('#looptime').html(looptime);
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
