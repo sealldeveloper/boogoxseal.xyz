@@ -111,7 +111,7 @@
 
 
 	    var fps = Number($('#fps').val());
-            totalFrame = Math.floor(looptime*fps);
+            totalFrame = Math.floor(looptime*fps)*2;
             $('#totalframe').html(totalFrame);
         }
         $('.inputs').on('click', function(){
