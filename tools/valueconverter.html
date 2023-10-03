@@ -74,7 +74,8 @@
             </div>
             <h3 class="m-3">Output</h3>
             <div class="form-group col-md-5 m-3">
-              <p id="looptime">hi :3</p>
+	        <label for="looptime">Looptime:</label>
+                <h3 id="looptime">8000</h3>
             </div>
         </div>
 	</div>
@@ -85,6 +86,7 @@
             var bpm = Number($('#bpm').val());
             var convertFactor = 240000*timeSig;
             var looptime = (convertFactor*bars)/bpm;
+		looptime = Math.round(looptime);
             $('#looptime').html(looptime);
         })
     </script>
