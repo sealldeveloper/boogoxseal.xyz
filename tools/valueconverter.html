@@ -50,45 +50,61 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-1">
-                            <input class="form-control" type="number" id="timesig1" placeholder="4" required="true" value="4">
+                            <input class="form-control inputs" type="number" id="timesig1" placeholder="4" required="true" value="4">
                         </div>
                         <div class="col-md-1">
                             <h3 class="text-center">/</h3>
                         </div>
                         <div class="col-md-1">
-                            <input class="form-control" type="number" id="timesig2" placeholder="4" required="true" value="4">
+                            <input class="form-control inputs" type="number" id="timesig2" placeholder="4" required="true" value="4">
                         </div>
                     </div> 
                 </div>
             </div>
 	    <div class="form-group col-md-5 m-3">
                 <label for="bpm">BPM</label>
-                <input class="form-control" type="number" id="bpm" placeholder="120" required="true" value="120">
+                <input class="form-control inputs m-2" type="number" id="bpm" placeholder="120" required="true" value="120">
             </div>
 	    <div class="form-group col-md-5 m-3">
                 <label for="bars">Bars</label>
-                <input class="form-control" type="number" id="bars" placeholder="4" required="true" value="4">
+                <input class="form-control inputs m-2" type="number" id="bars" placeholder="4" required="true" value="4">
             </div>
-            <div class="form-group m-3 mt-3" id="submit">
-                <input class="btn btn-primary" type="submit" value="Submit and Convert" id="submission">
-            </div>
+            <br>
             <h3 class="m-3">Output</h3>
             <div class="form-group col-md-5 m-3">
-	        <label for="looptime">Looptime:</label>
+                <label for="looptime">Looptime:</label>
                 <h3 id="looptime">8000</h3>
+                <label for="totalframe">Animation Frames (24 FPS/30 FPS):</label>
+                <h3 id="totalframe">192 / 240</h3>
             </div>
         </div>
 	</div>
     <script>
-        $('#submission').on('click', function(){
+        function valueUpdate() { 
             var timeSig = Number($('#timesig1').val())/Number($('#timesig2').val());
             var bars = Number($('#bars').val());
             var bpm = Number($('#bpm').val());
             var convertFactor = 240000*timeSig;
             var looptime = (convertFactor*bars)/bpm;
-		looptime = Math.round(looptime);
+            looptime = Math.round(looptime)
             $('#looptime').html(looptime);
+            totalframe24=Math.floor(looptime*0.024)
+            totalframe30=Math.floor(looptime*0.030)
+            $('#totalframe').html(`${totalframe24} / ${totalframe30}`)
+        }
+        $('.inputs').on('click', function(){
+            valueUpdate()
         })
+        $('.inputs').on('keydown', function(){
+            valueUpdate()
+        })
+        $('.inputs').on('keyup', function(){
+            valueUpdate()
+        })
+        $('.inputs').on('change', function(){
+            valueUpdate()
+        })
+        valueUpdate()
     </script>
     <h3 style="padding-bottom:5px"></h3>
     <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and bae ;&rpar;</h3>
