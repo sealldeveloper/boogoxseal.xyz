@@ -164,6 +164,7 @@
                 frame_index_current = frame_index_count - 1;
 
             UpdateSprite();
+	    UpdateAudio();
         }
         }
 
@@ -412,11 +413,11 @@
         
         // apply any settings
         AssignSettings();
-        $('#imgInp').val('')
-        $('#jsonInp').val('')
-        $('#audInp1').val('')
-        $('#audInp2').val('')
-        setInterval(Update,16)
+        $('#imgInp').val('');
+        $('#jsonInp').val('');
+        $('#audInp1').val('');
+        $('#audInp2').val('');
+        setInterval(Update,16);
     </script>
     <h3 style="padding-bottom:5px"></h3>
     <h3 style="text-align:center;font-size:10px">Made by a <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and bae ;&rpar;</h3>
