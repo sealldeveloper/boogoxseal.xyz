@@ -301,6 +301,9 @@
         $('#brightness').on('mousemove', function(){
             $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
         })
+        $('#brightness').on('click', function(){
+            $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
+        })
         $('#buildform').on('change', function(){
             generate('build',false)
         })
