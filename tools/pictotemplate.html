@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="background-color:rgb(17, 5, 29) ;">
 <head>
-	<title>Picto Template Generator - BOOGO x SEAL</title>
+	<title>Picto Template Generator and Builder - BOOGO x SEAL</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
@@ -15,7 +15,7 @@
 	<meta charset="UTF-8">
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="BOOGO x SEAL">
-	<meta property="og:title" content="Picto Template Generator" />
+	<meta property="og:title" content="Picto Template Generator and Builder" />
 	    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
     <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
 	<meta name="twitter:card" content="summary_large_image">
@@ -39,9 +39,7 @@
 
 <body style="background-color:rgb(17, 5, 29);">
     <div id="overlay" class="text-center visually-hidden">
-        <h1 class="position-absolute top-50 start-50 translate-middle">
-            <img width="15%" src="../assets/loading.gif"/>
-        </h1>
+        <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
     </div>
     <div class="topnav">
 		<a href="../">Home</a>
@@ -63,6 +61,8 @@
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group m-3">
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br><br>
                 <canvas id="render-hd" height="272" class="visually-hidden"></canvas>
                 <div style="overflow-x: auto;">
                     <canvas id="render" height="136"></canvas>
@@ -80,14 +80,44 @@
                 <input class="form-control" type="number" id="pictocountbuild" placeholder="20" required="true" value="20"></input>
             </div>
             <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Inactive BG Colour</label>
+                <label for="pictocountbuild">Picto Inactive BG Colour (Beats)</label>
                 <br>
                 <input class="form-control" type="text" data-coloris id="pictocolour1" required="true" value="#000000"></input>
             </div>
             <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Active BG Colour</label>
+                <label for="pictocountbuild">Picto Active BG Colour (Beats)</label>
                 <br>
                 <input class="form-control" type="text" data-coloris id="pictocolour2" required="true" value="#cccccc00"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Inactive BG Colour (Effects)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour3" required="true" value="#000000"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Active BG Colour (Effects)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour4" required="true" value="#cccccc00"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Inactive BG Colour (Melodies)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour5" required="true" value="#000000"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Active BG Colour (Melodies)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour6" required="true" value="#cccccc00"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Inactive BG Colour (Voices)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour7" required="true" value="#000000"></input>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="pictocountbuild">Picto Active BG Colour (Voices)</label>
+                <br>
+                <input class="form-control" type="text" data-coloris id="pictocolour8" required="true" value="#cccccc00"></input>
             </div>
             <div class="form-group col-md-5 m-3" id="pictosection">
                 <label for="pictocountbuild">Pictos</label>
@@ -100,6 +130,8 @@
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group m-3">
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br><br>
                 <div style="overflow-x: auto;">
                     <canvas id="buildrender" height="136"></canvas>
                 </div>
@@ -197,12 +229,24 @@
                 }
             }
             var newCount = $("#pictos").children().length
-            var colourInactive = $("#pictocolour1").val()
-            var colourActive = $("#pictocolour2").val()
+            var colourInactiveBeats = $("#pictocolour1").val()
+            var colourActiveBeats = $("#pictocolour2").val()
+            var colourInactiveEffects = $("#pictocolour3").val()
+            var colourActiveEffects = $("#pictocolour4").val()
+            var colourInactiveMelodies = $("#pictocolour5").val()
+            var colourActiveMelodies = $("#pictocolour6").val()
+            var colourInactiveVoices = $("#pictocolour7").val()
+            var colourActiveVoices = $("#pictocolour8").val()
             var pictoUploads = makeArray(newCount)
             count = 0
-            drawLabelledBox(ctx,colourInactive,0,0,68*modifier*pictoCount,68*modifier)
-            drawLabelledBox(ctx,colourActive,0,68*modifier,68*modifier*pictoCount,68*modifier)
+            drawLabelledBox(ctx,colourInactiveBeats,0,0,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourActiveBeats,0,68*modifier,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourInactiveEffects,68*modifier*5,0,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourActiveEffects,68*modifier*5,68*modifier,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourInactiveMelodies,68*modifier*10,0,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourActiveMelodies,68*modifier*10,68*modifier,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourInactiveVoices,68*modifier*15,0,68*modifier*5,68*modifier)
+            drawLabelledBox(ctx,colourActiveVoices,68*modifier*15,68*modifier,68*modifier*5,68*modifier)
             ms=68*modifier
             if (pictoUploads.length > 0) {
                 for (r in pictoUploads) {
@@ -236,10 +280,12 @@
                 document.fonts.add(font);
                 if (input === 'build') {
                     if (currentlyrunningbuild <= 0){
+                        $('#submissionbuild').prop('disabled',true)
                         generatedelay=0
                         await pictoBuild('buildrender-hd',2,submissioncheck)
                         await pictoBuild('buildrender',1,submissioncheck)
                         await waitFor(_ => generatedelay === 2)
+                        $('#submissionbuild').prop('disabled',false)
                     }
                 } else if (input === 'template') {
                     pictoRender('render',1)
@@ -265,8 +311,8 @@
         $('#submission').on('click', function(){
             var zip = new JSZip();
             generate('template')
-            zip.file(`${name}-template.png`, zipImg('render'), {base64:true})
-            zip.file(`${name}-hd-template.png`, zipImg('render-hd'), {base64:true})
+            zip.file(`picto-template.png`, zipImg('render'), {base64:true})
+            zip.file(`picto-hd-template.png`, zipImg('render-hd'), {base64:true})
             zip.generateAsync({type:"base64"}).then(function (base64) {
                 window.open("data:application/zip;base64," + base64,'_blank')
             });

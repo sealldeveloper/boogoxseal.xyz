@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="background-color:rgb(17, 5, 29) ;">
 <head>
-	<title>Icon Template Generator - BOOGO x SEAL</title>
+	<title>Icon Template Generator and Builder - BOOGO x SEAL</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
@@ -15,7 +15,7 @@
 	<meta charset="UTF-8">
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="BOOGO x SEAL">
-	<meta property="og:title" content="Icon Template Generator" />
+	<meta property="og:title" content="Icon Template Generator and Builder" />
 	    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
     <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
 	<meta name="twitter:card" content="summary_large_image">
@@ -24,8 +24,13 @@
     <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/overlay.css">
     <script src="../assets/general-functions.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" integrity="sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
     </style>
@@ -34,6 +39,9 @@
 
 
 <body style="background-color:rgb(17, 5, 29) ;">
+    <div id="overlay" class="text-center visually-hidden">
+        <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
+    </div>
     <div class="topnav">
 		<a href="../">Home</a>
 		<a class="active" href="./">Tools</a>
@@ -47,48 +55,178 @@
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-3">
                 <label for="iconcount">Icon Count</label>
-                <input class="form-control" type="number" id="iconcount" placeholder="8" required="true" value="8"></input>
+                <input class="form-control" type="number" id="iconcount" placeholder="9" required="true" value="9"></input>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate Template" id="submission"></input>
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group col-md-5 m-3">
-                <canvas id="render" height="156"></canvas>
+                <canvas id="render" height="152"></canvas>
+                <div class="visually-hidden">
+                    <canvas id="render-hd" height="304"></canvas>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <h1 class="m-4 mt-3">Incredibox 'Icon' Builder</h1>
+        <div id="buildform">
+            <h3 class="m-3">Options</h3>
+            <div class="form-group col-md-5 m-3">
+                <label for="iconcountbuild">Icon Count</label>
+                <input class="form-control" type="number" id="iconcountbuild" placeholder="9" required="true" value="9"></input>
+            </div>
+            <div class="form-group col-md-5 m-3" id="iconsection">
+                <label for="iconcountbuild">Icons</label>
+                <br>
+                <div class="container-fluid" id="icons">
+                </div>
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group m-3">
+                <canvas id="buildrender" height="152"></canvas>
+                <div class="visually-hidden">
+                    <canvas id="buildrender-hd" height="304"></canvas>
+                    <canvas id="tempcanvas"></canvas>
+                </div>
             </div>
         </div>
 	</div>
     <script>
-        function generate() {
-            var canvas = document.getElementById('render')
+        generatedelay=0
+        currentlyrunningbuild=0
+        async function LoadImageFromDisk(input,r,type) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                exit_icon = ""
+                reader.onload = function (e) {
+                    img = reader.result;
+                    if (type === 'icon') $(`#iconimg${r}`).attr('src',img)
+                    if (type === 'text') $(`#iconimgtext${r}`).attr('src',img)
+                    exit_icon = (type === 'icon') ? $(`#iconimg${r}`)[0] : $(`#iconimgtext${r}`)[0]
+                    return
+                };
+                await waitFor( _ => exit_icon !== "")
+                return exit_icon
+            }
+        }
+
+        function initCanvases(canvasname,iconCount,modifier) {
+            var canvas = document.getElementById(canvasname)
+            var ctx = canvas.getContext('2d')
+            $('#'+canvasname).attr('width',(130*iconCount)*modifier)
+            $('#'+canvasname).attr('height',152*modifier)
+            return ctx
+        }
+        
+        async function iconBuild(canvasname, modifier,submissioncheck) {
+            currentlyrunningbuild++
+            var iconCount = Number($('#iconcountbuild').val())
+            var prevCount = Number($("#icons").children().length)
+            var newadjustment= iconCount-prevCount
+            var icons = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
+            ctx = initCanvases(canvasname,iconCount,modifier)
+            if (iconCount === 0) $('#iconsection').addClass('visually-hidden')
+            if (iconCount !== 0) $('#iconsection').removeClass('visually-hidden')
+
+            if (newadjustment > 0) {
+                for (var r in icons){
+                    r=Number(r)+1+prevCount
+                    $('#icons').append(`<div class="form-group col-md-5 m-3 iconinputs"><label for="icon${r}">Icon ${r}</label><input class="form-control" type="file" id="icon${r}" accept="image"></input><label for="icontext${r}">Icon Text ${r}</label><input class="form-control" type="file" id="icontext${r}" accept="image"></input><div class="visually-hidden" id="iconimg${r}-div" required="true"><img src="" id="iconimg${r}"/><img src="" id="iconimgtext${r}"/></div></div>`)
+                }
+            } else if (newadjustment < 0) {
+                for (var r in icons) {
+                    $('#icons').children().last().remove()
+                }
+            }
+            var newCount = $("#icons").children().length
+            var iconUploads = makeArray(newCount)
+            count = 0
+            ms=120*modifier
+            if (iconUploads.length > 0) {
+                for (r in iconUploads) {
+                    r = Number(r)+1
+                    x = ms*(r-1)+((r-1)*10)
+                    if ($(`#icon${r}`).val() !== ""){
+                        iconimg = await LoadImageFromDisk($(`#icon${r}`)[0],r,'icon')
+                        if (iconimg !== undefined) {
+                            ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
+                        }
+                    }
+                    if ($(`#icontext${r}`).val() !== ""){
+                        textimg = await LoadImageFromDisk($(`#icontext${r}`)[0],r,'text')
+                        if (textimg !== undefined) {
+                            ctx.drawImage(textimg,0,0,textimg.width,textimg.height,x,126*modifier,ms,26*modifier);
+                        }
+                    }
+                }
+            }
+            generatedelay++
+            if (submissioncheck === true) {
+                submissioncounter++
+            }
+            currentlyrunningbuild--
+            return
+            
+        }
+        function generate(input,submissioncheck) {
+            var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
+            cozette.load().then(async function(font){
+                document.fonts.add(font);
+                if (input === 'build') {
+                    if (currentlyrunningbuild <= 0){
+                        $('#submissionbuild').prop('disabled',true)
+                        generatedelay=0
+                        await iconBuild('buildrender',1,submissioncheck)
+                        await iconBuild('buildrender-hd',2,submissioncheck)
+                        await waitFor(_ => generatedelay === 2)
+                        $('#submissionbuild').prop('disabled',false)
+                    }
+                } else if (input === 'template') {
+                    iconRender('render',1)
+                    iconRender('render-hd',2)
+                }
+            })
+        }
+        function iconRender(cname,modifier) {
+            var canvas = document.getElementById(cname)
             var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
             var ctx = canvas.getContext('2d')
             cozette.load().then(function(font){
                 document.fonts.add(font);
-                var iconCount = $('#iconcount').val()
-                $('#render').attr('width',(130*Number(iconCount))-10)
-                $('#render').attr('height',152)
-                
-
+                var iconCount = Number($('#iconcount').val())
+                width=(130*iconCount)-10
+                height=152*modifier
+                $(`#${cname}`).attr('width',width*modifier)
+                $(`#${cname}`).attr('height',height)
                 // Icons
                 icons=makeArray(iconCount)
                 count=0
                 currentIconPosX=0
                 for (i in icons) {
                     count++
-                    drawLabelledBox(ctx,'red',currentIconPosX,0,120,120,currentIconPosX,12,'asset-v'+count+' Icon',15)
-                    drawLabelledBox(ctx,'lime',currentIconPosX,126,120,152,currentIconPosX,138,'asset-v'+count+' Text',15)
-                    currentIconPosX+=130
+                    isize=120*modifier
+                    textsize=15*modifier
+                    drawLabelledBox(ctx,'red',currentIconPosX,0,isize,isize,currentIconPosX,12*modifier,'asset-v'+count+' Icon',textsize)
+                    drawLabelledBox(ctx,'lime',currentIconPosX,126*modifier,isize,152*modifier,currentIconPosX,138*modifier,'asset-v'+count+' Text',textsize)
+                    currentIconPosX+=130*modifier
                 }
             })
         }
-        $('.form-control').on('change', function(){
-            generate()
+        $('#form').on('change', function(){
+            generate('template',false)
         })
-        $('.form-control').on('change', function(){
-            generate()
+        $('#buildform').on('change', function(){
+            generate('build',false)
         })
-        generate()
+        generate('template',false)
+        generate('build',false)
         function download(uri, name) {
             var link = document.createElement("a");
             link.download = name;
@@ -99,10 +237,28 @@
             delete link;
         }
         $('#submission').on('click', function(){
-            var canvas = document.getElementById('render')
-            var datauri = canvas.toDataURL('image/png')
-            download(datauri,'icon-template.png')
-
+            var zip = new JSZip();
+            generate('template')
+            zip.file(`icon-template.png`, zipImg('render'), {base64:true})
+            zip.file(`icon-hd-template.png`, zipImg('render-hd'), {base64:true})
+            zip.generateAsync({type:"base64"}).then(function (base64) {
+                window.open("data:application/zip;base64," + base64,'_blank')
+            });
+        })
+        $('#submissionbuild').on('click', async function(){
+            overlayShow()
+            submissioncounter = 0
+            await generate('build',true)
+            await waitFor(_ => submissioncounter === 1)
+            await generate('build',true)
+            await waitFor(_ => submissioncounter === 2)
+            var zip = new JSZip();
+            zip.file(`game-picto.png`, zipImg('buildrender'), {base64:true})
+            zip.file(`game-picto-hd.png`, zipImg('buildrender-hd'), {base64:true})
+            zip.generateAsync({type:"base64"}).then(function (base64) {
+                window.open("data:application/zip;base64," + base64,'_blank')
+            });
+            overlayHide()
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
