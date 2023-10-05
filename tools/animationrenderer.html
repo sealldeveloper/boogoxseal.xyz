@@ -235,9 +235,8 @@
             var reader = new FileReader();
             reader.readAsDataURL(input.files[0]);
             reader.onload = function (e) {
-                callback(reader.result);
+                callback(e.target.result);
             };
-            
         }
         }
 
@@ -353,7 +352,9 @@
 	        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
 	        for (i=0; i<1; i++) {
 	            name = aud_names[i];
-		    $(name).attr('src',aud_src[i]);
+		    LoadAudioFromDisk(aud_src[i], (audio) => {
+			$(name).attr('src',audio);    
+		    })
 	        }
 	      
 		UpdateAudio();
@@ -380,7 +381,7 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
-            _("#"+current_aud).pause();
+            $("#"+current_aud)[0].pause();
 	});
 
 	$("#frameStop").dblclick(function() {
@@ -391,7 +392,7 @@
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
             UpdateAudio();
-            _("#"+current_aud).play();
+            $("#"+current_aud)[0].play();
 	});
         
 	$("#framePlayBack").click(function() { 
