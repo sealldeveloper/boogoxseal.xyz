@@ -128,9 +128,9 @@
                 exit_icon = ""
                 reader.onload = function (e) {
                     img = reader.result;
-                    if (type === 'icon') $(`#iconimg${r}`).attr('src',img)
-                    if (type === 'text') $(`#iconimgtext${r}`).attr('src',img)
-                    exit_icon = (type === 'icon') ? $(`#iconimg${r}`)[0] : $(`#iconimgtext${r}`)[0]
+                    elementid = (type === "icon") ? `#iconimg${r}` : `#iconimgtext${r}`
+                    $(elementid).attr('src',img)
+                    exit_icon = $(elementid)[0]
                     return
                 };
                 await waitFor( _ => exit_icon !== "")
