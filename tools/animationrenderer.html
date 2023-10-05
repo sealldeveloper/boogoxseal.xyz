@@ -351,12 +351,9 @@
 	$(".audio-inputs").change(function() {
 		aud_src = (aud === 2 ? [$("#audInp1").val(), $("#audInp2").val()] : [$("#audInp1").val(), $("#audInp1").val()]) || [];
 	        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
-	        for (name in aud_names) {
-	            name=aud_names[name]
-	            LoadAudioFromDisk(this, (new_src)=>{
-	                $(name).attr('src',new_src)
-	                $(name).attr('type',new_src.split('data:')[1].split(';')[0])
-	            })
+	        for (i=0; i<1; i++) {
+	            name = aud_names[i];
+		    $(name).attr('src',aud_src[i]);
 	        }
 	      
 		UpdateAudio();
