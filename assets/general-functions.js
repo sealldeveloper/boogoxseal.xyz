@@ -1,3 +1,11 @@
+function _(query){
+	return document.querySelector(query);
+}
+
+function _all(query){
+	return document.querySelectorAll(query);
+}
+
 function drawLabelledBox(ctx,colour,posX,posY,width,height,textX,textY,text,fontsize){
     ctx.fillStyle = colour;
     ctx.fillRect(posX,posY,width,height)
