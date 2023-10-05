@@ -177,8 +177,10 @@
                     if ($(`#icon${r}`).val() !== ""){
                         iconimg = await LoadImageFromDisk($(`#icon${r}`)[0],r,'icon')
                         if (iconimg !== undefined) {
+                            ctx.save();
                             roundedCorners(ctx,x,0,35,ms,ms)
                             ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
+                            ctx.restore();
                         }
                     }
                     if ($(`#icontext${r}`).val() !== ""){
