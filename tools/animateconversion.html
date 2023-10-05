@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../assets/canvas-funcs.js"></script>
+    <script src="../assets/general-functions.js"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
     </style>
@@ -173,17 +173,7 @@
                 console.log(e)
             }
         }
-
-        function waitFor(conditionFunction) {
-
-            const poll = resolve => {
-                if(conditionFunction()) resolve();
-                else setTimeout(_ => poll(resolve), 400);
-            }
-
-            return new Promise(poll);
-        }
-
+        
         function submit() {
             if ( ! window.FileReader ) {
                 return alert( 'FileReader API is not supported by your browser.' );
@@ -280,9 +270,7 @@
                     newjsondata={"animeName":"generated-from-fla-using-sealldevelopers-tools","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
-                    var datauri = newcanvas.toDataURL('image/png')
-                    var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                    zip.file(`generated-sprite.png`, data, {base64:true})
+                    zip.file(`generated-sprite.png`, zipImg('fixedspritesheetcanvas'), {base64:true})
                     zip.generateAsync({type:"base64"}).then(function (base64) {
                         window.open("data:application/zip;base64," + base64);
                     });

@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="../assets/canvas-funcs.js"></script>
+    <script src="../assets/general-functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
@@ -126,7 +126,7 @@
                         ctx.fillText(`${name},${height},${headHeight},${headCount},${headrowCount},${headWidth},${totalframe}`,0,25*modifier)
 
                         // Heads
-                        heads=Array.apply(null, Array(headCount)).map(function (x, i) { return i; })
+                        heads=makeArray(headCount)
                         count=0
                         currentHeadPosX=0
                         currentHeadPosY=height
@@ -183,30 +183,21 @@
                 totalframe=Number($('#framecount').val())
                 height=Number($('#height').val())
                 headheight=Number($('#headheight').val())
-                arrayframes=Array.apply(null, Array(totalframe)).map(function (x, i) { return i; })
+                arrayframes=makeArray(totalframe)
                 af=[]
                 for (x in arrayframes) {
                     af.push(`{"prop":"0,${height},0,0"}`)
                 }
                 coordinates_compiled=` === sealldeveloper's Polo Template Generator - Coordinates Sheet - ${name} === \n\n`+coordinates.join('\n')+"\n\n === End of Coordinates Sheet === "
+                json_data=`{"animeName":"${name}","percentageMax":"0.2","totalFrame":"${totalframe}","width":"164","height":"${height}","headHeight":"${headheight}","arrayFrame":[`+af.join(',')+`]}`
                 zip.file(`${name}-coordinates.txt`,coordinates_compiled)
-                json_data=JSON.parse(`{"animeName":"${name}","percentageMax":"0.2","totalFrame":"${totalframe}","width":"164","height":"${height}","headHeight":"${headheight}","arrayFrame":[`+af.join(',')+`]}`)
-                json_data=JSON.stringify(json_data, null,"\t")
+                json_data=JSON.stringify(JSON.parse(json_data), null,"\t")
                 zip.file(`${name}-json.json`,json_data)
-                var canvas = document.getElementById('render')
-                var datauri = canvas.toDataURL('image/png')
-                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                zip.file(`${name}-template.png`, data, {base64:true})
-                var canvas = document.getElementById('render-hd')
-                var datauri = canvas.toDataURL('image/png')
-                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                zip.file(`${name}-hd-template.png`, data, {base64:true})
-                var canvas = document.getElementById('render-mini')
-                var datauri = canvas.toDataURL('image/png')
-                var data = datauri.replace(/^data:image\/\w+;base64,/, "");
-                zip.file(`${name}-mini-template.png`, data, {base64:true})
+                zip.file(`${name}-template.png`, zipImg('render'), {base64:true})
+                zip.file(`${name}-hd-template.png`, zipImg('render-hd'), {base64:true})
+                zip.file(`${name}-mini-template.png`, zipImg('render-mini'), {base64:true})
                 zip.generateAsync({type:"base64"}).then(function (base64) {
-                    location.href="data:application/zip;base64," + base64;
+                    window.open("data:application/zip;base64," + base64,"_blank")
                 });
 
             })

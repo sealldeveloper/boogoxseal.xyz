@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
     <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/terser@5.19.2/dist/bundle.min.js"></script>
+    <script src="../assets/general-functions.js"></script>
 
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
@@ -494,7 +495,7 @@
             function bonusUpdate(val) {
                 temp_selection=[]
                 polocount = Number($('#polocount').val())
-                allpolos=Array.apply(null, Array(polocount)).map(function (x, i) { return i; })
+                allpolos=makeArray(polocount)
                 for (var a in allpolos) {
                     if ($(`#${a}polo-${val}`).is(':checked')) {
                         id = $(`#${a}polo-${val}`).attr('id')
@@ -520,7 +521,7 @@
     
             function bonusRequired(val) {
                 num = Number(val)
-                requiredpolos=Array.apply(null, Array(3)).map(function (x, i) { return i; })
+                requiredpolos=makeArray(3)
                 for (var r in requiredpolos){
                     r=Number(r)+1
                     required = (r === 0) ? false : ((r <= num) ? true : false)
@@ -554,7 +555,7 @@
                 if ($('input[name="bonusesRadio"]:checked').val() !== "0") {
                     $('#bonus-options').empty()
                     var val=$('input[name="bonusesRadio"]:checked').val()
-                    choices=Array.from({length: Number(val)}, (_, i) => i + 1)
+                    choices=makeArray(val)
                     for (const c in choices){
                         $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
                     }
@@ -596,7 +597,7 @@
                 polocount = Number($('#polocount').val())
                 prevcount = Number($("#pololist").children().length)
                 newadjustment= polocount-prevcount
-                polos = (newadjustment < 0) ? Array.apply(null, Array(-newadjustment)).map(function (x, i) { return i; }) : ((newadjustment > 0) ? Array.apply(null, Array(newadjustment)).map(function (x, i) { return i; }) : 0)
+                polos = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
                 if (newadjustment > 0) {
                     for (var r in polos){
                         r=Number(r)+1+prevcount
@@ -611,7 +612,7 @@
             
             function poloUpdates(val) {
                 polocount = Number($('#polocount').val())
-                polos = Array.apply(null, Array(polocount)).map(function (x, i) { return i; })
+                polos = makeArray(polocount)
                 for (var r in polos){
                     r=Number(r)+1
                     $('#poloname'+r).prop('required',true)
@@ -637,7 +638,7 @@
                     return
                 }
                 
-                choices=Array.from({length: Number($('#polocount').val())}, (_, i) => i + 1)
+                choices=makeArray($('#polocount').val())
                 $('#polo-options').empty()
                 for (const c in choices){
                     $('#polo-options').append(`<option>${Number(c)+1}</option>`)
@@ -762,7 +763,7 @@
                         
                         j=0
                         $('#polo-options').empty()
-                        choices=Array.from({length: Number($('#polocount').val())}, (_, i) => i + 1)
+                        choices=makeArray($('#polocount').val())
                         for (const c in choices){
                             $('#polo-options').append(`<option>${Number(c)+1}</option>`)
                         }
@@ -822,7 +823,7 @@
                             $('#0bonuses').prop('checked',false)
                             $(`#${q}bonuses`).prop('checked',true)
                         }
-                        choices=Array.from({length: Number(q)}, (_, i) => i + 1)
+                        choices=makeArray(q)
                         for (const c in choices){
                             $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
                         }
@@ -892,7 +893,7 @@
                 $('#bonus-options').empty()
                 $('.bonus-polo-code').empty()
                 i=0
-                bonuses=Array.from({length: Number(3)}, (_, i) => i + 1)
+                bonuses=makeArray(3)
                 for (b in bonuses) {
                     i++
                     $('#bonusname'+i).val('')
@@ -902,7 +903,7 @@
                     $('#bonusaspire'+i).val('')
                 }
                 i=0
-                polos=Array.from({length: Number(20)}, (_, i) => i + 1)
+                polos=makeArray(20)
                 for (p in polos) {
                     i++
                     $('#poloname'+i).val('')
