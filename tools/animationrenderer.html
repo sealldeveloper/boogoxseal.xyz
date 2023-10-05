@@ -196,7 +196,7 @@
 
 	function UpdateAudio() {
 		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile1" : "audFile2";
-  		_("#"+current_aud).currentTime = (aud_len*frame_index_current)/frame_index_count
+  		_("#"+current_aud).currentTime = Math.round((aud_len*frame_index_current)/frame_index_count)
 	}
 
         function encode64(input) {
