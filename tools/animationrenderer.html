@@ -30,6 +30,7 @@
     <script src="../assets/GIFEncoder.js"></script>
     <script src="../assets/LZWEncoder.js"></script>
     <script src="../assets/NeuQuant.js"></script>
+    <script src="../assets/general-functions.js"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}.coolButton{font-size:15px;margin-right:10px;transition:all .2s linear;border-style:solid;color:var(--color);border-width:2px;border-color:#7023b8;font-family:monospace}.coolButton:hover{transform:translateY(-3px);border-radius:28px;border-bottom-right-radius:28px;border-top-right-radius:28px;border-top-left-radius:28px;border-bottom-left-radius:28px;border-color:#7023b8;font-family:monospace}.parent:hover .coolButton:not(:hover){border-radius:29px;font-family:monospace}h1,h3{font-family:monospace}
     </style>
@@ -194,7 +195,7 @@
 
 	function UpdateAudio() {
 		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile1" : "audFile2";
-  		$("#"+current_aud).currentTime = (aud_len*frame_index_current)/frame_index_count
+  		_("#"+current_aud).currentTime = (aud_len*frame_index_current)/frame_index_count
 	}
 
         function encode64(input) {
@@ -382,7 +383,7 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
-            $("#"+current_aud).pause();
+            _("#"+current_aud).pause();
 	});
 
 	$("#frameStop").dblclick(function() {
@@ -393,7 +394,7 @@
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
             UpdateAudio();
-            $("#"+current_aud).play();
+            _("#"+current_aud).play();
 	});
         
 	$("#framePlayBack").click(function() { 
