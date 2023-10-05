@@ -125,6 +125,11 @@
                 <div class="container-fluid" id="pictos">
                 </div>
             </div>
+            <div class="form-group col-md-5 m-3">
+                <label for="brightness" class="form-label">Brightness of Active Icons</label>
+                <input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightness" value="0.7">
+                <small id="brightnessval"></small>
+            </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
             </div>
@@ -145,15 +150,15 @@
     <h3 style="padding-bottom:5px"></h3>
     <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
     <script>
-        filters = [
-            new fabric.Image.filters.Grayscale(),
-            new fabric.Image.filters.Brightness({
-                brightness: 0.7
-            })
-        ]
         generatedelay=0
         currentlyrunningbuild=0
         async function grayscale(input) {
+            filters = [
+                new fabric.Image.filters.Grayscale(),
+                new fabric.Image.filters.Brightness({
+                    brightness: Number($('#brightness').val())
+                })
+            ]
             var img = ""
             var canvas = new fabric.Canvas('tempcanvas', {
             });
@@ -293,6 +298,9 @@
                 }
             })
         }
+        $('#brightness').on('mousemove', function(){
+            $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
+        })
         $('#buildform').on('change', function(){
             generate('build',false)
         })
@@ -306,6 +314,7 @@
             generate('build',false)
             await waitFor(_ => generatedelay === 2)
             generate('template',false)
+            $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
         }
         onload()
         $('#submission').on('click', function(){

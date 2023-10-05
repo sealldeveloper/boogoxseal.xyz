@@ -62,7 +62,11 @@
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group col-md-5 m-3">
-                <canvas id="render" height="152"></canvas>
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br><br>
+                <div style="overflow-x: auto;">
+                    <canvas id="render" height="152"></canvas>
+                </div>
                 <div class="visually-hidden">
                     <canvas id="render-hd" height="304"></canvas>
                 </div>
@@ -89,7 +93,11 @@
             </div>
             <h3 class="m-3">Preview</h3>
             <div class="form-group m-3">
-                <canvas id="buildrender" height="152"></canvas>
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br><br>
+                <div style="overflow-x: auto;">
+                    <canvas id="buildrender" height="152"></canvas>
+                </div>
                 <div class="visually-hidden">
                     <canvas id="buildrender-hd" height="304"></canvas>
                     <canvas id="tempcanvas"></canvas>
@@ -100,6 +108,20 @@
     <script>
         generatedelay=0
         currentlyrunningbuild=0
+        function roundedCorners(ctx,x,y,radius,width,height) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            ctx.clip()
+        }
         async function LoadImageFromDisk(input,r,type) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -120,7 +142,7 @@
         function initCanvases(canvasname,iconCount,modifier) {
             var canvas = document.getElementById(canvasname)
             var ctx = canvas.getContext('2d')
-            $('#'+canvasname).attr('width',(130*iconCount)*modifier)
+            $('#'+canvasname).attr('width',((130*iconCount)*modifier)-(10*modifier))
             $('#'+canvasname).attr('height',152*modifier)
             return ctx
         }
@@ -156,6 +178,7 @@
                     if ($(`#icon${r}`).val() !== ""){
                         iconimg = await LoadImageFromDisk($(`#icon${r}`)[0],r,'icon')
                         if (iconimg !== undefined) {
+                            roundedCorners(ctx,x,0,35,ms,ms)
                             ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
                         }
                     }
