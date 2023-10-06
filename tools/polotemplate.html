@@ -135,28 +135,24 @@
                             count++
                             currentHeadPosY += ((count-1)%headrowCount==0 && count !== 1) ? headHeight : 0
                             currentHeadPosX = ((count-1)%headrowCount==0 && count !== 1) ? 0 : currentHeadPosX
-                            ctx.fillStyle = (count%2 == 0) ? 'cyan' : 'yellow'
-                            ctx.fillRect(currentHeadPosX,currentHeadPosY,164*modifier,headHeight)
-                            ctx.stroke()
+                            head_colour = (count%2 == 0) ? 'cyan' : 'yellow'
+                            drawLabelledBox(ctx,head_colour,currentHeadPosX,currentHeadPosY,164*modifier,headHeight)
                             if (headWidth < 164*modifier) {
                                 gaps=164*modifier-headWidth
-                                ctx.fillStyle= (count%2 == 0) ? 'orange' : 'brown'
-                                ctx.fillRect(currentHeadPosX,currentHeadPosY,gaps/2,headHeight)
-                                ctx.stroke()
-                                ctx.fillRect(currentHeadPosX+headWidth+gaps/2,currentHeadPosY,gaps/2,headHeight)
-                                ctx.stroke()
+                                gap_colour= (count%2 == 0) ? 'orange' : 'brown'
+                                drawLabelledBox(ctx,gap_colour,currentHeadPosX,currentHeadPosY,gaps/2,headHeight)
+                                drawLabelledBox(ctx,gap_colour,currentHeadPosX+headWidth+gaps/2,currentHeadPosY,gaps/2,headHeight)
                             }
                             ctx.fillStyle = "black";
                             ctx.font = 15*modifier+"px CozetteVector";
                             ctx.fillText('Head '+count,currentHeadPosX,currentHeadPosY+10*modifier)
                             coordinates.push(`Head ${count}: ${currentHeadPosX},${currentHeadPosY}`)
-                            currentHeadPosX=currentHeadPosX+164*modifier
+                            currentHeadPosX+=164*modifier
                         }
                     }
-                    
-                    canvas_render('render',1)
                     canvas_render('render-hd',2)
                     canvas_render('render-mini',0.5)
+                    canvas_render('render',1)
                 })
             }
             $('.form-control').on('change', function(){
@@ -168,14 +164,10 @@
                 pom.setAttribute('href', text);
                 pom.setAttribute('download', filename);
 
-                if (document.createEvent) {
-                    var event = document.createEvent('MouseEvents');
-                    event.initEvent('click', true, true);
-                    pom.dispatchEvent(event);
-                }
-                else {
-                    pom.click();
-                }
+                if (!document.createEvent) return pom.click();
+                var event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
             }
             $('#submission').on('click', function(){
                 var zip = new JSZip();
@@ -185,9 +177,7 @@
                 headheight=Number($('#headheight').val())
                 arrayframes=makeArray(totalframe)
                 af=[]
-                for (x in arrayframes) {
-                    af.push(`{"prop":"0,${height},0,0"}`)
-                }
+                for (x in arrayframes) af.push(`{"prop":"0,${height},0,0"}`)
                 coordinates_compiled=` === sealldeveloper's Polo Template Generator - Coordinates Sheet - ${name} === \n\n`+coordinates.join('\n')+"\n\n === End of Coordinates Sheet === "
                 json_data=`{"animeName":"${name}","percentageMax":"0.2","totalFrame":"${totalframe}","width":"164","height":"${height}","headHeight":"${headheight}","arrayFrame":[`+af.join(',')+`]}`
                 zip.file(`${name}-coordinates.txt`,coordinates_compiled)

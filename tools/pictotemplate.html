@@ -136,6 +136,8 @@
             <h3 class="m-3">Preview</h3>
             <div class="form-group m-3">
                 <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br>
+                <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
                 <br><br>
                 <div style="overflow-x: auto;">
                     <canvas id="buildrender" height="136"></canvas>
@@ -152,6 +154,7 @@
     <script>
         generatedelay=0
         currentlyrunningbuild=0
+        submissioncheck=false
         async function grayscale(input) {
             filters = [
                 new fabric.Image.filters.Grayscale(),
@@ -213,15 +216,16 @@
             }
         }
         
-        async function pictoBuild(canvasname, modifier,submissioncheck) {
+        async function pictoBuild(canvasname, modifier) {
             currentlyrunningbuild++
             var pictoCount = Number($('#pictocountbuild').val())
             var prevCount = Number($("#pictos").children().length)
             var newadjustment= pictoCount-prevCount
             var pictos = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
             ctx = initCanvases(canvasname,pictoCount,modifier)
-            if (pictoCount === 0) $('#pictosection').addClass('visually-hidden')
-            if (pictoCount !== 0) $('#pictosection').removeClass('visually-hidden')
+            classes=$('#pictosection').attr("class").split(/\s+/)
+            newclasses = (pictoCount === 0) ? classes.push('visually-hidden') : classes.pop()
+            $('#pictosection').attr("class",classes.join(/\s+/))
 
             if (newadjustment > 0) {
                 for (var r in pictos){
@@ -271,15 +275,12 @@
                     }
                 }
             }
-            generatedelay++
-            if (submissioncheck === true) {
-                submissioncounter++
-            }
             currentlyrunningbuild--
+            generatedelay += submissioncheck ? 2 : 1
             return
             
         }
-        function generate(input,submissioncheck) {
+        function generate(input) {
             var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
             cozette.load().then(async function(font){
                 document.fonts.add(font);
@@ -287,8 +288,8 @@
                     if (currentlyrunningbuild <= 0){
                         $('#submissionbuild').prop('disabled',true)
                         generatedelay=0
-                        await pictoBuild('buildrender-hd',2,submissioncheck)
-                        await pictoBuild('buildrender',1,submissioncheck)
+                        await pictoBuild('buildrender-hd',2)
+                        await pictoBuild('buildrender',1)
                         await waitFor(_ => generatedelay === 2)
                         $('#submissionbuild').prop('disabled',false)
                     }
@@ -305,18 +306,18 @@
             $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
         })
         $('#buildform').on('change', function(){
-            generate('build',false)
+            generate('build')
         })
         $('#form').on('change', function(){
-            generate('template',false)
+            generate('template')
         })
         async function onload() {
             Coloris({
                 alpha:true
             })
-            generate('build',false)
+            generate('build')
             await waitFor(_ => generatedelay === 2)
-            generate('template',false)
+            generate('template')
             $('#brightnessval').html(`Current Value: ${$('#brightness').val()}`)
         }
         onload()
@@ -331,17 +332,16 @@
         })
         $('#submissionbuild').on('click', async function(){
             overlayShow()
-            submissioncounter = 0
-            await generate('build',true)
-            await waitFor(_ => submissioncounter === 1)
-            await generate('build',true)
-            await waitFor(_ => submissioncounter === 2)
+            submissioncheck=true
+            await generate('build')
+            await waitFor(_ => generatedelay === 4)
             var zip = new JSZip();
             zip.file(`game-picto.png`, zipImg('buildrender'), {base64:true})
             zip.file(`game-picto-hd.png`, zipImg('buildrender-hd'), {base64:true})
             zip.generateAsync({type:"base64"}).then(function (base64) {
                 window.open("data:application/zip;base64," + base64,'_blank')
             });
+            submissioncheck=false
             overlayHide()
         })
     </script>

@@ -93,6 +93,8 @@
             <h3 class="m-3">Preview</h3>
             <div class="form-group m-3">
                 <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br>
+                <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
                 <br><br>
                 <div style="overflow-x: auto;">
                     <canvas id="buildrender" height="152"></canvas>
@@ -107,6 +109,7 @@
     <script>
         generatedelay=0
         currentlyrunningbuild=0
+        submissioncheck=false
         function roundedCorners(ctx,x,y,radius,width,height) {
             ctx.beginPath();
             ctx.moveTo(x + radius, y);
@@ -146,15 +149,16 @@
             return ctx
         }
         
-        async function iconBuild(canvasname, modifier,submissioncheck) {
+        async function iconBuild(canvasname, modifier) {
             currentlyrunningbuild++
             var iconCount = Number($('#iconcountbuild').val())
             var prevCount = Number($("#icons").children().length)
             var newadjustment= iconCount-prevCount
             var icons = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
             ctx = initCanvases(canvasname,iconCount,modifier)
-            if (iconCount === 0) $('#iconsection').addClass('visually-hidden')
-            if (iconCount !== 0) $('#iconsection').removeClass('visually-hidden')
+            classes=$('#iconsection').attr("class").split(/\s+/)
+            newclasses = (iconCount === 0) ? classes.push('visually-hidden') : classes.pop()
+            $('#iconsection').attr("class",classes.join(/\s+/))
 
             if (newadjustment > 0) {
                 for (var r in icons){
@@ -168,38 +172,30 @@
             }
             var newCount = $("#icons").children().length
             var iconUploads = makeArray(newCount)
-            count = 0
             ms=120*modifier
             if (iconUploads.length > 0) {
                 for (r in iconUploads) {
                     r = Number(r)+1
                     x = ms*(r-1)+((r-1)*10)
-                    if ($(`#icon${r}`).val() !== ""){
-                        iconimg = await LoadImageFromDisk($(`#icon${r}`)[0],r,'icon')
-                        if (iconimg !== undefined) {
-                            ctx.save();
-                            roundedCorners(ctx,x,0,35,ms,ms)
-                            ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
-                            ctx.restore();
-                        }
+                    iconimg = ($(`#icon${r}`).val() !== "") ? await LoadImageFromDisk($(`#icon${r}`)[0],r,'icon') : undefined
+                    textimg = ($(`#icontext${r}`).val() !== "") ? await LoadImageFromDisk($(`#icontext${r}`)[0],r,'text') : undefined
+                    if (iconimg !== undefined) {
+                        ctx.save();
+                        roundedCorners(ctx,x,0,35,ms,ms)
+                        ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
+                        ctx.restore();
                     }
-                    if ($(`#icontext${r}`).val() !== ""){
-                        textimg = await LoadImageFromDisk($(`#icontext${r}`)[0],r,'text')
-                        if (textimg !== undefined) {
-                            ctx.drawImage(textimg,0,0,textimg.width,textimg.height,x,126*modifier,ms,26*modifier);
-                        }
+                    if (textimg !== undefined) {
+                        ctx.drawImage(textimg,0,0,textimg.width,textimg.height,x,126*modifier,ms,26*modifier);
                     }
                 }
             }
-            generatedelay++
-            if (submissioncheck === true) {
-                submissioncounter++
-            }
             currentlyrunningbuild--
+            generatedelay += submissioncheck ? 2 : 1
             return
             
         }
-        function generate(input,submissioncheck) {
+        function generate(input) {
             var cozette = new FontFace('CozetteVector', 'url(../assets/CozetteVector.otf)');
             cozette.load().then(async function(font){
                 document.fonts.add(font);
@@ -207,8 +203,8 @@
                     if (currentlyrunningbuild <= 0){
                         $('#submissionbuild').prop('disabled',true)
                         generatedelay=0
-                        await iconBuild('buildrender',1,submissioncheck)
-                        await iconBuild('buildrender-hd',2,submissioncheck)
+                        await iconBuild('buildrender',1)
+                        await iconBuild('buildrender-hd',2)
                         await waitFor(_ => generatedelay === 2)
                         $('#submissionbuild').prop('disabled',false)
                     }
@@ -244,13 +240,13 @@
             })
         }
         $('#form').on('change', function(){
-            generate('template',false)
+            generate('template')
         })
         $('#buildform').on('change', function(){
-            generate('build',false)
+            generate('build')
         })
-        generate('template',false)
-        generate('build',false)
+        generate('template')
+        generate('build')
         function download(uri, name) {
             var link = document.createElement("a");
             link.download = name;
@@ -271,17 +267,16 @@
         })
         $('#submissionbuild').on('click', async function(){
             overlayShow()
-            submissioncounter = 0
-            await generate('build',true)
-            await waitFor(_ => submissioncounter === 1)
-            await generate('build',true)
-            await waitFor(_ => submissioncounter === 2)
+            submissioncheck=true
+            await generate('build')
+            await waitFor(_ => generatedelay === 4)
             var zip = new JSZip();
-            zip.file(`game-picto.png`, zipImg('buildrender'), {base64:true})
-            zip.file(`game-picto-hd.png`, zipImg('buildrender-hd'), {base64:true})
+            zip.file(`switch-bt.png`, zipImg('buildrender'), {base64:true})
+            zip.file(`switch-bt-hd.png`, zipImg('buildrender-hd'), {base64:true})
             zip.generateAsync({type:"base64"}).then(function (base64) {
                 window.open("data:application/zip;base64," + base64,'_blank')
             });
+            submissioncheck=false
             overlayHide()
         })
     </script>
