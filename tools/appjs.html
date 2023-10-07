@@ -60,12 +60,13 @@
                 <small id="import-comment" style="color:#999999" class="form-text m-1">This will attempt to parse an existing app.js and put it in the builder to be modified! This is should be able to process all app.js files.</small>
                 <br>
                 <div class="m-2">
-                    <label for="appjs-import">Enter your existing app.js contents below:</label>
+                    <label for="appjs-import">App.js File</label>
                     <br>
-                    <textarea id="appjs-import" class="form-control" rows="5"></textarea>
+                    <div class="col-md-3">
+                        <input id="appjs-import" class="form-control" type="file"></input>
+                    </div>
                     <div class="form-group m-2" id="import-button">
                         <input class="btn btn-primary" type="submit" value="Import App.js" id="import-input"></input>
-                        <input class="btn btn-warning" type="submit" value="Clear App.js Box" id="clear-appjs-input"></input>
                         <input class="btn btn-danger" type="submit" value="Clear All Fields" id="clear-input"></input>
                     </div>
                 </div>
@@ -390,15 +391,26 @@
                 pom.setAttribute('href', 'data:text/plain;charset=utf8,' + encodeURIComponent(text));
                 pom.setAttribute('download', filename);
     
-                if (document.createEvent) {
-                    var event = document.createEvent('MouseEvents');
-                    event.initEvent('click', true, true);
-                    pom.dispatchEvent(event);
-                }
-                else {
-                    pom.click();
-                }
+                if (!document.createEvent) return pom.click();
+                var event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
             }
+            function LoadTextFromDisk(input, callback) {
+            try{
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsText(input.files[0]);
+                    reader.onload = () => {
+                        callback(reader.result);
+                    };
+                }  else {
+                    callback(undefined)
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
             
 
             // Math and Advanced Options
@@ -470,19 +482,7 @@
                 $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
             }
             
-            $('#col1').on('change', function(){
-                colourUpdate()
-            })
-            
-            $('#col2').on('change', function(){
-                colourUpdate()
-            })
-            
-            $('#col3').on('change', function(){
-                colourUpdate()
-            })
-            
-            $('#col4').on('change', function(){
+            $('#colors').on('change', function(){
                 colourUpdate()
             })
             
@@ -497,58 +497,43 @@
                 polocount = Number($('#polocount').val())
                 allpolos=makeArray(polocount)
                 for (var a in allpolos) {
-                    if ($(`#${a}polo-${val}`).is(':checked')) {
-                        id = $(`#${a}polo-${val}`).attr('id')
-                        id = id.replace(`polo-${val}`,'')
-                        temp_selection.push(id)
-                    }
+                    if (!$(`#${a}polo-${val}`).is(':checked')) continue
+                    id = $(`#${a}polo-${val}`).attr('id')
+                    id = id.replace(`polo-${val}`,'')
+                    temp_selection.push(id)
                 }
                 if (temp_selection.length > 5) {
                     alert('You can\'t select more than 5 polos for a bonus!')
-                    
                     for (var a in allpolos) {
-                        a=Number(a)+1
+                        a++
                         checked = (last_valid_selection[Number(val)-1].includes(a.toString())) ? true : false
                         $(`#${a}polo-${val}`).prop('checked',checked)
                     }
                 } else {
                     last_valid_selection[Number(val)-1]=[]
-                    for (const t in temp_selection) {
-                        last_valid_selection[Number(val)-1].push(temp_selection[t])
-                    }
+                    for (const t in temp_selection) last_valid_selection[Number(val)-1].push(temp_selection[t])
                 }
             }
     
-            function bonusRequired(val) {
+            function bonusProperties(val) {
                 num = Number(val)
-                requiredpolos=makeArray(3)
-                for (var r in requiredpolos){
-                    r=Number(r)+1
-                    required = (r === 0) ? false : ((r <= num) ? true : false)
-                    $('#bonusname'+r).prop('required',required)
-                    $('#bonussrc'+r).prop('required',required)
-                    $('#bonuscode'+r).prop('required',required)
-                    $('#bonussound'+r).prop('required',required)
+                bonuses=makeArray(3)
+                for (var r in bonuses){
+                    r++
+                    usedbonus = (r <= num) ? true : false
+                    $('#bonusname'+r).prop('required',usedbonus)
+                    $('#bonussrc'+r).prop('required',usedbonus)
+                    $('#bonuscode'+r).prop('required',usedbonus)
+                    $('#bonussound'+r).prop('required',usedbonus)
                 }
-            }
-
-            function bonusHides(val) {
                 $('#bonusedit1').addClass('visually-hidden')
                 $('#bonusedit2').addClass('visually-hidden')
                 $('#bonusedit3').addClass('visually-hidden')
-                $('#bonusedit'+val).removeClass('visually-hidden')
+                $('#bonusedit'+num).removeClass('visually-hidden')
             }
             
-            $('#bonuspolocode1').on('click', function(event){
-                bonusUpdate("1")
-            })
-            
-            $('#bonuspolocode2').on('click', function(event){
-                bonusUpdate("2")
-            })
-            
-            $('#bonuspolocode3').on('click', function(event){
-                bonusUpdate("3")
+            $('.bonus-polo-code').on('click', function(event){
+                bonusUpdate($(this).attr('id').split('bonuspolocode')[1])
             })
             
             $('input[name="bonusesRadio"]').change(function(){ 
@@ -556,13 +541,10 @@
                     $('#bonus-options').empty()
                     var val=$('input[name="bonusesRadio"]:checked').val()
                     choices=makeArray(val)
-                    for (const c in choices){
-                        $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
-                    }
+                    for (const c in choices) $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
                     $('#bonusselector').removeClass('visually-hidden')
                     var val = $('#bonusselect')[0].selectedOptions[0].innerText
-                    bonusRequired(val)
-                    bonusHides(val)
+                    bonusProperties(val)
                 } else {
                     $('#bonusedit1').addClass('visually-hidden')
                     $('#bonusedit2').addClass('visually-hidden')
@@ -573,22 +555,14 @@
                
             })
             
-            $('#bonusselect').on('click',function(){
+            $('#bonusselect').on('mousemove',function(){
                 var val = $(this)[0].selectedOptions[0].innerText
-                bonusRequired(val)
-                bonusHides(val)
+                bonusProperties(val)
             })
             
             $('#bonusselect').on('change',function(){
                 var val = $(this)[0].selectedOptions[0].innerText
-                bonusRequired(val)
-                bonusHides(val)
-            })
-            
-            $('#bonusselect').on('keyup',function(){
-                var val = $(this)[0].selectedOptions[0].innerText
-                bonusRequired(val)
-                bonusHides(val)
+                bonusProperties(val)
             })
     
             
@@ -614,7 +588,7 @@
                 polocount = Number($('#polocount').val())
                 polos = makeArray(polocount)
                 for (var r in polos){
-                    r=Number(r)+1
+                    r++
                     $('#poloname'+r).prop('required',true)
                     $('#polocolor'+r).prop('required',true)
                     $('#polouniqsnd'+r).prop('required',true)
@@ -625,16 +599,16 @@
             
             $('#polocount').change(function(){ 
                 $('#polo-options').empty()
-                var val=$(this).val()
-                if (Number(val) > 99 || Number(val) < 1) {
+                var val=Number($(this).val())
+                if (val > 99 || val < 1) {
                     warning = "The amount of polos cannot be "
                     warning += (Number(val) > 99) ? 'greater than 99!' : 'less than 1!'
-                    alert(warning)
                     $('#bonusescontent-comment').removeClass('visually-hidden')
                     $('#bonuses-content').addClass('visually-hidden')
                     $('#poloselector').addClass('visually-hidden')
                     poloElements()
                     $(this).val("")
+                    alert(warning)
                     return
                 }
                 
@@ -669,184 +643,152 @@
                 poloUpdates(val)
                 
             })
-    
-            $('#poloselect').on('click',function(){
-                var val = $(this)[0].selectedOptions[0].innerText
-                poloElements()
-                poloUpdates(val)
-                
-            })
             
             $('#poloselect').on('change',function(){
                 var val = $(this)[0].selectedOptions[0].innerText
                 poloElements()
                 poloUpdates(val)
-               
             })
-            
-            $('#poloselect').on('keyup',function(){
+
+            $('#poloselect').on('mousemove',function(){
                 var val = $(this)[0].selectedOptions[0].innerText
                 poloElements()
                 poloUpdates(val)
-                
             })
     
 
             // Imports and Field clears
             $('#import-input').on('click', async function(){
-                
+                error_log=""
                 const options = {
                     toplevel: true,
                 };
-
-                    const result = await Terser.minify($('#appjs-import').val(), options);
-                    if (result.error) {
-                        alert("Error: " + result.error)
-                    } else {
-                        console.log(result.code)
-                        data=result.code.split('new function(){')[1]
-                        $('#name').val(data.split('this.name="')[1].split('",')[0])
-                        $('#version').val(data.split('this.version="')[1].split('",')[0]).change()
-                        $('#date').val(data.split('this.date="')[1].split('",')[0])
-                        $('#folder').val(data.split('this.folder="')[1].split('",')[0])
-                        $('#looptime').val(data.split('this.looptime=')[1].split(',')[0])
-                        $('#bpm').val(data.split('this.bpm=')[1].split(',')[0])
-                        $('#totalframe').val(data.split('this.totalframe=')[1].split(',')[0])
-                        $('#nbpolo').val(data.split('this.nbpolo=')[1].split(',')[0])
-                        $('#nbloopbonus').val(data.split('this.nbloopbonus=')[1].split(',')[0])
-                        $('#bonusloopA').val(data.split('this.bonusloopA=')[1].split(',')[0]).change()
-                        $('#bonusendloopA').val(data.split('this.bonusendloopA=')[1].split(',')[0]).change()
-                        $('#recmaxloop').val(data.split('this.recmaxloop=')[1].split(',')[0])
-                        $('#recminloop').val(data.split('this.recminloop=')[1].split(',')[0])
-                        $('#spritepolo').val(data.split('this.spritepolo="')[1].split('",')[0])
-                        $('#spritepicto').val(data.split('this.spritepicto="')[1].split('",')[0])
-                        $('#colBck').val(data.split('this.colBck="')[1].split('",')[0])
-                        document.querySelector('#colBck').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#col0').val(data.split('this.col0="')[1].split('",')[0])
-                        document.querySelector('#col0').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#col1').val(data.split('this.col1="')[1].split('",')[0])
-                        document.querySelector('#col1').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#col2').val(data.split('this.col2="')[1].split('",')[0])
-                        document.querySelector('#col2').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#col3').val(data.split('this.col3="')[1].split('",')[0])
-                        document.querySelector('#col3').dispatchEvent(new Event('input', { bubbles: true }));
-                        loadbar($('#col3').val())
-                        $('#col4').val(data.split('this.col4="')[1].split('",')[0])
-                        document.querySelector('#col4').dispatchEvent(new Event('input', { bubbles: true }));
-                        $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
-                        $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
-                        $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
-                        $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
-                        $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
-                        loadbar($(col3).val())
-                        $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
-                        
-            
-                        polos=data.split('this.animearray=[')[1].split('],this.bonusarray')[0].split('},')
-                        $('#polocount').val(polos.length)
-                        poloElements()
-                        i=0
-                        for (polo in polos) {
-                            i++
-                            polos=data.split('this.animearray=[')[1].split('],this.bonusarray')[0].split('},')
-                            polo=Number(polo)
-                            polonew=polos[polo]
-                            poloname = polonew.split('name:"')[1].split('",')[0]
-                            $('#poloname'+i).val(poloname)
-                            $('#polocolor'+i).val('#'+polonew.split('color:"')[1].split('",')[0])
-                            console.log($('#polocolor'+i))
-                            document.querySelector('#polocolor'+i).dispatchEvent(new Event('input', { bubbles: true }));
-                            $('#polouniqsnd'+i).val(polonew.split('uniqsnd:')[1].split('}')[0])
-                        }
-                        
-                        
-                        
-                        j=0
-                        $('#polo-options').empty()
-                        choices=makeArray($('#polocount').val())
-                        for (const c in choices){
-                            $('#polo-options').append(`<option>${Number(c)+1}</option>`)
-                        }
-                        $('.bonus-polo-code').each(function(i,obj) {
-                            $(this).empty()
-                            j++
-                            i=0
-                            r=1
-                            a=-1
-                            for (const c in choices){
-                                i++
-                                if (i===r) {
-                                    $(this).append(`<div class="row"></div>`)
-                                    r=r+5
-                                    a++
-                                }
-                                $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
-                            }
-                        })
-                        bonus_split=data.split('this.bonusarray=[')[1]
-                        console.log(bonus_split)
-                        bonuses=bonus_split.split('];')[0].length > 0 ? bonus_split.split('],this')[0] : bonus_split.split('];')[0]
-                        bonuses=bonuses.split('},')
-                        q=0
-                        if (bonuses[0] !== ""){
-                            $('#bonusselector').removeClass('visually-hidden')
-                            for (var bonus in bonuses) {
-                                bonus=bonuses[bonus]
-                                q++
-                                $('#bonusname'+q).val(bonus.split('name:"')[1].split('",')[0])
-                                $('#bonussrc'+q).val(bonus.split('src:"')[1].split('",')[0])
-                                
-                                try {
-                                    $('#bonussound'+q).val(bonus.split('sound:"')[1].split('",')[0])
-                                    console.log(bonus.split('aspire:"')[1],bonus.split('aspire:"')[1].split('"'))
-                                    $('#bonusaspire'+q).val(bonus.split('aspire:"')[1].split('"')[0])
-                                } catch {
-                                    $('#bonussound'+q).val(bonus.split('sound:"')[1].split('"}')[0])
-                                    console.log('No aspire bonus import '+q)
-                                }
-                                bonuscode=bonus.split('code:"')[1].split('",')[0]
-                                bonuscode=bonuscode.split(',')
-                                for (var code in bonuscode) {
-                                    code = bonuscode[code]
-                                    $(`#${code}polo-${q}`).prop('checked',true)
-                                }
-                                last_valid_selection[q-1]=bonuscode
-                            }
-                        }
-            
-                        
-                        $('#bonusescontent-comment').addClass('visually-hidden')
-                        $('#bonuses-content').removeClass('visually-hidden')
-                        $('#poloselector').removeClass('visually-hidden')
-                        poloUpdates("1")
-                        if (q !== 0) {
-                            $('#0bonuses').prop('checked',false)
-                            $(`#${q}bonuses`).prop('checked',true)
-                        }
-                        choices=makeArray(q)
-                        for (const c in choices){
-                            $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
-                        }
-                        bonusUpdate(q)
-                        bonusHides(q)
-                        bonusRequired(q)
+                var datainput = $('#appjs-import')[0];
+                result = ""
+                LoadTextFromDisk(datainput, async (text) => {
+                    if (text === undefined) return error_log+="No file selected for App.js import!\n"
+                    result = await Terser.minify(text, options);
+                })
+                if (error_log !== "") alert("Error Log:\n"+error_log)
+                await waitFor(_ => result !== "")
+                    
+                if (result.error) return alert("Error: " + result.error)
+                data=result.code.split('new function(){')[1]
+                values = ['name','version','date','folder','spritepolo','spritepicto']
+                number_values = ['looptime','bpm','totalframe','nbpolo','nbloopbonus','bonusloopA','bonusendloopA','recmaxloop','recminloop']
+                for (x in number_values) {
+                    x = number_values[x]
+                    try{
+                        tempdata = data.split(`this.${x}=`)[1].split(',')[0]
+                        $(`#${x}`).val(tempdata).change()
+                    } catch {
+                        error_log+=`${x} was not found in the AppJS!\n`
                     }
-                
-                
-            })
+                }
+                for (x in values) {
+                    x = values[x]
+                    try{
+                        $(`#${x}`).val(data.split(`this.${x}="`)[1].split('",')[0]).change()
+                    } catch {
+                        error_log+=`${x} was not found in the AppJS!\n`
+                    }
+                }
+                colour_elements = ['colBck','col0','col1','col2','col3','col4']
+                for (x in colour_elements) {
+                    x = colour_elements[x]
+                    try{
+                        $(`#${x}`).val(data.split(`this.${x}="`)[1].split('",')[0])
+                        document.querySelector(`#${x}`).dispatchEvent(new Event('input', { bubbles: true }));
+                    } catch {
+                        error_log+=`${x} was not found in the AppJS!\n`
+                    }
+                }
+                colourUpdate()
     
-            $('#clear-appjs-input').on('click', function() {
-                $('#appjs-import').val("")
-            })
+                polos=data.split('this.animearray=[')[1].split('],this.bonusarray')[0].split('},')
+                $('#polocount').val(polos.length)
+                poloElements()
+                i=0
+                for (polo in polos) {
+                    i++
+                    polos=data.split('this.animearray=[')[1].split('],this.bonusarray')[0].split('},')
+                    polonew=polos[polo]
+                    poloname = polonew.split('name:"')[1].split('",')[0]
+                    polocolor = polonew.split('color:"')[1].split('",')[0]
+                    polouniqsnd = polonew.split('uniqsnd:')[1].split('}')[0]
+
+                    $('#poloname'+i).val(poloname)
+                    $('#polocolor'+i).val('#'+polocolor)
+                    document.querySelector('#polocolor'+i).dispatchEvent(new Event('input', { bubbles: true }));
+                    $('#polouniqsnd'+i).val(polouniqsnd)
+                }
+                
+                j=0
+                $('#polo-options').empty()
+                choices=makeArray($('#polocount').val())
+                for (const c in choices){
+                    $('#polo-options').append(`<option>${Number(c)+1}</option>`)
+                }
+                $('.bonus-polo-code').each(function(i,obj) {
+                    $(this).empty()
+                    j++
+                    i=0
+                    r=1
+                    a=-1
+                    for (const c in choices){
+                        i++
+                        if (i===r) {
+                            $(this).append(`<div class="row"></div>`)
+                            r+=5
+                            a++
+                        }
+                        $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
+                    }
+                })
+
+                bonus_split=data.split('this.bonusarray=[')[1]
+                bonuses=bonus_split.split('];')[0].length > 0 ? bonus_split.split('],this')[0] : bonus_split.split('];')[0]
+                bonuses=bonuses.split('},')
+                q=0
+                if (bonuses[0] !== ""){
+                    $('#bonusselector').removeClass('visually-hidden')
+                    for (var bonus in bonuses) {
+                        bonus=bonuses[bonus]
+                        q++
+                        $('#bonusname'+q).val(bonus.split('name:"')[1].split('",')[0])
+                        $('#bonussrc'+q).val(bonus.split('src:"')[1].split('",')[0])
+                        bonussound = (bonus.split('sound:"')[1].split('",').length === 1) ? bonus.split('sound:"')[1].split('"}')[0] : bonus.split('sound:"')[1].split('",')[0]
+                        bonusaspire = (bonus.split('sound:"')[1].split('",').length !== 1) ? bonus.split('aspire:"')[1].split('"')[0] : ""
+                        $('#bonussound'+q).val(bonussound)
+                        $('#bonusaspire'+q).val(bonusaspire)
+                        bonuscode=bonus.split('code:"')[1].split('",')[0]
+                        bonuscode=bonuscode.split(',')
+                        for (var code in bonuscode) {
+                            code = bonuscode[code]
+                            $(`#${code}polo-${q}`).prop('checked',true)
+                        }
+                        last_valid_selection[q-1]=bonuscode
+                    }
+                }
     
+                $('#bonusescontent-comment').addClass('visually-hidden')
+                $('#bonuses-content').removeClass('visually-hidden')
+                $('#poloselector').removeClass('visually-hidden')
+                poloUpdates("1")
+                if (q !== 0) {
+                    $('#0bonuses').prop('checked',false)
+                    $(`#${q}bonuses`).prop('checked',true)
+                }
+                choices=makeArray(q)
+                for (const c in choices) $('#bonus-options').append(`<option>${Number(c)+1}</option>`)
+                bonusUpdate(q)
+                bonusProperties(q)
+                if (error_log !== "") alert("Error Log:\n"+error_log)
+            })
             $('#clear-input').on('click', function() {
-                $('#name').val('')
+                values = ['name','date','folder','looptime','bpm','totalframe','polocount']
+                for (x in values) $(`#${values[x]}`).val('')
                 $('#version').val("1").change()
-                $('#date').val('')
-                $('#folder').val('')
-                $('#looptime').val('')
-                $('#bpm').val('')
-                $('#totalframe').val('')
                 $('#nbpolo').val('7')
                 $('#nbloopbonus').val('6')
                 $('#bonusloopA').val("!0").change()
@@ -855,70 +797,51 @@
                 $('#recminloop').val('4')
                 $('#spritepolo').val('polo-sprite.png')
                 $('#spritepicto').val('game-picto.png')
-                $('#colBck').val("#000000")
-                document.querySelector('#colBck').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#col0').val("#000000")
-                document.querySelector('#col0').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#col1').val("#ff00ff")
-                document.querySelector('#col1').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#col2').val("#000000")
-                document.querySelector('#col2').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#col3').val("#000000")
-                document.querySelector('#col3').dispatchEvent(new Event('input', { bubbles: true }));
-                loadbar($('#col3').val())
-                $('#col4').val("#000000")
-                document.querySelector('#col4').dispatchEvent(new Event('input', { bubbles: true }));
-                $('#button-preview').html(`#playbutton{transition:.2s;background-color:${$(col1).val()};border-color:${$(col1).val()};width:100px;height:100px}#playbutton:hover{border-color:${$(col3).val()};background-color:${$(col3).val()}}`)
-                $('#renders-mymix-mymixbutton').attr('style',`font-size:20px; text-align:center;padding-right:20px;padding:15px;border-radius: 10px 10px 0px 0px;background-color:${$(col1).val()}`)
-                $('#renders-mymix-row').attr('style',`background-color:${$(col1).val()};padding:15px`)
-                $('#renders-mymix-favbutton').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col2).val()};color:${$(col1).val()}`)
-                $('#renders-mymix-mymixbutton2').attr('style',`font-size:15px;text-align:center;padding-bottom:2px;padding-top:2px;border-radius: 20px;background-color:${$(col3).val()};color:#ffffff`)
-                loadbar($(col3).val())
-                $('#mymix-button-icon').attr('style',`color:${$(col4).val()}`)
-                $('#polocount').val('')
+                colour_elements = ['colBck','col0','col1','col2','col3','col4']
+                for (x in colour_elements) {
+                    x = colour_elements[x]
+                    $(`#${x}`).val(getRandomColor())
+                    document.querySelector(`#${x}`).dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                colourUpdate()
                 $('#bonusescontent-comment').removeClass('visually-hidden')
                 $('#bonuses-content').addClass('visually-hidden')
                 $('#poloselector').addClass('visually-hidden')
                 poloUpdates("1")
-                $('#1bonuses').prop('checked',false)
-                $('#2bonuses').prop('checked',false)
-                $('#3bonuses').prop('checked',false)
                 $('#0bonuses').prop('checked',true)
                 $('#bonusselector').addClass('visually-hidden')
-                $('#bonusedit1').addClass('visually-hidden')
-                $('#bonusedit2').addClass('visually-hidden')
-                $('#bonusedit3').addClass('visually-hidden')
-                bonusRequired(0)
+                bonusProperties(0)
                 $('#polo-options').empty()
                 $('#bonus-options').empty()
                 $('.bonus-polo-code').empty()
                 i=0
                 bonuses=makeArray(3)
+                bonusValues = ['name','src','code','sound','aspire']
                 for (b in bonuses) {
                     i++
-                    $('#bonusname'+i).val('')
-                    $('#bonussrc'+i).val('')
-                    $('#bonuscode'+i).val('')
-                    $('#bonussound'+i).val('')
-                    $('#bonusaspire'+i).val('')
+                    for (x in bonusValues) {
+                        $(`#bonus${bonusValues[x]}${i}`).val('')
+                    }
+                    $('#bonusedit'+i).addClass('visually-hidden')
+                    $(`#${i}bonuses`).prop('checked',false)
                 }
                 i=0
                 polos=makeArray(20)
+                poloValues = ['name','color','uniqsnd']
                 for (p in polos) {
                     i++
-                    $('#poloname'+i).val('')
-                    $('#polocolor'+i).val('')
-                    $('#polouniqsnd'+i).val('')
+                    for (x in poloValues) {
+                        $(`#polo${poloValues[x]}${i}`).val('')
+                    }
                 }
             })
-    
 
             // Export
             $('#submission').on('click', function(){
                 polos=[]
                 polocount = Number($('#polocount').val())
                 for (var i in [...Array(polocount).keys()]) {
-                    i=Number(i)+1
+                    i++
                     name=$('#poloname'+i).val()
                     color=$('#polocolor'+i).val()
                     color=color.replace('#','')
@@ -929,17 +852,15 @@
                 bonuses=[]
                 bonuscount = Number($('input[name="bonusesRadio"]:checked').val())
                 for (var i in [...Array(bonuscount).keys()]) {
-                    i=Number(i)+1
+                    i++
                     name=$('#bonusname'+i).val()
                     src=$('#bonussrc'+i).val()
                     code=last_valid_selection[i-1].join(',')
                     sound=$('#bonussound'+i).val()
                     aspire=$('#bonusaspire'+i).val()
-                    if (!aspire) {
-                        bonuses.push(`{name:"${name}",src:"${src}",code:"${code}",sound:"${sound}"}`)
-                    } else {
-                        bonuses.push(`{name:"${name}",src:"${src}",code:"${code}",sound:"${sound}",aspire:"${aspire}"}`)
-                    }
+                    bonusdata = `{name:"${name}",src:"${src}",code:"${code}",sound:"${sound}"`
+                    bonusdata += (!aspire) ? "}" : `,aspire:"${aspire}"}`
+                    bonuses.push(bonusdata)
                 }
                 data=`/** Generated by sealldevelopers app.js generator **/\nvar app=new function(){this.name="${$('#name').val()}",this.version="${$('#version').find(':selected').val()}",this.date="${$('#date').val()}",this.folder="${$('#folder').val()}",this.looptime=${$('#looptime').val()},this.bpm=${$('#bpm').val()},this.totalframe=${$('#totalframe').val()},this.nbpolo=${$('#nbpolo').val()},this.nbloopbonus=${$('#nbloopbonus').val()},this.bonusloopA=${$('#bonusloopA').find(':selected').val()},this.bonusendloopA=${$('#bonusendloopA').find(':selected').val()},this.recmaxloop=${$('#recmaxloop').val()},this.recminloop=${$('#recminloop').val()},this.recmintime=Math.round(this.looptime/1e3)*this.recminloop,this.spritepolo="${$('#spritepolo').val()}",this.spritepicto="${$('#spritepicto').val()}",this.colBck="${$('#colBck').val()}",this.col0="${$('#col0').val()}",this.col1="${$('#col1').val()}",this.col2="${$('#col2').val()}",this.col3="${$('#col3').val()}",this.col4="${$('#col4').val()}",this.animearray=[${polos.join(',')}],this.bonusarray=[${bonuses.join(',')}],this.unlockerarray=[];for(var n=0,o=this.animearray.length;n<o;n++){var a=this.animearray[n].name;this.animearray[n].soundA=a+"_a",this.animearray[n].soundB=this.animearray[n].uniqsnd?a+"_a":a+"_b",this.animearray[n].anime=a+"-sprite.png",this.animearray[n].animeData=a+".json"}};`
                 download('app.js',data)

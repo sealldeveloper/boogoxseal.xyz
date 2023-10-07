@@ -151,7 +151,7 @@
                         callback(reader.result)
                     };
                 } else {
-                    console.log('hi img broke')
+                    callback(undefined)
                 }
             } catch (e) {
                 console.log(e)
@@ -167,7 +167,7 @@
                         callback(reader.result);
                     };
                 }  else {
-                    console.log('hi json broke')
+                    callback(undefined)
                 }
             } catch (e) {
                 console.log(e)
@@ -183,7 +183,7 @@
                         callback(reader.result);
                     };
                 }  else {
-                    console.log('hi xml broke')
+                    callback(undefined)
                 }
             } catch (e) {
                 console.log(e)
@@ -196,6 +196,7 @@
             }
             jsondata=""
             xmldata=""
+            error_log=""
             $( '#jsoncontent' ).empty()
             $( '#spritesheetcontent' ).empty()
             var $i = $( '#json' ), // Put file input ID here
@@ -208,12 +209,15 @@
             var imginput = $('#spritesheet')[0];
             var xmlinput = $('#motionxml')[0];
             LoadJSONFromDisk(jsoninput, (text) => {
+                if (text === undefined) return error_log+='No JSON Selected!\n'
                 jsondata=JSON.parse(text)
             })
             LoadXMLFromDisk(xmlinput, (text) => {
+                if (text === undefined) return error_log+='No XML Selected!\n'
                 xmldata=atob(text.split(',')[1])
             })
             LoadImageFromDisk(imginput, (imgdata) => {
+                if (imgdata === undefined) return error_log+='No Spritesheet Selected!\n'
                 if (window.DOMParser){
                 parser = new DOMParser();
                 xml = parser.parseFromString(xmldata, "text/xml")
@@ -365,6 +369,7 @@
                 seperate_count++
                 return true
             })
+            if (error_log !== "") alert("Error Log:\n"+error_log)
         }
 
         $('#submission').on('click', async function(){

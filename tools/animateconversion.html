@@ -151,7 +151,7 @@
                         callback(reader.result)
                     };
                 } else {
-                    console.log('hi img broke')
+                    callback(undefined)
                 }
             } catch (e) {
                 console.log(e)
@@ -167,7 +167,7 @@
                         callback(reader.result);
                     };
                 }  else {
-                    console.log('hi json broke')
+                    callback(undefined)
                 }
             } catch (e) {
                 console.log(e)
@@ -179,14 +179,17 @@
                 return alert( 'FileReader API is not supported by your browser.' );
             }
             jsondata=""
+            error_log=""
             $( '#jsoncontent' ).empty()
             $( '#spritesheetcontent' ).empty()
             var jsoninput = $('#json')[0];
             var imginput = $('#spritesheet')[0];
             LoadJSONFromDisk(jsoninput, (text) => {
+                if (text === undefined) error_log += "No JSON Selected!\n"
                 jsondata=JSON.parse(text)
             })
             LoadImageFromDisk(imginput, (imgdata) => {
+                if (imgdata === undefined) error_log += "No Spritesheet Selected!\n"
                 frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
                 frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
                 canvas=$('#spritesheetcanvas')[0]
@@ -277,6 +280,7 @@
                 }
                 seperate_count++
             })
+            if (error_log !== "") alert("Error Log:\n"+error_log)
         }
 
         $('#submission').on('click', async function(){
