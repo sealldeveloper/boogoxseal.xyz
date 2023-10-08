@@ -144,7 +144,7 @@
         function initCanvases(canvasname,iconCount,modifier) {
             var canvas = document.getElementById(canvasname)
             var ctx = canvas.getContext('2d')
-            $('#'+canvasname).attr('width',((130*iconCount)*modifier)-(10*modifier))
+            $('#'+canvasname).attr('width',((130*8)*modifier)-(10*modifier))
             $('#'+canvasname).attr('height',152*modifier)
             return ctx
         }
