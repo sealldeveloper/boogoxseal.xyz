@@ -30,6 +30,7 @@
     <script src="../assets/GIFEncoder.js"></script>
     <script src="../assets/LZWEncoder.js"></script>
     <script src="../assets/NeuQuant.js"></script>
+    <link rel="stylesheet" href="../css/overlay.css">
     <script src="../assets/general-functions.js"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}.coolButton{font-size:15px;margin-right:10px;transition:all .2s linear;border-style:solid;color:var(--color);border-width:2px;border-color:#7023b8;font-family:monospace}.coolButton:hover{transform:translateY(-3px);border-radius:28px;border-bottom-right-radius:28px;border-top-right-radius:28px;border-top-left-radius:28px;border-bottom-left-radius:28px;border-color:#7023b8;font-family:monospace}.parent:hover .coolButton:not(:hover){border-radius:29px;font-family:monospace}h1,h3{font-family:monospace}
@@ -39,6 +40,9 @@
 
 
 <body style="background-color:rgb(17, 5, 29) ;">
+    <div id="overlay" class="text-center visually-hidden">
+        <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
+    </div>
     <div class="topnav">
 		<a href="../">Home</a>
 		<a class="active" href="./">Tools</a>
@@ -111,8 +115,8 @@
                     <a class="btn coolButton" role="button" id="frameStepForward">Frame &gt;</a>
                 </div>
             </div>
-		<audio id="audFile1" hidden><source id="audFileSource1" src="" type=""></audio>
-		<audio id="audFile2" hidden><source id="audFileSource2" src="" type=""></audio>
+		<audio id="audFile1" src="" hidden></audio>
+		<audio id="audFile2" src="" hidden></audio>
         </div>
 	</div>
     <script>
@@ -139,9 +143,9 @@
         var border_bool = false;
         var image_src;
         var json_src;	    
-	var aud_src = [];
-	var aud_len;
-	var current_aud;
+        var aud_src = [];
+        var aud_len;
+        var current_aud;
         var ui_framenum = true;
         var ui_framecontrols = true;
         var gif_loop = true;
@@ -164,7 +168,7 @@
                 frame_index_current = frame_index_count - 1;
 
             UpdateSprite();
-	    UpdateAudio();
+	        UpdateAudio();
         }
         }
 
@@ -195,8 +199,10 @@
         }
 
 	function UpdateAudio() {
-		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile1" : "audFile2";
-  		_("#"+current_aud).currentTime = Math.round((aud_len*frame_index_current)/frame_index_count)
+		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile2" : "audFile1";
+        (!$("#"+current_aud).attr('src')) ? console.log($("#"+current_aud).attr('src'), current_aud,frame_index_count,frame_index_current) : console.log(current_aud,frame_index_count,frame_index_current)
+        if ($("#"+current_aud).attr('src')) $("#"+current_aud)[0].load()
+        if (aud_len) _("#"+current_aud).currentTime = Math.round((aud_len*frame_index_current)/frame_index_count)
 	}
 
         function encode64(input) {
@@ -231,13 +237,16 @@
         }
         }
 
-        function LoadAudioFromDisk(input, callback) {
+        async function LoadAudioFromDisk(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.readAsDataURL(input.files[0]);
+            returnValue = ""
             reader.onload = function (e) {
-                callback(e.target.result);
+                returnValue = e.target.result
             };
+            await waitFor(_ => returnValue !== "")
+            return returnValue
         }
         }
 
@@ -299,7 +308,8 @@
 
             var binary_gif = encoder.stream().getData();
             var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
-            encoder.download("download.gif");
+            window.open(data_url)
+            //encoder.download("download.gif");
         }
 
         // register event functions
@@ -348,15 +358,17 @@
             $("#audInp2").attr("style", "display:"+(aud === 2 ? "block" : "none"));
         });
 
-	$(".audio-inputs").change(function() {
-		aud_src = (aud === 2 ? [$("#audInp1").val(), $("#audInp2").val()] : [$("#audInp1").val(), $("#audInp1").val()]) || [];
-	        aud_names = (aud_src[0] === aud_src[1] ? ["#audFileSource1", "#audFileSource1"] : ["#audFileSource1", "#audFileSource2"]);
-	        for (i=0; i<1; i++) {
-	            name = aud_names[i];
-		    LoadAudioFromDisk(aud_src[i], (audio) => {
-			$(name).attr('src',audio);    
-		    })
-	        }
+	$(".audio-inputs").change(async function() {
+        console.log(this)
+		aud_src = (aud === 2 ? [$("#audInp1"), $("#audInp2")] : [$("#audInp1"), $("#audInp1")]) || [];
+        aud_names = (aud_src[0] === aud_src[1] ? ["#audFile1", "#audFile1"] : ["#audFile1", "#audFile2"]);
+        for (i=0; i<1; i++) {
+            name = aud_names[i];
+            console.log(name, aud_src[i])
+            prevSrc = $(name).attr('src')
+            audio = await LoadAudioFromDisk(aud_src[i][0])
+            $(name).attr('src',audio);    
+        }
 	      
 		UpdateAudio();
 	});
@@ -382,7 +394,7 @@
         
 	$("#frameStop").click(function() { 
 	    SetFrameStep(0); 
-            $("#"+current_aud)[0].pause();
+        if (!$("#"+current_aud)[0].paused) $("#"+current_aud)[0].pause();
 	});
 
 	$("#frameStop").dblclick(function() {
@@ -392,8 +404,9 @@
         
 	$("#framePlayForward").click(function() { 
 	    SetFrameStep(1);
-            UpdateAudio();
-            $("#"+current_aud)[0].play();
+        UpdateAudio();
+        if ($("#"+current_aud)[0].paused) $("#"+current_aud)[0].play().catch((e)=>{console.log(e)})
+
 	});
         
 	$("#framePlayBack").click(function() { 
@@ -401,7 +414,11 @@
 	});
         
         $("#gif").click(function(){
+            overlayShow();
+            console.log($('#overlay'))
             GenerateGif();
+            overlayHide();
+            console.log($('#overlay'))
         });
     
         // get default variable values from form inputs
@@ -417,6 +434,9 @@
         $('#jsonInp').val('');
         $('#audInp1').val('');
         $('#audInp2').val('');
+        Coloris({
+            alpha:false
+        })
         setInterval(Update,16);
     </script>
     <h3 style="padding-bottom:5px"></h3>
