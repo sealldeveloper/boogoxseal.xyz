@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:rgb(17, 5, 29) ;">
+<head>
+	<title>Title SVG Generator - BOOGO x SEAL</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../icons/site.webmanifest">
+	<link rel="shortcut icon" href="../icons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#603cba">
+	<meta name="msapplication-config" content="../icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BOOGO x SEAL">
+	<meta property="og:title" content="Title SVG Generator" />
+    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
+    <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
+	<meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/overlay.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="../js/general-functions.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" integrity="sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas2svg"></script>
+    <style>
+        td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
+    </style>
+</head>
+
+
+<body style="background-color:rgb(17, 5, 29);">
+    <div id="overlay" class="text-center visually-hidden">
+        <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
+    </div>
+    <div class="topnav">
+		<a href="../">Home</a>
+		<a class="active" href="./">Tools</a>
+		<a href="../mods">Mods</a>
+		<a href="../about">About Us</a>
+		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
+	  </div>
+	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+        <h1 class="m-4 mt-3">Incredibox 'Title SVG' Generator</h1>
+        <div id="buildform">
+            <h3 class="m-3">Options</h3>
+            <div class="form-group col-md-5 m-3">
+                <label for="imageupload"></label>
+                <input class="form-control" type="file" id="imageupload" accept="image"></input>
+                <div id="imageupload-div" required="true">
+                    <img src="" id="imageupload-img"/>
+                </div>
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group m-3">
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br>
+                <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
+                <br><br>
+                <canvas id="buildrender" height="100" width="500"></canvas>
+            </div>
+        </div>
+	</div>
+    <h3 style="padding-bottom:5px"></h3>
+    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+    <script>
+        generatedelay=0
+        currentlyrunningbuild=0
+        submissioncheck=false
+        svg = ""
+        async function LoadImageFromDisk(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                exit_value = [""]
+                reader.onload = function (e) {
+                    imgdata = reader.result;
+                    $(`#imageupload-img`).attr('src',imgdata)
+                    exit_value = [$(`#imageupload-img`)[0]]
+                    return
+                };
+                await waitFor( _ => exit_value[0] !== "")
+                return exit_value
+            }
+        }
+        
+        async function build(canvasname) {
+            var canvas = new fabric.Canvas(canvasname, { isDrawingMode: false });
+            var ctx = canvas.getContext('2d')
+            var svgctx = new C2S(500,100);
+            currentlyrunningbuild++
+            img = await LoadImageFromDisk($(`#imageupload`)[0])
+            if (img !== undefined) {
+                img=img[0]
+                vals = aspectRatioConvert([500,100],[img.width,img.height])
+                ctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
+                svgctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
+            }
+            currentlyrunningbuild--
+            generatedelay += submissioncheck ? 2 : 1
+            svg = svgctx.getSerializedSvg(true)
+            return 
+            
+        }
+        function generate() {
+            var cozette = new FontFace('CozetteVector', 'url(../webfonts/CozetteVector.otf)');
+            cozette.load().then(async function(font){
+                document.fonts.add(font);
+                if (currentlyrunningbuild <= 0){
+                    $('#submissionbuild').prop('disabled',true)
+                    generatedelay=0
+                    await build('buildrender')
+                    await waitFor(_ => generatedelay === 1)
+                    $('#submissionbuild').prop('disabled',false)
+                }
+            })
+        }
+        $('#buildform').on('change', function(){
+            generate()
+        })
+        async function onload() {
+            Coloris({
+                alpha:true
+            })
+            generate()
+            await waitFor(_ => generatedelay === 1)
+        }
+        onload()
+        $('#submissionbuild').on('click', async function(){
+            overlay('show')
+            submissioncheck=true
+            value = await generate()
+            await waitFor(_ => generatedelay === 2)
+            var zip = new JSZip();
+            zip.file(`title.svg`, btoa(svg), {base64:true})
+            zip.generateAsync({type:"base64"}).then(function (base64) {
+                window.open("data:application/zip;base64," + base64,'_blank')
+            });
+            submissioncheck=false
+            overlay('hide')
+        })
+    </script>
+</body>
+</html>

@@ -16,7 +16,7 @@
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="BOOGO x SEAL">
 	<meta property="og:title" content="App.js Generator" />
-	    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
+    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
     <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
 	<meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:description" content="Boogo and Seal make Incredibox Mods and Tools.">
@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
     <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/terser@5.19.2/dist/bundle.min.js"></script>
-    <script src="../assets/general-functions.js"></script>
+    <script src="../js/general-functions.js"></script>
 
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
@@ -421,14 +421,9 @@
             
             $('#enableadvanced').change(function(){
                 var options = $('.advanced-option');
-                if ($('#enableadvanced:checked').length !== 0) {
-                    for (const o of options) {
-                        o.removeClass('visually-hidden')
-                    }
-                } else {
-                    for (const o of options) {
-                        o.addClass('visually-hidden')
-                    }
+                var classType = ($('#enableadvanced:checked').length !== 0) ? 'r' : 'a'
+                for (const o of options) {
+                    modifyClass(classType, 'visually-hidden', o)
                 }
             })
             
@@ -526,9 +521,8 @@
                     $('#bonuscode'+r).prop('required',usedbonus)
                     $('#bonussound'+r).prop('required',usedbonus)
                 }
-                $('#bonusedit1').addClass('visually-hidden')
-                $('#bonusedit2').addClass('visually-hidden')
-                $('#bonusedit3').addClass('visually-hidden')
+                elements = [$('#bonusedit1'),$('#bonusedit2'),$('#bonusedit3')]
+                modifyMultipleClass('a','visually-hidden',elements)
                 $('#bonusedit'+num).removeClass('visually-hidden')
             }
             
@@ -546,10 +540,8 @@
                     var val = $('#bonusselect')[0].selectedOptions[0].innerText
                     bonusProperties(val)
                 } else {
-                    $('#bonusedit1').addClass('visually-hidden')
-                    $('#bonusedit2').addClass('visually-hidden')
-                    $('#bonusedit3').addClass('visually-hidden')
-                    $('#bonusselector').addClass('visually-hidden')
+                    elements=[$('#bonusedit1'),$('#bonusedit2'),$('#bonusedit3'),$('#bonusselector')]
+                    modifyMultipleClass('a','visually-hidden',elements)
                     $('#bonus-options').empty()
                 }
                
@@ -604,8 +596,8 @@
                     warning = "The amount of polos cannot be "
                     warning += (Number(val) > 99) ? 'greater than 99!' : 'less than 1!'
                     $('#bonusescontent-comment').removeClass('visually-hidden')
-                    $('#bonuses-content').addClass('visually-hidden')
-                    $('#poloselector').addClass('visually-hidden')
+                    elements = [$('#bonuses-content'),$('#poloselector')]
+                    modifyMultipleClass('a','visually-hidden',elements)
                     poloElements()
                     $(this).val("")
                     alert(warning)
@@ -637,8 +629,8 @@
                 
                 var val = $('#poloselect')[0].selectedOptions[0].innerText
                 $('#bonusescontent-comment').addClass('visually-hidden')
-                $('#bonuses-content').removeClass('visually-hidden')
-                $('#poloselector').removeClass('visually-hidden')
+                elements = [$('#bonuses-content'),$('#poloselector')]
+                modifyMultipleClass('r','visually-hidden',elements)
                 poloElements()
                 poloUpdates(val)
                 
@@ -772,8 +764,8 @@
                 }
     
                 $('#bonusescontent-comment').addClass('visually-hidden')
-                $('#bonuses-content').removeClass('visually-hidden')
-                $('#poloselector').removeClass('visually-hidden')
+                elements = [$('#bonuses-content'),$('#poloselector')]
+                modifyMultipleClass('r','visually-hidden',elements)
                 poloUpdates("1")
                 if (q !== 0) {
                     $('#0bonuses').prop('checked',false)
@@ -805,11 +797,10 @@
                 }
                 colourUpdate()
                 $('#bonusescontent-comment').removeClass('visually-hidden')
-                $('#bonuses-content').addClass('visually-hidden')
-                $('#poloselector').addClass('visually-hidden')
                 poloUpdates("1")
                 $('#0bonuses').prop('checked',true)
-                $('#bonusselector').addClass('visually-hidden')
+                elements = [$('#bonusselector'),$('#poloselector'),$('#bonuses-content')]
+                modifyMultipleClass('a','visually-hidden',elements)
                 bonusProperties(0)
                 $('#polo-options').empty()
                 $('#bonus-options').empty()

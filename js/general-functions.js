@@ -16,6 +16,7 @@ function drawLabelledBox(ctx,colour,posX,posY,width,height,textX,textY,text,font
         ctx.fillText(text,textX,textY)
     }
 }
+
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -24,9 +25,11 @@ function getRandomColor() {
     }
     return color;
 }
+
 function makeArray(int) {
     return Array.apply(null, Array(Number(int))).map(function (x, i) { return i; })
 }
+
 function waitFor(conditionFunction) {
 
     const poll = resolve => {
@@ -42,11 +45,26 @@ function zipImg(name) {
     var data = datauri.replace(/^data:image\/\w+;base64,/, "");
     return data
 }
-function overlayShow() {
-    $('#overlay').removeClass('visually-hidden')
-    $('body').css('overflow','hidden')
+function overlay(o) {
+    bodycss = (o === 'hide') ? 'auto' : 'hidden'
+    classoption = (o === 'hide') ? 'a' : 'r'
+    modifyClass(classoption, 'visually-hidden', $('#overlay'))
+    $('body').css('overflow', bodycss)
 }
-function overlayHide() {
-    $('#overlay').addClass('visually-hidden')
-    $('body').css('overflow','auto')
+
+function modifyClass(etype, c, e) {
+    (etype === 'a') ? e.addClass(c) : e.removeClass(c)
+}
+
+function modifyMultipleClass(etype, c, e) {
+    for (f in e) modifyClass(etype, c, f)
+}
+
+function aspectRatioConvert(base,img) {
+    var rw = img[0] / base[0],
+        rh = img[1] / base[1],
+        ar = rw > rh ? rw : rh;
+    var x = (base[0]/2)-((img[0]/ar)/2),
+        y = (base[1]/2)-((img[1]/ar)/2)
+    return [x,y,(img[0]/ar),(img[1]/ar)]
 }
