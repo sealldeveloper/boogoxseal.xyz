@@ -56,7 +56,7 @@
             <div class="form-group col-md-5 m-3">
                 <label for="imageupload"></label>
                 <input class="form-control" type="file" id="imageupload" accept="image"></input>
-                <div id="imageupload-div" required="true">
+                <div class="visually-hidden" id="imageupload-div" required="true">
                     <img src="" id="imageupload-img"/>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                 <br>
                 <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
                 <br><br>
-                <canvas id="buildrender" height="100" width="500"></canvas>
+                <canvas id="buildrender" height="80" width="370"></canvas>
             </div>
         </div>
 	</div>
@@ -80,6 +80,8 @@
         currentlyrunningbuild=0
         submissioncheck=false
         svg = ""
+        basex = 370
+        basey = 80
         async function LoadImageFromDisk(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -99,13 +101,21 @@
         async function build(canvasname) {
             var canvas = new fabric.Canvas(canvasname, { isDrawingMode: false });
             var ctx = canvas.getContext('2d')
-            var svgctx = new C2S(500,100);
+            var svgctx = new C2S(basex,basey);
             currentlyrunningbuild++
             img = await LoadImageFromDisk($(`#imageupload`)[0])
             if (img !== undefined) {
                 img=img[0]
-                vals = aspectRatioConvert([500,100],[img.width,img.height])
+                vals = aspectRatioConvert([basex,basey],[img.width,img.height])
+                var rx = vals[0]-(vals[2]/2),
+                    ry = vals[1]-(vals[3]/2)
+                console.log(rx,ry)
+                var rx = (rx < 0) ? basex+(vals[2]/2) : rx,
+                    ry = (ry < 0) ? basey+(vals[3]/2) : ry
+                console.log(rx,ry)
+                ctx.fillRect(0,0,rx,ry);
                 ctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
+                svgctx.fillRect(0,0,rx,ry);
                 svgctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
             }
             currentlyrunningbuild--

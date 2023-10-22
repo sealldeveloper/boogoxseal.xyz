@@ -414,10 +414,10 @@
 	});
         
         $("#gif").click(function(){
-            overlayShow();
+            overlay('show');
             console.log($('#overlay'))
             GenerateGif();
-            overlayHide();
+            overlay('hide');
             console.log($('#overlay'))
         });
     
