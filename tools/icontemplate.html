@@ -266,7 +266,7 @@
             });
         })
         $('#submissionbuild').on('click', async function(){
-            overlayShow()
+            overlay('show')
             submissioncheck=true
             await generate('build')
             await waitFor(_ => generatedelay === 4)
@@ -277,7 +277,7 @@
                 window.open("data:application/zip;base64," + base64,'_blank')
             });
             submissioncheck=false
-            overlayHide()
+            overlay('hide')
         })
     </script>
     <h3 style="padding-bottom:5px"></h3>
