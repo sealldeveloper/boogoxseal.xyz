@@ -35,6 +35,7 @@
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
     </style>
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script> 
 </head>
 
 
@@ -48,6 +49,7 @@
 		<a href="../mods">Mods</a>
 		<a href="../about">About Us</a>
 		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
+<a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
 	  </div>
 	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
         <h1 class="m-4 mt-3">Incredibox 'Title SVG' Generator</h1>
@@ -69,19 +71,20 @@
                 <br>
                 <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
                 <br><br>
-                <canvas id="buildrender" height="80" width="370"></canvas>
+                <canvas id="buildrender" height="100" width="500"></canvas>
             </div>
         </div>
 	</div>
     <h3 style="padding-bottom:5px"></h3>
+    
     <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
     <script>
         generatedelay=0
         currentlyrunningbuild=0
         submissioncheck=false
         svg = ""
-        basex = 370
-        basey = 80
+        basex = 500
+        basey = 100
         async function LoadImageFromDisk(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -107,15 +110,15 @@
             if (img !== undefined) {
                 img=img[0]
                 vals = aspectRatioConvert([basex,basey],[img.width,img.height])
-                var rx = vals[0]-(vals[2]/2),
-                    ry = vals[1]-(vals[3]/2)
-                console.log(rx,ry)
-                var rx = (rx < 0) ? basex+(vals[2]/2) : rx,
-                    ry = (ry < 0) ? basey+(vals[3]/2) : ry
-                console.log(rx,ry)
+                var rx = (basex-vals[2] === 0) ? basex : (basex-vals[2])/2,
+                    ry = (basey-vals[3] === 0) ? basey : (basey-vals[3])/2
+                ctx.globalAlpha = 0;
                 ctx.fillRect(0,0,rx,ry);
+                ctx.globalAlpha = 1;
                 ctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
+                svgctx.globalAlpha = 0;
                 svgctx.fillRect(0,0,rx,ry);
+                svgctx.globalAlpha = 1;
                 svgctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
             }
             currentlyrunningbuild--
