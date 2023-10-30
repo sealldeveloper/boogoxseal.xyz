@@ -120,29 +120,6 @@
 	</div>
     <script>
         seperate_count=0
-        function range(start, stop, step) {
-            if (typeof stop == 'undefined') {
-                // one param defined
-                stop = start;
-                start = 0;
-            }
-
-            if (typeof step == 'undefined') {
-                step = 1;
-            }
-
-            if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
-                return [];
-            }
-
-            var result = [];
-            for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
-                result.push(i);
-            }
-
-            return result;
-        };
-
         function LoadImageFromDisk(input, callback) {
             try{
                 if (input.files && input.files[0]) {
@@ -158,23 +135,6 @@
                 console.log(e)
             }
         }
-
-        function LoadJSONFromDisk(input, callback) {
-            try{
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.readAsText(input.files[0]);
-                    reader.onload = () => {
-                        callback(reader.result);
-                    };
-                }  else {
-                    callback(undefined)
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-
         function LoadXMLFromDisk(input, callback) {
             try{
                 if (input.files && input.files[0]) {
@@ -268,10 +228,7 @@
                 ctx.drawImage(this,0,0); // Or at whatever offset you like
                 };
                 img.src = imgdata;
-                if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
-                    frame0width=frame0width/2, frame0height=frame0height/2;
-                }
-                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
+                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "hd") {
                     frame0width=frame0width*2, frame0height=frame0height*2;
                 }
                 final_buffer = Number($('#downbuffer').val())

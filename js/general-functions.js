@@ -68,3 +68,42 @@ function aspectRatioConvert(base,img) {
         y = (base[1]/2)-((img[1]/ar)/2)
     return [x,y,(img[0]/ar),(img[1]/ar)]
 }
+
+function range(start, stop, step) {
+    if (typeof stop == 'undefined') {
+        // one param defined
+        stop = start;
+        start = 0;
+    }
+
+    if (typeof step == 'undefined') {
+        step = 1;
+    }
+
+    if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+        return [];
+    }
+
+    var result = [];
+    for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+        result.push(i);
+    }
+
+    return result;
+};
+
+function LoadJSONFromDisk(input, callback) {
+    try{
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.readAsText(input.files[0]);
+            reader.onload = () => {
+                callback(reader.result);
+            };
+        }  else {
+            callback(undefined)
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
