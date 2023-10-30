@@ -71,7 +71,7 @@
                 <br>
                 <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
                 <br><br>
-                <canvas id="buildrender" height="100" width="500"></canvas>
+                <canvas id="buildrender" height="80" width="370"></canvas>
             </div>
         </div>
 	</div>
@@ -83,8 +83,8 @@
         currentlyrunningbuild=0
         submissioncheck=false
         svg = ""
-        basex = 500
-        basey = 100
+        basex = 370
+        basey = 80
         async function LoadImageFromDisk(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
