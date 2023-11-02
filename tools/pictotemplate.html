@@ -74,57 +74,25 @@
         <hr>
         <br>
         <h1 class="m-4 mt-3">Incredibox 'Picto' Builder</h1>
+        <div class="m-4">
+            <h3 class="mt-3">Info</h3>
+            <span>
+                The picto can be any square image, though it should be larger than 136x136.<br>
+                You can use images that are not in this format, but they will get streched and warped.
+            </span>
+        </div>
         <div id="buildform">
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-3">
                 <label for="pictocountbuild">Picto Count</label>
                 <input class="form-control" type="number" id="pictocountbuild" placeholder="20" required="true" value="20"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Inactive BG Colour (Beats)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour1" required="true" value="#000000"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Active BG Colour (Beats)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour2" required="true" value="#cccccc00"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Inactive BG Colour (Effects)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour3" required="true" value="#000000"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Active BG Colour (Effects)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour4" required="true" value="#cccccc00"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Inactive BG Colour (Melodies)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour5" required="true" value="#000000"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Active BG Colour (Melodies)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour6" required="true" value="#cccccc00"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Inactive BG Colour (Voices)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour7" required="true" value="#000000"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="pictocountbuild">Picto Active BG Colour (Voices)</label>
-                <br>
-                <input class="form-control" type="text" data-coloris id="pictocolour8" required="true" value="#cccccc00"></input>
-            </div>
             <div class="form-group col-md-5 m-3" id="pictosection">
-                <label for="pictocountbuild">Pictos</label>
                 <br>
-                <div class="container-fluid" id="pictos">
+                <h5 class="m-3">Pictos</h5>
+                <div class="container-fluid m-3" id="pictos">
                 </div>
+                <br>
             </div>
             <div class="form-group col-md-5 m-3">
                 <label for="brightness" class="form-label">Brightness of Active Icons</label>
@@ -231,7 +199,7 @@
             if (newadjustment > 0) {
                 for (var r in pictos){
                     r=Number(r)+1+prevCount
-                    $('#pictos').append(`<div class="form-group col-md-5 m-3 pictoinputs"><label for="pictoicon${r}">Picto ${r}</label><input class="form-control" type="file" id="pictoicon${r}" accept="image"></input><div class="visually-hidden" id="pictoiconimg${r}-div" required="true"><img src="" id="pictoiconimg${r}"/><img src="" id="pictoiconimg${r}-gray"/></div></div>`)
+                    $('#pictos').append(`<div class="row pictoinputs col-md-7"><div class="col"><label for="pictoicon${r}">Picto ${r} Image</label><input class="form-control" type="file" id="pictoicon${r}" accept="image"></input></div><div class="col"><label for="picto${r}col1">Picto ${r} Inactive Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col1" required="true" value="#000000"></input></div><div class="col"><label for="picto${r}col2">Picto ${r} Active Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col2" required="true" value="#ffffff00"></input></div><div class="visually-hidden" id="pictoiconimg${r}-div" required="true"><img src="" id="pictoiconimg${r}"/><img src="" id="pictoiconimg${r}-gray"/></div></div>`)
                 }
             } else if (newadjustment < 0) {
                 for (var r in pictos) {
@@ -239,28 +207,17 @@
                 }
             }
             var newCount = $("#pictos").children().length
-            var colourInactiveBeats = $("#pictocolour1").val()
-            var colourActiveBeats = $("#pictocolour2").val()
-            var colourInactiveEffects = $("#pictocolour3").val()
-            var colourActiveEffects = $("#pictocolour4").val()
-            var colourInactiveMelodies = $("#pictocolour5").val()
-            var colourActiveMelodies = $("#pictocolour6").val()
-            var colourInactiveVoices = $("#pictocolour7").val()
-            var colourActiveVoices = $("#pictocolour8").val()
             var pictoUploads = makeArray(newCount)
             count = 0
-            drawLabelledBox(ctx,colourInactiveBeats,0,0,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourActiveBeats,0,68*modifier,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourInactiveEffects,68*modifier*5,0,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourActiveEffects,68*modifier*5,68*modifier,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourInactiveMelodies,68*modifier*10,0,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourActiveMelodies,68*modifier*10,68*modifier,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourInactiveVoices,68*modifier*15,0,68*modifier*5,68*modifier)
-            drawLabelledBox(ctx,colourActiveVoices,68*modifier*15,68*modifier,68*modifier*5,68*modifier)
             ms=68*modifier
             if (pictoUploads.length > 0) {
                 for (r in pictoUploads) {
                     r = Number(r)+1
+                    x = ms*(r-1)
+                    inactiveCol = $(`#picto${r}col1`).val()
+                    drawLabelledBox(ctx,inactiveCol,x,0,68*modifier,68*modifier)
+                    activeCol = $(`#picto${r}col2`).val()
+                    drawLabelledBox(ctx,activeCol,x,68*modifier,68*modifier,68*modifier)
                     pictoimgs = await LoadImageFromDisk($(`#pictoicon${r}`)[0],r)
                     if (pictoimgs !== undefined) {
                         pictoimg=pictoimgs[0]
@@ -270,7 +227,6 @@
                         src = await grayscale(graypictoimg)
                         await waitFor(_ => src !== graypictoimg.src)
                         graypictoimg.src = src
-                        x = ms*(r-1)
                         ctx.drawImage(pictoimg,0,0,pictoimg.width,pictoimg.height,x,0,ms,ms);
                         ctx.drawImage(graypictoimg,0,0,pictoimg.width,pictoimg.height,x,ms,ms,ms);
                     }
