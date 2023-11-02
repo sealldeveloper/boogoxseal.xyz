@@ -57,7 +57,7 @@ function modifyClass(etype, c, e) {
 }
 
 function modifyMultipleClass(etype, c, e) {
-    for (f in e) modifyClass(etype, c, f)
+    for (f in e) modifyClass(etype, c, e[f])
 }
 
 function aspectRatioConvert(base,img) {

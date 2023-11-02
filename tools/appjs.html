@@ -47,7 +47,7 @@
 		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
 <a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
 	  </div>
-	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+	<div id="main" class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
         <style id="button-preview">
             #playbutton{transition:.2s;background-color:#000;border-color:#000;width:100px;height:100px}#playbutton:hover{border-color:#f0f;background-color:#f0f}
             ::placeholder {color: #e2e2e2 !important;}
@@ -220,7 +220,7 @@
                         </optgroup>
                     </select>
                 </div>
-                <div id="pololist">
+                <div id="pololist" class="container m-3">
 
                 </div>
             </div>
@@ -568,7 +568,8 @@
                 if (newadjustment > 0) {
                     for (var r in polos){
                         r=Number(r)+1+prevcount
-                        $('#pololist').append(`<div class="form-group m-3 visually-hidden" id="poloedit${r}"><div class="form-group m-3 col-md-3"><label for="poloname${r}">Polo Name</label><input class="form-control" type="text" id="poloname${r}" placeholder="polo"></div><div class="form-group m-3 col-md-3"><label for="polocolor${r}">Polo Bonus Circle & Loading Bar Color </label><input class="form-control" type="text" data-coloris id="polocolor${r}" value="#000000"></div><div class="form-group m-3 col-md-3"><label for="polouniqsnd${r}">Does this Polo have two unique sound files?</label><select id="polouniqsnd${r}" class="form-control form-select"><optgroup><option value="!1" selected="">True</option><option value="!0">False</option></optgroup></select></div></div>`)
+                        $('#pololist').append(`<div class="row col-md-11" id="poloedit${r}"><div class="col"><label for="poloname${r}">Polo ${r} Name</label><input class="form-control" type="text" id="poloname${r}" placeholder="polo" required="true"></div><div class="col"><label for="polocolor${r}">Polo ${r} Bonus Circle & Loading Bar Color</label><input class="form-control" type="text" id="polocolor${r}" value="#000000" required="true" data-coloris=""></div><div class="col"><label for="polouniqsnd${r}">Does Polo ${r} have two unique sound files?</label><select id="polouniqsnd${r}" class="form-control form-select" required="true"><optgroup><option value="!1" selected="">True</option><option value="!0">False</option></optgroup></select></div></div>`)
+                        document.querySelector(`#polocolor${r}`).dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 } else if (newadjustment < 0) {
                     for (var r in polos) {
@@ -577,27 +578,13 @@
                 }
             }
             
-            function poloUpdates(val) {
-                polocount = Number($('#polocount').val())
-                polos = makeArray(polocount)
-                for (var r in polos){
-                    r++
-                    $('#poloname'+r).prop('required',true)
-                    $('#polocolor'+r).prop('required',true)
-                    $('#polouniqsnd'+r).prop('required',true)
-                    $('#poloedit'+r).addClass('visually-hidden')
-                }
-                if (val !== 0) $('#poloedit'+val).removeClass('visually-hidden')
-            }
-            
             $('#polocount').change(function(){ 
                 $('#polo-options').empty()
                 var val=Number($(this).val())
-                if (val > 99 || val < 1) {
-                    warning = "The amount of polos cannot be "
-                    warning += (Number(val) > 99) ? 'greater than 99!' : 'less than 1!'
+                if (val > 99) {
+                    warning = "The amount of polos cannot be greater than 99!"
                     $('#bonusescontent-comment').removeClass('visually-hidden')
-                    elements = [$('#bonuses-content'),$('#poloselector')]
+                    elements = [$('#bonuses-content')]
                     modifyMultipleClass('a','visually-hidden',elements)
                     poloElements()
                     $(this).val("")
@@ -628,25 +615,12 @@
                     }
                 })
                 
-                var val = $('#poloselect')[0].selectedOptions[0].innerText
                 $('#bonusescontent-comment').addClass('visually-hidden')
-                elements = [$('#bonuses-content'),$('#poloselector')]
+                elements = [$('#bonuses-content')]
                 modifyMultipleClass('r','visually-hidden',elements)
                 poloElements()
-                poloUpdates(val)
                 
-            })
-            
-            $('#poloselect').on('change',function(){
-                var val = $(this)[0].selectedOptions[0].innerText
-                poloElements()
-                poloUpdates(val)
-            })
-
-            $('#poloselect').on('mousemove',function(){
-                var val = $(this)[0].selectedOptions[0].innerText
-                poloElements()
-                poloUpdates(val)
+                
             })
     
 
@@ -765,9 +739,8 @@
                 }
     
                 $('#bonusescontent-comment').addClass('visually-hidden')
-                elements = [$('#bonuses-content'),$('#poloselector')]
+                elements = [$('#bonuses-content')]
                 modifyMultipleClass('r','visually-hidden',elements)
-                poloUpdates("1")
                 if (q !== 0) {
                     $('#0bonuses').prop('checked',false)
                     $(`#${q}bonuses`).prop('checked',true)
@@ -798,9 +771,8 @@
                 }
                 colourUpdate()
                 $('#bonusescontent-comment').removeClass('visually-hidden')
-                poloUpdates("1")
                 $('#0bonuses').prop('checked',true)
-                elements = [$('#bonusselector'),$('#poloselector'),$('#bonuses-content')]
+                elements = [$('#bonusselector'),$('#bonuses-content')]
                 modifyMultipleClass('a','visually-hidden',elements)
                 bonusProperties(0)
                 $('#polo-options').empty()
@@ -830,6 +802,11 @@
 
             // Export
             $('#submission').on('click', function(){
+                for (const el of document.getElementById('main').querySelectorAll("[required]")) {
+                    if (!el.reportValidity()) {
+                        return;
+                    }
+                }
                 polos=[]
                 polocount = Number($('#polocount').val())
                 for (var i in [...Array(polocount).keys()]) {
@@ -864,6 +841,7 @@
                 alpha:false
             })
             colourUpdate()
+            poloElements()
         </script>
 	</div>
     <h3 style="padding-bottom:5px"></h3>
