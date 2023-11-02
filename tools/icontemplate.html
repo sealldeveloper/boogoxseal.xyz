@@ -50,7 +50,7 @@
 <a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
 	  </div>
 	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
-		<h1 class="m-4 mt-3">Incredibox 'Icon Template' Generator</h1>
+        <h1 class="m-4 mt-3">Incredibox 'Icon Template' Generator</h1>
         <div id="form">
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-3">
@@ -76,16 +76,27 @@
         <hr>
         <br>
         <h1 class="m-4 mt-3">Incredibox 'Icon' Builder</h1>
+        <h3 class="m-4 mt-3">Info</h3>
+        <span>
+            The text image should be greater than or equal to 240x56 while retaining the aspect ratio (eg. 480x112).<br>
+            The icon can be any square image, though it should be larger than 240x240.<br><br>
+            You can use images that are not in this format, but they will get streched and warped.
+        </span>
         <div id="buildform">
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-3">
                 <label for="iconcountbuild">Icon Count</label>
-                <input class="form-control" type="number" id="iconcountbuild" placeholder="9" required="true" value="9"></input>
+                <input class="form-control" type="number" id="iconcountbuild" placeholder="8" required="true" value="8"></input>
+                <br>
+                <div class="form-switch form-check">
+                    <label class="form-check-label" for="iconcurvedbuild">Should the icons have curved corners?</label>
+                    <input class="form-check-input" type="checkbox" id="iconcurvedbuild" required="true" checked="true"></input>
+                </div>
             </div>
             <div class="form-group col-md-5 m-3" id="iconsection">
-                <label for="iconcountbuild">Icons</label>
                 <br>
-                <div class="container-fluid" id="icons">
+                <h5 class="m-3">Icons</h5>
+                <div class="container-fluid m-3" id="icons">
                 </div>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
@@ -164,7 +175,7 @@
             if (newadjustment > 0) {
                 for (var r in icons){
                     r=Number(r)+1+prevCount
-                    $('#icons').append(`<div class="form-group col-md-5 m-3 iconinputs"><label for="icon${r}">Icon ${r}</label><input class="form-control" type="file" id="icon${r}" accept="image"></input><label for="icontext${r}">Icon Text ${r}</label><input class="form-control" type="file" id="icontext${r}" accept="image"></input><div class="visually-hidden" id="iconimg${r}-div" required="true"><img src="" id="iconimg${r}"/><img src="" id="iconimgtext${r}"/></div></div>`)
+                    $('#icons').append(`<div class="iconinputs row col-md-5"><div class="col-sm"><label for="icon${r}">Icon ${r}</label><input class="form-control" type="file" id="icon${r}" accept="image"></input></div><div class="col-sm"><label for="icontext${r}">Icon Text ${r}</label><input class="form-control" type="file" id="icontext${r}" accept="image"></input></div><div class="visually-hidden" id="iconimg${r}-div" required="true"><img src="" id="iconimg${r}"/><img src="" id="iconimgtext${r}"/></div></div>`)
                 }
             } else if (newadjustment < 0) {
                 for (var r in icons) {
@@ -182,7 +193,7 @@
                     textimg = ($(`#icontext${r}`).val() !== "") ? await LoadImageFromDisk($(`#icontext${r}`)[0],r,'text') : undefined
                     if (iconimg !== undefined) {
                         ctx.save();
-                        roundedCorners(ctx,x,0,35,ms,ms)
+                        if ($('#iconcurvedbuild').prop('checked')) roundedCorners(ctx,x,0,35,ms,ms)
                         ctx.drawImage(iconimg,0,0,iconimg.width,iconimg.height,x,0,ms,ms);
                         ctx.restore();
                     }
@@ -222,7 +233,7 @@
             cozette.load().then(function(font){
                 document.fonts.add(font);
                 var iconCount = Number($('#iconcount').val())
-                width=(130*iconCount)-10
+                width=(130*8)-10
                 height=152*modifier
                 $(`#${cname}`).attr('width',width*modifier)
                 $(`#${cname}`).attr('height',height)
