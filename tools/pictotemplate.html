@@ -192,6 +192,7 @@
             var newadjustment= pictoCount-prevCount
             var pictos = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
             ctx = initCanvases(canvasname,pictoCount,modifier)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             classes=$('#pictosection').attr("class").split(/\s+/)
             newclasses = (pictoCount === 0) ? classes.push('visually-hidden') : classes.pop()
             $('#pictosection').attr("class",classes.join(/\s+/))

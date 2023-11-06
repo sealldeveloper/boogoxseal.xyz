@@ -52,6 +52,14 @@ function overlay(o) {
     $('body').css('overflow', bodycss)
 }
 
+function modifyProp(etype, p, e) {
+    (etype === 'a') ? e.prop(p,true) : e.prop(p,false)
+}
+
+function modifyMultipleProps(etype, c, e) {
+    for (f in e) modifyProp(etype, c, e[f])
+}
+
 function modifyClass(etype, c, e) {
     (etype === 'a') ? e.addClass(c) : e.removeClass(c)
 }

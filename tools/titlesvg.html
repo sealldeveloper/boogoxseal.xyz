@@ -104,6 +104,7 @@
         async function build(canvasname) {
             var canvas = new fabric.Canvas(canvasname, { isDrawingMode: false });
             var ctx = canvas.getContext('2d')
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             var svgctx = new C2S(basex,basey);
             currentlyrunningbuild++
             img = await LoadImageFromDisk($(`#imageupload`)[0])
@@ -122,8 +123,8 @@
                 svgctx.drawImage(img,0,0,img.width,img.height,vals[0],vals[1],vals[2],vals[3]);
             }
             currentlyrunningbuild--
-            generatedelay += submissioncheck ? 2 : 1
             svg = svgctx.getSerializedSvg(true)
+            generatedelay += submissioncheck ? 2 : 1
             return 
             
         }

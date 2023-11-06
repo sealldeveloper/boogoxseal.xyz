@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:rgb(17, 5, 29) ;">
+<head>
+	<title>Bonus SVG Builder - BOOGO x SEAL</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../icons/site.webmanifest">
+	<link rel="shortcut icon" href="../icons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#603cba">
+	<meta name="msapplication-config" content="../icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="BOOGO x SEAL">
+	<meta property="og:title" content="Bonus SVG Builder" />
+    <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
+    <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
+	<meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
+    <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/overlay.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="../js/general-functions.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" integrity="sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas2svg"></script>
+    <style>
+        td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
+    </style>
+</head>
+
+
+<body style="background-color:rgb(17, 5, 29);">
+    <div id="overlay" class="text-center visually-hidden">
+        <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
+    </div>
+    <div class="topnav">
+		<a href="../">Home</a>
+		<a class="active" href="./">Tools</a>
+		<a href="../mods">Mods</a>
+		<a href="../about">About Us</a>
+		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
+<a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
+	  </div>
+	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
+		<h1 class="m-4 mt-3">Incredibox Bonus SVG Builder</h1>
+        <div class="m-4">
+            <h3 class="mt-3">Info</h3>
+            <span>
+                The bonus icons can be any square image, though it should be larger than 70x70.<br>
+                You can use images that are not in this format, but they will get streched and warped.
+            </span>
+        </div>
+        <div id="buildform">
+            <h3 class="m-3">Options</h3>
+            <div class="form-group col-md-5 m-3">
+                <label for="bonuscountbuild">How many bonuses (total across all versions)?</label>
+                <input class="form-control" type="number" id="bonuscountbuild" placeholder="3" required="true" value="3"/>
+            </div>
+            <div class="form-group col-md-5 m-3">
+                <br>
+                <div class="form-switch form-check">
+                    <label class="form-check-label" for="iconlockchoice">Use the default lock icon?</label>
+                    <input class="form-check-input" type="checkbox" id="iconlockchoice" required="true" checked="true"/>
+                </div>
+                <div id="lockfileupload" class="visually-hidden">
+                    <br>
+                    <label for="bonusiconlock">Bonus Lock Image</label>
+                    <input class="form-control" type="file" id="bonusiconlock" accept="image"></input>
+                </div>
+                <div>
+                    <br>
+                    <div class="form-switch form-check">
+                        <label class="form-check-label" for="iconshrunklock">Should the icon be shrunk to fit better to the circle?</label>
+                        <input class="form-check-input" type="checkbox" id="iconshrunklock"/>
+                    </div>
+                    <div class="form-switch form-check">
+                        <label class="form-check-label" for="icongreylock">Should the icon be Greyscale?</label>
+                        <input class="form-check-input" type="checkbox" id="icongreylock"/>
+                    </div>
+                    <input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightnesslock" value="0"/>
+                    <br>
+                    <label for="bonuslockcol">Lock Icon Background Colour</label>
+                    <br>
+                    <input class="form-control" type="text" data-coloris id="bonuslockcol" required="true" value="#ffffff00"/>
+                    <div class="visually-hidden" id="bonusiconimglock-div" required="true">
+                        <img src="" id="bonusiconimglock"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-5 m-3" id="bonussection">
+                <br>
+                <h5 class="m-3">Bonuses</h5>
+                <div class="container-fluid m-3" id="bonuses">
+                </div>
+                <br>
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group m-3">
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br>
+                <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
+                <br><br>
+                <div style="overflow: auto;">
+                    <canvas id="buildrender" height="630" width="210"></canvas>
+                </div>
+                <div class="visually-hidden">
+                    <canvas id="tempcanvas"></canvas>
+                </div>
+            </div>
+        </div>
+	</div>
+    <h3 style="padding-bottom:5px"></h3>
+    <h3 style="text-align:center;font-size:10px">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a></h3>
+    <script>
+        generatedelay=0
+        currentlyrunningbuild=0
+        svg = ""
+        submissioncheck=false
+        async function grayscale(input,r) {
+            filters = [
+                new fabric.Image.filters.Grayscale(),
+                new fabric.Image.filters.Brightness({
+                    brightness: Number($(`#brightness${r}`).val())
+                })
+            ]
+            var img = ""
+            var canvas = new fabric.Canvas('tempcanvas', {});
+            canvas.setDimensions({width:input.width, height:input.height});
+            oImg = new fabric.Image(input)
+            canvas.add(oImg)
+            canvas.centerObject(oImg);
+            oImg.filters = filters
+            oImg.applyFilters()
+            img = canvas.toDataURL('image/png')
+            canvas.remove()
+            return img
+        }
+        async function LoadImageFromDisk(input,r) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                exit_bonus = [""]
+                reader.onload = function (e) {
+                    bonusimg = reader.result;
+                    $(`#bonusiconimg${r}`).attr('src',bonusimg)
+                    exit_bonus = [$(`#bonusiconimg${r}`)[0]]
+                    return
+                };
+                await waitFor( _ => exit_bonus[0] !== "")
+                return exit_bonus
+            }
+        }
+        
+        async function bonusBuild(canvasname, modifier) {
+            currentlyrunningbuild++
+            var bonusCount = Number($('#bonuscountbuild').val())
+            var prevCount = Number($("#bonuses").children().length)
+            var newadjustment= bonusCount-prevCount
+            var bonuses = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
+            var canvas = document.getElementById(canvasname)
+            var ctx = canvas.getContext('2d')
+            var svgctx = new C2S(canvas.width,canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            classes=$('#bonussection').attr("class").split(/\s+/)
+            newclasses = (bonusCount === 0) ? classes.push('visually-hidden') : classes.pop()
+            $('#bonussection').attr("class",classes.join(/\s+/))
+            if (newadjustment > 0) {
+                bonustracker=1
+                for (var r in bonuses){
+                    r=Number(r)+1+prevCount
+                    $('#bonuses').append(`<div class="row bonusinputs col-md-11"><div class="col"><label for="bonusicon${r}">Bonus ${bonustracker} (Pack ${Math.ceil(r/3)}) Image</label><input class="form-control" type="file" id="bonusicon${r}" accept="image"/></div><div class="col"><br><div class="form-switch form-check"><label class="form-check-label" for="iconshrunk${r}">Should the icon be shrunk to fit better to the circle?</label><input class="form-check-input" type="checkbox" id="iconshrunk${r}" required="true"/></div></div><div class="col"><br><div class="form-switch form-check"><label class="form-check-label" for="icongrey${r}">Should the icon be Greyscale?</label><input class="form-check-input" type="checkbox" id="icongrey${r}" required="true"/><br><input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightness${r}" value="0"/></div></div><div class="col"><label for="bonus${r}col">Bonus ${r} Background Colour</label><input class="form-control" type="text" data-coloris id="bonus${r}col" required="true" value="#ffffff00"/></div><div class="visually-hidden" id="bonusiconimg${r}-div" required="true"><img src="" id="bonusiconimg${r}"/></div></div></div>`)
+                    bonustracker = (bonustracker%3 === 0) ? 1 : bonustracker+1
+                }
+                
+            } else if (newadjustment < 0) {
+                for (var r in bonuses) {
+                    $('#bonuses').children().last().remove()
+                }
+            }
+            var newCount = $("#bonuses").children().length
+            var bonusUploads = makeArray(newCount)
+            count = 0
+            currenty=70
+            currentx=0
+            ms=70*modifier
+            if (bonusUploads.length > 0) {
+                for (r in bonusUploads) {
+                    r = Number(r)+1
+                    iconShrunk = $(`#iconshrunk${r}`).prop('checked')
+                    iconGrey = $(`#icongrey${r}`).prop('checked')
+                    backgroundCol = $(`#bonus${r}col`).val()
+                    svgctx.fillStyle = backgroundCol;
+                    svgctx.fillRect(currentx,currenty,ms,ms);
+                    drawLabelledBox(ctx,backgroundCol,currentx,currenty,ms,ms)
+                    bonusimgs = await LoadImageFromDisk($(`#bonusicon${r}`)[0],r)
+                    if (bonusimgs !== undefined) {
+                        bonusimg=bonusimgs[0]
+                        greysrc = bonusimg.src
+                        src = bonusimg.src
+                        greysrc = await grayscale(bonusimg,r)
+                        await waitFor(_ => greysrc !== bonusimg.src)
+                        pastex = (iconShrunk) ? currentx+15 : currentx
+                        pastey = (iconShrunk) ? currenty+15 : currenty
+                        pastesize = (iconShrunk) ? modifier*40 : ms
+                        bonusimg.src = (iconGrey) ? greysrc : src
+                        ctx.drawImage(bonusimg,0,0,bonusimg.width,bonusimg.height,pastex,pastey,pastesize,pastesize);
+                        svgctx.drawImage(bonusimg,0,0,bonusimg.width,bonusimg.height,pastex,pastey,pastesize,pastesize);
+                    }
+                    currentx = (r%3 === 0) ? 0 : currentx+ms
+                    currenty += (r%3 === 0) ? ms : 0
+                }
+                
+                iconShrunk = $(`#iconshrunklock`).prop('checked')
+                iconGrey = $(`#icongreylock`).prop('checked')
+                backgroundCol = $(`#bonuslockcol`).val()
+                svgctx.fillStyle = backgroundCol;
+                svgctx.fillRect(0,0,ms,ms);
+                drawLabelledBox(ctx,backgroundCol,0,0,ms,ms)
+                if (!$(`#iconlockchoice`).prop('checked')) {
+                    bonusimgs = await LoadImageFromDisk($(`#bonusiconlock`)[0],'lock')
+                } else {
+                    $(`#bonusiconimglock`).attr("src","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAEJQTFRFAAAA////////////////////////////////////////////////////////////////////////////////////CF/ShgAAABZ0Uk5TADA/ECCf7//fb39QYM+AkEBfoC+/sDUnkE0AAACoSURBVHic7dbNDoMgEEZRUBEtiNji+79qZ5oYjUkJDm6afnejs/AE/ElUCiH0z+mmaWuNzvSWGsYq6WG3eidXjD3kq5QpOD8PFU7ka8fPaTvzvjoRw0tYtoHv0lOiaLrQ7ONEy5EwgZjXPi40RiFzWpzkoZ8YRWMAcxvjUkr89qVD/KHT4cLTijaTLmZCjinfGRgwYMD8GONzzIX/k/W7spYrCCGEynoD09kYscc9uUcAAAAASUVORK5CYII=")
+                    bonusimgs = [$(`#bonusiconimglock`)[0]]
+                }
+                if (bonusimgs !== undefined) {
+                    bonusimg=bonusimgs[0]
+                    greysrc = bonusimg.src
+                    src = bonusimg.src
+                    greysrc = await grayscale(bonusimg,r)
+                    await waitFor(_ => greysrc !== bonusimg.src)
+                    pastex = (iconShrunk) ? 15 : 0
+                    pastey = (iconShrunk) ? 15 : 0
+                    pastesize = (iconShrunk) ? modifier*40 : ms
+                    bonusimg.src = (iconGrey) ? greysrc : src
+                    ctx.drawImage(bonusimg,0,0,bonusimg.width,bonusimg.height,pastex,pastey,pastesize,pastesize);
+                    svgctx.drawImage(bonusimg,0,0,bonusimg.width,bonusimg.height,pastex,pastey,pastesize,pastesize);
+                }
+            }
+            currentlyrunningbuild--
+            svg = svgctx.getSerializedSvg(true)
+            generatedelay += submissioncheck ? 2 : 1
+            return
+            
+        }
+        function generate(input) {
+            var cozette = new FontFace('CozetteVector', 'url(../webfonts/CozetteVector.otf)');
+            cozette.load().then(async function(font){
+                document.fonts.add(font);
+                if (currentlyrunningbuild <= 0){
+                    $('#submissionbuild').prop('disabled',true)
+                    generatedelay=0
+                    await bonusBuild('buildrender',1)
+                    await waitFor(_ => generatedelay === 1)
+                    $('#submissionbuild').prop('disabled',false)
+                }
+            })
+        }
+        $('#buildform').on('change', function(){
+            generate('build')
+        })
+        $('#iconlockchoice').on('click', function() {
+            val = $(this).prop('checked')
+            elem = $('#lockfileupload')
+            upload = $('#bonusiconlock')
+            classmod = (val) ? 'a' : 'r'
+            propmod = (!val) ? 'a' : 'r'
+            modifyClass(classmod, 'visually-hidden', elem)
+            modifyProp(propmod, 'required', upload)
+        })
+        async function onload() {
+            Coloris({
+                alpha:true
+            })
+            val = $('#iconlockchoice').prop('checked')
+            elem = $('#lockfileupload')
+            upload = $('#bonusiconlock')
+            classmod = (val) ? 'a' : 'r'
+            propmod = (!val) ? 'a' : 'r'
+            modifyClass(classmod, 'visually-hidden', elem)
+            modifyProp(propmod, 'required', upload)
+            generate('build')
+            await waitFor(_ => generatedelay === 1)
+            
+        }
+        onload()
+        $('#submissionbuild').on('click', async function(){
+            overlay('show')
+            submissioncheck=true
+            await generate('build')
+            await waitFor(_ => generatedelay === 2)
+            var zip = new JSZip();
+            zip.file(`bt-bonus.svg`, btoa(svg), {base64:true})
+            zip.generateAsync({type:"base64"}).then(function (base64) {
+                window.open("data:application/zip;base64," + base64,'_blank')
+            });
+            submissioncheck=false
+            overlay('hide')
+        })
+    </script>
+</body>
+</html>

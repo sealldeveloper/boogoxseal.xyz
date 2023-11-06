@@ -170,6 +170,7 @@
             var newadjustment= iconCount-prevCount
             var icons = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
             ctx = initCanvases(canvasname,iconCount,modifier)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             classes=$('#iconsection').attr("class").split(/\s+/)
             newclasses = (iconCount === 0) ? classes.push('visually-hidden') : classes.pop()
             $('#iconsection').attr("class",classes.join(/\s+/))
