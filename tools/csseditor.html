@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" style="background-color:rgb(17, 5, 29) ;">
 <head>
-	<title>HTML Editor - BOOGO x SEAL</title>
+	<title>CSS Editor - BOOGO x SEAL</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon16x16.png">
 	<link rel="manifest" href="../icons/site.webmanifest">
 	<link rel="shortcut icon" href="../icons/favicon.ico">
 	<meta name="msapplication-TileColor" content="#603cba">
@@ -15,7 +15,7 @@
 	<meta charset="UTF-8">
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="BOOGO x SEAL">
-	<meta property="og:title" content="HTML Editor" />
+	<meta property="og:title" content="CSS Editor" />
     <meta property="og:image" content="https://boogoxseal.xyz/assets/banner.png" />
     <meta property="twitter:image:src" content="https://boogoxseal.xyz/assets/banner.png" />
 	<meta name="twitter:card" content="summary_large_image">
@@ -52,59 +52,59 @@
 <a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
 	  </div>
 	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
-        <h1 class="m-4 mt-3">Incredibox 'HTML Editor'</h1>
+        <h1 class="m-4 mt-3">Incredibox 'CSS Editor'</h1>
+        
         <div id="buildform">
             <h3 class="m-3">Uploads</h3>
+            <small class="m-4" style="color:lightskyblue">Use CTRL+SHIFT+R to reset the form :></small>
             <div class="form-group col-md-5 m-3">
-                <label for="indexhtml">index.html</label>
-                <input class="form-control" type="file" id="indexhtml" accept="text/html"></input>
-            </div>
-            <div class="form-group col-md-5 m-3">
-                <label for="apphtml">app.html</label>
-                <input class="form-control" type="file" id="apphtml" accept="text/html"></input>
+                <label for="stylemincss">style.min.css</label>
+                <input class="form-control" type="file" id="stylemincss" accept="text/css"></input>
             </div>
             <h3 class="m-3">Options</h3>
             <div class="form-group col-md-5 m-4">
-                <label for="iconamount">Which packs do you have?</label>
-                <div class="form-control icons" id="iconchoices">
+                <label for="iconamount">Checkmark Colour Editor</label>
                     <div class="row">
                         <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-1">asset-v1</label>
-                            <input class="form-check-input" type="checkbox" id="icon-1">
+                            <label class="form-label" for="icon1">asset-v1 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon1">
                         </div>
                         <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-2">asset-v2</label>
-                            <input class="form-check-input" type="checkbox" id="icon-2">
-                        </div>
-                        <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-3">asset-v3</label>
-                            <input class="form-check-input" type="checkbox" id="icon-3">
-                        </div>
-                        <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-4">asset-v4</label>
-                            <input class="form-check-input" type="checkbox" id="icon-4">
+                            <label class="form-label" for="icon2">asset-v2 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon2">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-5">asset-v5</label>
-                            <input class="form-check-input" type="checkbox" id="icon-5">
+                            <label class="form-label" for="icon3">asset-v3 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon3">
                         </div>
                         <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-6">asset-v6</label>
-                            <input class="form-check-input" type="checkbox" id="icon-6">
-                        </div>
-                        <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-7">asset-v7</label>
-                            <input class="form-check-input" type="checkbox" id="icon-7">
-                        </div>
-                        <div class="form-check m-3 col">
-                            <label class="form-check-label" for="icon-8">asset-v8</label>
-                            <input class="form-check-input" type="checkbox" id="icon-8">
+                            <label class="form-label" for="icon4">asset-v4 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon4">
                         </div>
                     </div>
-                </div>
-                <div class="visually-hidden" id="icons"></div>
+                    <div class="row">
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="icon5">asset-v5 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon5">
+                        </div>
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="icon6">asset-v6 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon6">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="icon7">asset-v7 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon7">
+                        </div>
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="icon8">asset-v8 checkmark colour</label>
+                            <input class="form-control" type="text" data-coloris id="icon8">
+                        </div>
+                    </div>
+                <div id="icons"></div>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
@@ -118,61 +118,72 @@
         generatedelay=0
         currentlyrunningbuild=0
         submissioncheck=false
-        apphtml = ""
-        indexhtml = ""
-        
-        function LoadTextFromDisk(input, callback) {
+        css = ""
+        function cssRulesfromContent(styleContent) {
+            var doc = document.implementation.createHTMLDocument(""), 
+            styleElement = document.createElement("style");
+
+            styleElement.textContent = styleContent;
+            // the style will only be parsed once it is added to a document
+            doc.body.appendChild(styleElement);
+
+            return styleElement.sheet.cssRules;
+        };
+        async function LoadTextFromDisk(input) {
             try{
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.readAsText(input.files[0]);
+                    exit_val = ""
                     reader.onload = () => {
-                        callback(reader.result);
+                        exit_val = reader.result;
+                        return
                     };
+                    await waitFor(_ => exit_val !== "")
+                    return exit_val
                 }  else {
-                    callback(undefined)
+                    return undefined
                 }
             } catch (e) {
                 console.log(e)
+                return undefined
             }
         }
 
         async function build() {
-            currentlyrunningbuild++
-            vals = range(1,9)
-            $('#icons').empty()
-            for (var r in vals) {
-                if ($(`#icon-${vals[r]}`).prop('checked')) {
-                    iconhtml=`<div class="icon" id="icon${vals[r]}"><div class="img"></div><div class="txt"></div><div class="bul"><svg class="icn-svg"><use xlink:href="#ic-check"></use></svg></div></div>`
-                    $('#icons').append(iconhtml)
+            try{
+                currentlyrunningbuild++
+                vals = range(1,9)
+                $('#icons').empty()
+                newcss = await LoadTextFromDisk($('#stylemincss')[0])
+                if (newcss !== undefined){
+                    data1 = cssRulesfromContent(newcss)
+                    exportdata = ""
+                    for (var x in data1) {
+                        try{
+                            selector = data1[x].selectorText
+                            if (selector.includes('#sp-select') && selector.includes('.bul') && selector.includes('.icon#icon')) {
+                                iconid = Number(data1[x].selectorText.split('.icon#icon')[1].split(' ')[0])
+                                cssbackground = data1[x].style['background-color'].split("(")[1].split(")")[0].split(' ').join('').split(',');
+                                var b = cssbackground.map(function(x){             //For each array element
+                                    x = parseInt(x).toString(16);      //Convert to a base16 string
+                                    return (x.length==1) ? "0"+x : x;  //Add zero if we get only one character
+                                })
+                                hex = "#"+b.join('')
+                                if ($(`#icon${iconid}`).val() === "") $(`#icon${iconid}`).val(hex)
+                                document.querySelector(`#icon${iconid}`).dispatchEvent(new Event('input', { bubbles: true }));
+                                data1[x].style['background-color'] = $(`#icon${iconid}`).val()
+                            }
+                            exportdata += data1[x].cssText+"\n"
+                        } catch {}
+                        css = exportdata
+                    }
                 }
-            }
-            LoadTextFromDisk($('#indexhtml')[0], async (text) => {
-                if (text === undefined) return
-                indexhtml = text
-            })
-            LoadTextFromDisk($('#apphtml')[0], async (text) => {
-                if (text === undefined) return
-                apphtml = text
-            })
-            data1 = new DOMParser().parseFromString(apphtml ,"text/html")
-            data2 = new DOMParser().parseFromString(indexhtml, "text/html")
-            inputs = [data1,data2]
-            outputs = []
-            for (var i in inputs){
-                try{
-                    inputs[i].getElementById('sp-select').innerHTML = $('#icons').html()
-                } catch (e) {
-                    console.log(e)
-                }
-                out = new XMLSerializer().serializeToString(inputs[i])
-                outputs.push(out)
-            }
-            apphtml = outputs[0]
-            indexhtml = outputs[1]
-            currentlyrunningbuild--
-            generatedelay += submissioncheck ? 2 : 1
-            return 
+                currentlyrunningbuild--
+                generatedelay += submissioncheck ? 2 : 1
+                return 
+                
+            } catch (e){console.log(e)}
             
         }
         function generate() {
@@ -191,12 +202,14 @@
         $('#buildform').on('change', function(){
             generate()
         })
-        async function onload() {
+        function onload() {
             Coloris({
-                alpha:true
+                alpha:false
             })
-            generate()
-            await waitFor(_ => generatedelay === 1)
+            window.addEventListener('DOMContentLoaded', async function() {
+                generate()
+                await waitFor(_ => generatedelay === 1)
+            })
         }
         onload()
         $('#submissionbuild').on('click', async function(){
@@ -205,8 +218,7 @@
             value = await generate()
             await waitFor(_ => generatedelay === 2)
             var zip = new JSZip();
-            zip.file(`app.html`, apphtml, {base64:false})
-            zip.file(`index.html`, indexhtml, {base64:false})
+            zip.file(`style.min.css`, css, {base64:false})
             zip.generateAsync({type:"base64"}).then(function (base64) {
                 window.open("data:application/zip;base64," + base64,'_blank')
             });
