@@ -23,6 +23,7 @@
     <meta name="og:image:alt" content="Boogo and Seal make Incredibox Mods and Tools.">
     <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
     <link rel="stylesheet" href="../css/all.css"/>
+    <link rel="stylesheet" href="../css/required.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -77,11 +78,11 @@
             <h2 class="m-2">Builder</h2>
             <div class="form-group position-relative" id="metadata">
                 <h3 class="m-3">Metadata</h3>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="name">Name</label>
                     <input class="form-control" type="text" id="name" placeholder="Name" required="true"></input>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="version">Version</label> 
                     <select id="version" class="form-control form-select" required="true">
                         <optgroup>
@@ -97,35 +98,36 @@
                         </optgroup>
                     </select>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="date">Year of release</label>  
                     <input class="form-control" type="number" id="date" placeholder="2023" required="true"></input>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="folder">Mod Folder</label>
                     <input class="form-control" type="text" id="folder" placeholder="asset-v1/" required="true"></input>
                 </div>
             </div>
             <div class="form-group" id="music">
                 <h3 class="m-3">Music</h3>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="looptime">The length of one loop (in milliseconds)</label>
                     <input class="form-control" type="number" id="looptime" placeholder="6857" required="true"></input>
                 </div>
                 <div class="form-group col-md-5 m-4">
                     <label for="bpm">Beats per minute (BPM)</label>  
-                    <input class="form-control" type="number" id="bpm" placeholder="100" required="true"></input>
+                    <input class="form-control" type="number" id="bpm" placeholder="100" required="true" value="100"></input>
                     <small id="bpm-comment" style="color:#999999" class="form-text"><b>This is purely informational and has no effect.</b></small>
                 </div>
             </div>
             <div class="form-group" id="animations">
                 <h3 class="m-3">Animations</h3>
                 <div class="form-group col-md-5 m-4">
-                    <label for="totalframe">How many frames will the Polos have in their animation? (Based off the 'Loop Time')</label> 
+                    <label for="totalframe">How many frames will the Polos have in their animation (two loops)?</label> 
+                    <small style="color:#999999">Based off the 'Loop Time', known as the 'totalframe'</small>
                     <input class="form-control" type="number" id="totalframe" disabled="true"></input>
                 </div>
             </div>
-            <div class="form-group col-md-5 m-4">
+            <div class="form-group required col-md-5 m-4">
                 <label for="bonusendloopA">Should the bonus always end at the end of loop B?</label>
                 <select id="bonusendloopA" class="form-control form-select" required="true">
                     <optgroup>
@@ -136,34 +138,38 @@
             </div>
             <div class="form-group" id="colors">
                 <h3 class="m-3">Colours</h3>
-                <div class="form-group col-md-5 m-4">
-                    <label for="colBck">Colour of the background, if the image fails to load its the reserve, it also replaces the transparent pixels of the loaded background with this colour.</label>
+                <div class="form-group required m-4">
+                    <label for="colBck">Colour of the background</label>
+                    <br>
+                    <small style="color:#999999">If the image fails to load its the reserve, it also replaces the transparent pixels of the loaded background with this colour</small>
                     <br>
                     <input class="form-control" type="text" data-coloris id="colBck" required="true" value="#000000"></input>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="col0">Colour of the text</label>
                     <br>
                     <input class="form-control" type="text" data-coloris id="col0" required="true" value="#000000"></input>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="col1">Colour of the buttons background colour</label>
                     <br>
                     <input class="form-control" type="text" data-coloris id="col1" required="true" value="#ff00ff"></input>
                 </div>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="col2">Colour of the unhovered button background</label>
                     <br>
                     <input class="form-control" type="text" data-coloris id="col2" required="true" value="#000000"></input>
                     <br>
                     <small id="col2-comment" style="color:#999999" class="form-text">This is visible in the 'Playlist' menu.</small>
                 </div>
-                <div class="form-group col-md-7 m-4">
+                <div class="form-group required m-4">
                     <label for="col3">Colour of the loading bar, unselected menu tab background colour and the hovered button colour</label>
+                    <br>
                     <input class="form-control" type="text" data-coloris id="col3" required="true" value="#000000"></input>
                 </div>
-                <div class="form-group col-md-4 m-4">
+                <div class="form-group required m-4">
                     <label for="col4">Colour the selected menu button's icon</label>
+                    <br>
                     <input class="form-control" type="text" data-coloris id="col4" required="true" value="#000000"></input>
                     <br>
                     <small id="col4-comment" style="color:#999999" class="form-text">This is visible in the 'Playlist' menu when selecting 'My Mix'.</small>
@@ -208,7 +214,7 @@
             </div>
             <div class="form-group" id="polos">
                 <h3 class="m-3">Polos</h3>
-                <div class="form-group col-md-5 m-4">
+                <div class="form-group required col-md-5 m-4">
                     <label for="polocount">How many polos do you want?</label>
                     <input class="form-control" type="number" max="99" min="1" id="polocount" placeholder="20" required="true"></input>
                     <small id="polocount-comment" style="color:#999999" class="form-text">Between 1 and 99 polos! (Generally 20)</b></small>
@@ -220,14 +226,12 @@
                         </optgroup>
                     </select>
                 </div>
-                <div id="pololist" class="container m-3">
-
-                </div>
+                <div id="pololist" class="container m-3"></div>
             </div>
             <div class="form-group" id="bonuses">
                 <h3 class="m-3">Bonuses</h3>
                 <small id="bonusescontent-comment" style="color:#999999" class="form-text m-3">You must first set your amount of polos, then you can edit bonuses.</small>
-                <div class="form-group col-md-5 m-4 visually-hidden" id="bonuses-content">
+                <div class="form-group required col-md-5 m-4 visually-hidden" id="bonuses-content">
                     <label for="bonusselect">How many bonuses do you want?</label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="bonusesRadio" id="0bonuses" value="0" checked>
@@ -262,21 +266,21 @@
                     </select>
                 </div>
                 <div class="form-group m-3 visually-hidden" id="bonusedit1">
-                   <div class="form-group m-3">
+                   <div class="form-group required m-3">
                         <label for="bonusname1">Bonus Name</label>
                         <input class="form-control" type="text" id="bonusname1" placeholder="Name"></input>
                    </div>
-                   <div class="form-group m-3">
+                   <div class="form-group required m-3">
                         <label for="bonussrc1">Bonus Video Source File</label>
                         <input class="form-control" type="text" id="bonussrc1" placeholder="video.mp4"></input>
                     </div>
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                         <label for="bonuscode">Bonus Polo Code</label>
                         <small id="bonuscode-comment" style="color:#999999" class="form-text">Note: Limit this to <b>only selecting 5</b>.</small>
                         <div class="form-control bonus-polo-code" id="bonuspolocode1">
                         </div>
                    </div>
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                         <label for="bonussound1">Bonus Sound Source File</label>
                         <input class="form-control" type="text" id="bonussound1" placeholder="bonus"></input>
                     </div>
@@ -287,21 +291,21 @@
                     </div>
                 </div>
                 <div class="form-group m-3 visually-hidden" id="bonusedit2">
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                          <label for="bonusname2">Bonus Name</label>
                          <input class="form-control" type="text" id="bonusname2" placeholder="Name"></input>
                     </div>
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                          <label for="bonussrc2">Bonus Video Source File</label>
                          <input class="form-control" type="text" id="bonussrc2" placeholder="video.mp4"></input>
                      </div>
-                     <div class="form-group m-3">
+                     <div class="form-group required m-3">
                          <label for="bonuscode2">Bonus Polo Code</label>
                          <small id="bonuscode-comment" style="color:#999999" class="form-text">Note: Limit this to <b>only selecting 5</b>.</small>
                          <div class="form-control bonus-polo-code" id="bonuspolocode2">
                         </div>
                     </div>
-                     <div class="form-group m-3">
+                     <div class="form-group required m-3">
                          <label for="bonussound2">Bonus Sound Source File</label>
                          <input class="form-control" type="text" id="bonussound2" placeholder="bonus"></input>
                      </div>
@@ -312,21 +316,21 @@
                      </div>
                  </div>
                  <div class="form-group m-3 visually-hidden" id="bonusedit3">
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                          <label for="bonusname3">Bonus Name</label>
                          <input class="form-control" type="text" id="bonusname3" placeholder="Name"></input>
                     </div>
-                    <div class="form-group m-3">
+                    <div class="form-group required m-3">
                          <label for="bonussrc3">Bonus Video Source File</label>
                          <input class="form-control" type="text" id="bonussrc3" placeholder="video.mp4"></input>
                      </div>
-                     <div class="form-group m-3">
+                     <div class="form-group required m-3">
                          <label for="bonuscode3">Bonus Polo Code</label>
                          <small id="bonuscode-comment" style="color:#999999" class="form-text">Note: Limit this to <b>only selecting 5</b>.</small>
                          <div class="form-control bonus-polo-code" id="bonuspolocode3">
                         </div>
                     </div>
-                     <div class="form-group m-3">
+                     <div class="form-group required m-3">
                          <label for="bonussound3">Bonus Sound Source File</label>
                          <input class="form-control" type="text" id="bonussound3" placeholder="bonus"></input>
                      </div>
@@ -568,7 +572,7 @@
                 if (newadjustment > 0) {
                     for (var r in polos){
                         r=Number(r)+1+prevcount
-                        $('#pololist').append(`<div class="row col-md-11" id="poloedit${r}"><div class="col"><label for="poloname${r}">Polo ${r} Name</label><input class="form-control" type="text" id="poloname${r}" placeholder="polo" required="true"></div><div class="col"><label for="polocolor${r}">Polo ${r} Bonus Circle & Loading Bar Color</label><input class="form-control" type="text" id="polocolor${r}" value="#000000" required="true" data-coloris=""></div><div class="col"><label for="polouniqsnd${r}">Does Polo ${r} have two unique sound files?</label><select id="polouniqsnd${r}" class="form-control form-select" required="true"><optgroup><option value="!1" selected="">True</option><option value="!0">False</option></optgroup></select></div></div>`)
+                        $('#pololist').append(`<div class="row col-md-11" id="poloedit${r}"><div class="required col"><label for="poloname${r}">Polo ${r} Name</label><input class="form-control" type="text" id="poloname${r}" placeholder="polo" required="true"></div><div class="required col"><label for="polocolor${r}">Polo ${r} Bonus Circle & Loading Bar Color</label><input class="form-control" type="text" id="polocolor${r}" value="#000000" required="true" data-coloris=""></div><div class="required col"><label for="polouniqsnd${r}">Does Polo ${r} have two unique sound files?</label><select id="polouniqsnd${r}" class="form-control form-select" required="true"><optgroup><option value="!1" selected="">True</option><option value="!0">False</option></optgroup></select></div></div>`)
                         document.querySelector(`#polocolor${r}`).dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 } else if (newadjustment < 0) {
@@ -611,7 +615,7 @@
                             r+=5
                             a++
                         }
-                        $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
+                        $(this).children('div').eq(a).append(`<div class="form-check m-3 col"><label class="unrequired form-check-label" for="${Number(c)+1}polo-${j}">Polo ${Number(c)+1}</label><input class="form-check-input bonus-checkboxes-${j}" type="checkbox" id="${Number(c)+1}polo-${j}"></input></div>`)
                     }
                 })
                 

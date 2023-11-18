@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <link rel="stylesheet" href="../css/overlay.css">
+    <link rel="stylesheet" href="../css/required.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="../js/general-functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -61,13 +62,13 @@
         </div>
         <div id="buildform">
             <h3 class="m-3">Options</h3>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="bonuscountbuild">How many bonuses (total across all versions)?</label>
                 <input class="form-control" type="number" id="bonuscountbuild" placeholder="3" required="true" value="3"/>
             </div>
             <div class="form-group col-md-5 m-3">
                 <br>
-                <div class="form-switch form-check">
+                <div class="form-switch required form-check">
                     <label class="form-check-label" for="iconlockchoice">Use the default lock icon?</label>
                     <input class="form-check-input" type="checkbox" id="iconlockchoice" required="true" checked="true"/>
                 </div>
@@ -78,19 +79,21 @@
                 </div>
                 <div>
                     <br>
-                    <div class="form-switch form-check">
+                    <div class="form-switch form-check required">
                         <label class="form-check-label" for="iconshrunklock">Should the icon be shrunk to fit better to the circle?</label>
                         <input class="form-check-input" type="checkbox" id="iconshrunklock"/>
                     </div>
-                    <div class="form-switch form-check">
+                    <div class="form-switch form-check required">
                         <label class="form-check-label" for="icongreylock">Should the icon be Greyscale?</label>
                         <input class="form-check-input" type="checkbox" id="icongreylock"/>
                     </div>
                     <input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightnesslock" value="0"/>
                     <br>
-                    <label for="bonuslockcol">Lock Icon Background Colour</label>
-                    <br>
-                    <input class="form-control" type="text" data-coloris id="bonuslockcol" required="true" value="#ffffff00"/>
+                    <div class="required">
+                        <label for="bonuslockcol">Lock Icon Background Colour</label>
+                        <br>
+                        <input class="form-control" type="text" data-coloris id="bonuslockcol" required="true" value="#ffffff00"/>
+                    </div>
                     <div class="visually-hidden" id="bonusiconimglock-div" required="true">
                         <img src="" id="bonusiconimglock"/>
                     </div>
@@ -180,7 +183,7 @@
                 bonustracker=1
                 for (var r in bonuses){
                     r=Number(r)+1+prevCount
-                    $('#bonuses').append(`<div class="row bonusinputs col-md-11"><div class="col"><label for="bonusicon${r}">Bonus ${bonustracker} (Pack ${Math.ceil(r/3)}) Image</label><input class="form-control" type="file" id="bonusicon${r}" accept="image"/></div><div class="col"><br><div class="form-switch form-check"><label class="form-check-label" for="iconshrunk${r}">Should the icon be shrunk to fit better to the circle?</label><input class="form-check-input" type="checkbox" id="iconshrunk${r}" required="true"/></div></div><div class="col"><br><div class="form-switch form-check"><label class="form-check-label" for="icongrey${r}">Should the icon be Greyscale?</label><input class="form-check-input" type="checkbox" id="icongrey${r}" required="true"/><br><input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightness${r}" value="0"/></div></div><div class="col"><label for="bonus${r}col">Bonus ${r} Background Colour</label><input class="form-control" type="text" data-coloris id="bonus${r}col" required="true" value="#ffffff00"/></div><div class="visually-hidden" id="bonusiconimg${r}-div" required="true"><img src="" id="bonusiconimg${r}"/></div></div></div>`)
+                    $('#bonuses').append(`<div class="row bonusinputs col-md-11"><div class="col required"><label for="bonusicon${r}">Bonus ${bonustracker} (Pack ${Math.ceil(r/3)}) Image</label><input class="form-control" type="file" id="bonusicon${r}" accept="image"/></div><div class="col required"><br><div class="form-switch form-check"><label class="form-check-label" for="iconshrunk${r}">Should the icon be shrunk to fit better to the circle?</label><input class="form-check-input" type="checkbox" id="iconshrunk${r}" required="true"/></div></div><div class="col required"><br><div class="form-switch form-check"><label class="form-check-label" for="icongrey${r}">Should the icon be Greyscale?</label><input class="form-check-input" type="checkbox" id="icongrey${r}" required="true"/><br><input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightness${r}" value="0"/></div></div><div class="col required"><label for="bonus${r}col">Bonus ${r} Background Colour</label><input class="form-control" type="text" data-coloris id="bonus${r}col" required="true" value="#ffffff00"/></div><div class="visually-hidden" id="bonusiconimg${r}-div" required="true"><img src="" id="bonusiconimg${r}"/></div></div></div>`)
                     bonustracker = (bonustracker%3 === 0) ? 1 : bonustracker+1
                 }
                 

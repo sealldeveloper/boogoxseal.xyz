@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
     <link rel="stylesheet" href="../css/overlay.css">
+    <link rel="stylesheet" href="../css/required.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="../js/general-functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -53,7 +54,7 @@
 		<h1 class="m-4 mt-3">Incredibox 'Picto Template' Generator</h1>
         <div id="form">
             <h3 class="m-3">Options</h3>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="pictocount">Picto Count</label>
                 <input class="form-control" type="number" id="pictocount" placeholder="20" required="true" value="20"></input>
             </div>
@@ -83,7 +84,7 @@
         </div>
         <div id="buildform">
             <h3 class="m-3">Options</h3>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="pictocountbuild">Picto Count</label>
                 <input class="form-control" type="number" id="pictocountbuild" placeholder="20" required="true" value="20"></input>
             </div>
@@ -94,7 +95,7 @@
                 </div>
                 <br>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="brightness" class="form-label">Brightness of Active Icons</label>
                 <input type="range" class="form-range" min="-1" max="1" step="0.1" id="brightness" value="0.7">
                 <small id="brightnessval"></small>
@@ -161,17 +162,12 @@
             }
         }
 
-        function initCanvases(canvasname,pictoCount,modifier) {
+        function pictoRender(canvasname,modifier){
+            var pictoCount = Number($('#pictocount').val())
             var canvas = document.getElementById(canvasname)
             var ctx = canvas.getContext('2d')
             $('#'+canvasname).attr('width',(68*pictoCount)*modifier)
             $('#'+canvasname).attr('height',136*modifier)
-            return ctx
-        }
-
-        function pictoRender(canvasname,modifier){
-            var pictoCount = Number($('#pictocount').val())
-            ctx = initCanvases(canvasname,pictoCount,modifier)
 
             // Pictos
             pictos=makeArray(pictoCount)
@@ -191,7 +187,10 @@
             var prevCount = Number($("#pictos").children().length)
             var newadjustment= pictoCount-prevCount
             var pictos = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
-            ctx = initCanvases(canvasname,pictoCount,modifier)
+            var canvas = document.getElementById(canvasname)
+            var ctx = canvas.getContext('2d')
+            $('#'+canvasname).attr('width',(68*pictoCount)*modifier)
+            $('#'+canvasname).attr('height',136*modifier)
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             classes=$('#pictosection').attr("class").split(/\s+/)
             newclasses = (pictoCount === 0) ? classes.push('visually-hidden') : classes.pop()
@@ -200,7 +199,7 @@
             if (newadjustment > 0) {
                 for (var r in pictos){
                     r=Number(r)+1+prevCount
-                    $('#pictos').append(`<div class="row pictoinputs col-md-7"><div class="col"><label for="pictoicon${r}">Picto ${r} Image</label><input class="form-control" type="file" id="pictoicon${r}" accept="image"></input></div><div class="col"><label for="picto${r}col1">Picto ${r} Inactive Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col1" required="true" value="#000000"></input></div><div class="col"><label for="picto${r}col2">Picto ${r} Active Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col2" required="true" value="#ffffff00"></input></div><div class="visually-hidden" id="pictoiconimg${r}-div" required="true"><img src="" id="pictoiconimg${r}"/><img src="" id="pictoiconimg${r}-gray"/></div></div>`)
+                    $('#pictos').append(`<div class="row pictoinputs col-md-7"><div class="col required"><label for="pictoicon${r}">Picto ${r} Image</label><input class="form-control" type="file" id="pictoicon${r}" accept="image"></input></div><div class="col required"><label for="picto${r}col1">Picto ${r} Inactive Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col1" required="true" value="#000000"></input></div><div class="col required"><label for="picto${r}col2">Picto ${r} Active Colour</label><input class="form-control" type="text" data-coloris id="picto${r}col2" required="true" value="#ffffff00"></input></div><div class="visually-hidden" id="pictoiconimg${r}-div" required="true"><img src="" id="pictoiconimg${r}"/><img src="" id="pictoiconimg${r}-gray"/></div></div>`)
                 }
             } else if (newadjustment < 0) {
                 for (var r in pictos) {

@@ -24,6 +24,7 @@
     <meta name="og:description" content="Boogo and Seal make Incredibox Mods and Tools.">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/required.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="../js/general-functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -52,34 +53,34 @@
             </style>
         <div id="form">
             <h3 class="m-3">Options</h3>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="name">Name</label>
                 <input class="form-control" type="text" id="name" placeholder="Name" required="true" value="Name" required="true"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="height">Height</label>
                 <input class="form-control" type="number" id="height" placeholder="380" required="true" value="380" required="true"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="headheight">Head Height</label>
                 <input class="form-control" type="number" id="headheight" placeholder="199" required="true" value="199" required="true"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="headcount">Head Count</label>
                 <input class="form-control" type="number" id="headcount" placeholder="8" required="true" value="8" required="true"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="headrowcount">Heads per row</label>
                 <input class="form-control" type="number" id="headrowcount" placeholder="5" required="true" value="5" required="true"></input>
             </div>
             <div class="form-group col-md-5 m-3">
                 <label for="headwidth">Head Width (optional)</label>
-                <input class="form-control" type="number" id="headwidth" placeholder="164" required="true" value="164"></input>
+                <input class="form-control" type="number" id="headwidth" placeholder="164" required="false" value="164"></input>
             </div>
-            <div class="form-group col-md-5 m-3">
+            <div class="form-group required col-md-5 m-3">
                 <label for="framecount">Frame Count</label>
                 <input class="form-control" type="number" id="framecount" placeholder="8" required="true" placeholder="1000" required="true"></input>
-                <small id="frame-comment" class="form-text text-muted">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
+                <small id="frame-comment" class="form-text">This can be found by using the <a href="https://files.seall.dev/incredibox/appjs.html" target="_blank">app.js generator</a> tool and inputting your loop time.</small>
             </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate Template and Coordinates" id="submission"></input>
@@ -91,8 +92,142 @@
                 <canvas id="render-mini" class="visually-hidden"></canvas>
             </div>
         </div>
+        <br>
+        <hr>
+        <br>
+        <h1 class="m-4 mt-3">Incredibox 'Polo' Builder</h1>
+        <div class="m-4">
+            <h3 class="mt-3">Info</h3>
+            <span>
+                The polo body, headless and silhouette can be any rectangular image, though it should be equal to or larger than 164x380 for non-hd and 328x760 for hd.<br>
+                The heads should be consistently sized with a width of 164 for non-hd or 328 for hd or less than, not greater.
+            </span>
+        </div>
+        <div id="buildform">
+            <h3 class="m-3">Options</h3>
+            <h4 class="m-3">Values</h4>
+            <div class="form-group required col-md-5 m-3">
+                <label for="headheightbuild">Head Height</label>
+                <input class="form-control" type="number" id="headheightbuild" placeholder="164" required="true" value="164"></input>
+            </div>
+            <div class="form-group required col-md-5 m-3">
+                <label for="headscountbuild">Heads Count</label>
+                <input class="form-control" type="number" id="headscountbuild" placeholder="6" required="true" value="6"></input>
+            </div>
+            <div class="form-group required col-md-5 m-3">
+                <label for="headrowcountbuild">Heads per row</label>
+                <input class="form-control" type="number" id="headrowcountbuild" placeholder="5" required="true" value="5"></input>
+            </div>
+            <br>
+            <h4 class="m-3">Files</h4>
+            <div class="form-group col-md-5 m-3" id="ogsheetsection">
+                <label for="ogsheet">Original Sheet (optional)</label>
+                <small style="color:#999999">Used for adding/modifying an existing sheet</small>
+                <input class="form-control" type="file" id="ogsheet" accept="image"/>
+                <div class="visually-hidden">
+                    <img src="" id="ogsheetimg"/>
+                </div>
+            </div>
+            <div class="form-group col-md-5 m-3" id="bodiesbuildsection">
+                <h5 class="m-3">Bodies</h5>
+                <div class="container-fluid m-3" id="bodies">
+                    <div class="row headinputs col-md-7">
+                        <div class="required col">
+                            <label for="body1">Default</label>
+                            <input class="form-control" type="file" id="body1" accept="image">
+                            <img src="" id="bodyimg1">
+                        </div>
+                    </div>
+                    <div class="row headinputs col-md-7">
+                        <div class="required col">
+                            <label for="body2">Headless</label>
+                            <input class="form-control" type="file" id="body2" accept="image">
+                            <img src="" id="bodyimg2">
+                        </div>
+                    </div>
+                    <div class="row headinputs col-md-7">
+                        <div class="required col">
+                            <label for="body3">Silhouette</label>
+                            <input class="form-control" type="file" id="body3" accept="image">
+                            <img src="" id="bodyimg3">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-5 m-3" id="headbuildsection">
+                    <h5 class="m-3">Heads</h5>
+                    <div class="container-fluid m-3" id="heads">
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="form-group m-4 mt-4" id="submit">
+                <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
+            </div>
+            <h3 class="m-3">Preview</h3>
+            <div class="form-group m-3">
+                <small style="color:darkcyan">NOTE: Scrollable!</small>
+                <br>
+                <small style="color:coral">NOTE: These previews can have delay/lag, submitting them will update them and download your results.</small>
+                <br><br>
+                <div style="overflow-x: auto;">
+                    <canvas id="buildrender" height="380"></canvas>
+                </div>
+                <div class="visually-hidden">
+                    <canvas id="buildrender-hd" height="760"></canvas>
+                    <canvas id="tempcanvas"></canvas>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <h1 class="m-4 mt-3">Incredibox 'Polo' Head Height Calculator</h1>
+        <div class="m-4">
+            <h3 class="mt-3">Info</h3>
+            <span>
+                This calculates the values of the heads and such, assuming that the sheet is not uneven.
+            </span>
+        </div>
+        <div id="calcform">
+            <h3 class="m-3">Options</h3>
+            <h4 class="m-3">Values</h4>
+            <div class="form-group required col-md-5 m-3">
+                <label for="headcountcalc">Heads Count</label>
+                <input class="form-control" type="number" id="headcountcalc" placeholder="6" required="true" value="6"></input>
+            </div>
+            <div class="form-group required col-md-5 m-3">
+                <label for="headrowcountcalc">Heads per row</label>
+                <input class="form-control" type="number" id="headrowcountcalc" placeholder="5" required="true" value="5"></input>
+            </div>
+            <div class="form-group required col-md-5 m-3">
+                <label for="calcres">Resolution / Sprite Sheet Size</label>
+                <select class="form-control form-select" id="calcres" name="calcres">
+                    <option value="1">Non-HD (x1)</option>
+                    <option value="2">HD (x2)</option>
+                </select>
+            </div>
+            <br>
+            <h4 class="m-3">Files</h4>
+            <div class="form-group required col-md-5 m-3" id="calcsheetsection">
+                <label for="calcsheet">Sheet</label>
+                <input class="form-control" type="file" id="calcsheet" accept="image"/>
+                <div class="visually-hidden">
+                    <img src="" id="calcsheetimg"/>
+                </div>
+            </div>
+            <h3 class="m-3">Output</h3>
+            <div class="form-group m-3">
+                <span id="headheightcalchd">Head Height (HD):</span>
+                <br>
+                <span id="headheightcalcnonhd">Head Height (Non-HD):</span>
+                <br>
+                <small style="color:#999999">The non-HD head height is used for animation JSONs</small>
+            </div>
+        </div>
         <script>
             coordinates = []
+            currentlyrunningbuild = 0
+            submissioncheck = false
             function generate() {
                 var cozette = new FontFace('CozetteVector', 'url(../webfonts/CozetteVector.otf)');
                 cozette.load().then(function(font){
@@ -156,10 +291,152 @@
                     canvas_render('render',1)
                 })
             }
-            $('.form-control').on('change', function(){
+            async function LoadImageFromDisk(input,output) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(input.files[0]);
+                    exit_head = ""
+                    reader.onload = function (e) {
+                        headimg = reader.result;
+                        $(`${output}`).attr('src',headimg)
+                        exit_head = $(`${output}`)[0]
+                        return
+                    };
+                    await waitFor( _ => exit_head !== "")
+                    return exit_head
+                }
+            }
+            async function calcgen() {
+                var headCount = Number($('#headcountcalc').val())
+                var headrowCount = Number($('#headrowcountcalc').val())
+                var sheetimg = await LoadImageFromDisk($(`#calcsheet`)[0],`#calcsheetimg`)
+                var res = Number($("#calcres").val());
+                if (sheetimg !== undefined) {
+                    console.log(sheetimg.height,res,headCount,headrowCount)
+                    height = sheetimg.height-(380*res)
+                    console.log(height)
+                    rowCount = Math.ceil(headCount/headrowCount)
+                    console.log(rowCount)
+                    headheight = height/rowCount
+                    console.log(headheight)
+                    hdtextdata = (res === 2) ? `Head Height (HD): ${headheight}` : `Head Height (HD): ${headheight*2}`
+                    nonhdtextdata = (res === 2) ? `Head Height (Non-HD): ${headheight/2}` : `Head Height (Non-HD): ${headheight}`
+                    $('#headheightcalchd').text(hdtextdata)
+                    $('#headheightcalcnonhd').text(nonhdtextdata)
+                }
+            }
+            function buildgen() {
+                var cozette = new FontFace('CozetteVector', 'url(../webfonts/CozetteVector.otf)');
+                cozette.load().then(async function(font){
+                    document.fonts.add(font);
+                    if (currentlyrunningbuild <= 0){
+                        $('#submissionbuild').prop('disabled',true)
+                        generatedelay=0
+                        await poloBuild('buildrender',1)
+                        await poloBuild('buildrender-hd',2)
+                        await waitFor(_ => generatedelay === 2)
+                        $('#submissionbuild').prop('disabled',false)
+                    }
+                })
+            }
+            async function poloBuild(canvasname, modifier) {
+                currentlyrunningbuild++
+                var headsCount = Number($('#headscountbuild').val())
+                var headHeight = Number($('#headheightbuild').val())
+                var headsPerRow = Number($('#headrowcountbuild').val())
+                var prevCount = Number($("#heads").children().length)
+                var newadjustment= headsCount-prevCount
+                var heads = (newadjustment < 0) ? makeArray(-newadjustment) : ((newadjustment > 0) ? makeArray(newadjustment) : 0)
+                var canvas = document.getElementById(canvasname)
+                var ctx = canvas.getContext('2d')
+                $(`#${canvasname}`).attr('width',(headsPerRow*164)*modifier)
+                $(`#${canvasname}`).attr('height',(380*modifier)+(Math.ceil(headsCount/headsPerRow)*headHeight*modifier))
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ogsheetimg = await LoadImageFromDisk($(`#ogsheet`)[0],`#ogsheetimg`)
+                if (ogsheetimg !== undefined) {
+                    ctx.drawImage(ogsheetimg,0,0,ogsheetimg.width,ogsheetimg.height,0,0,canvas.width,canvas.height);
+                }
+                console.log(ogsheetimg)
+                classes=$('#headbuildsection').attr("class").split(/\s+/)
+                newclasses = (headsCount === 0) ? classes.push('visually-hidden') : classes.pop()
+                $('#headbuildsection').attr("class",classes.join(/\s+/))
+                
+                if (newadjustment > 0) {
+                    for (var r in heads){
+                        r=Number(r)+1+prevCount
+                        $('#heads').append(`<div class="row headinputs col-md-7"><div class="required col"><label for="head${r}">Head ${r} Image</label><input class="form-control" type="file" id="head${r}" accept="image"/><div class="visually-hidden"><img src="" id="headimg${r}"/></div></div>`)
+                    }
+                } else if (newadjustment < 0) {
+                    for (var r in heads) {
+                        $('#heads').children().last().remove()
+                    }
+                }
+                var newCount = $("#heads").children().length
+                var headUploads = makeArray(newCount)
+                count = 0
+                ms=164*modifier
+                currentx = 0
+                currenty=380*modifier
+                for (r in makeArray(3)) {
+                    r = Number(r)+1
+                    bodyimg = await LoadImageFromDisk($(`#body${r}`)[0],`#headimg${r}`)
+                    if (bodyimg !== undefined) {
+                        vals = aspectRatioConvert([ms,currenty],[bodyimg.width,bodyimg.height])
+                        y = currenty-vals[3]
+                        ctx.clearRect(currentx,y,vals[2],vals[3]);
+                        ctx.drawImage(bodyimg,0,0,bodyimg.width,bodyimg.height,currentx,y,vals[2],vals[3]);
+                    }
+                    currentx+=ms
+                }
+                currentx=0
+                if (headUploads.length > 0) {
+                    maxhx = maxhy = 0
+                    headimgs = []
+                    for (r in headUploads) {
+                        r = Number(r)+1
+                        headimg = await LoadImageFromDisk($(`#head${r}`)[0],`#headimg${r}`)
+                        if (headimg !== undefined) {
+                            maxhx = (maxhx < headimg.width) ? headimg.width : maxhx
+                            maxhy = (maxhy < headimg.height) ? headimg.height : maxhy
+                        }
+                        headimgs.push(headimg)
+                    }
+                    for (r in headUploads) {
+                        r = Number(r)+1
+                        currenty += ((r-1)%headsPerRow==0 && r !== 1) ? headHeight*modifier : 0
+                        currentx = ((r-1)%headsPerRow==0 && r !== 1) ? 0 : currentx
+                        
+                        x = ms*(r-1)
+                        headimg = await LoadImageFromDisk($(`#head${r}`)[0],`#headimg${r}`)
+                        if (headimg !== undefined) {
+                            
+                            newx=currentx, hw = ms
+                            if (headimg.width<ms) newx += (ms-headimg.width)/2, hw = headimg.width
+                            ctx.clearRect(newx,currenty,hw,ms);
+                            ctx.drawImage(headimg,0,0,headimg.width,headimg.height,newx,currenty,hw,ms);
+                        }
+                        currentx+=ms
+                    }
+                }
+                currentlyrunningbuild--
+                generatedelay += submissioncheck ? 2 : 1
+                return
+                
+            }
+            $('#form').on('change', function(){
                 generate()
             })
-            generate()
+            $('#buildform').on('change', function(){
+                buildgen()
+            })
+            $('#calcform').on('change', async function(){
+                await calcgen()
+            })
+            async function onload() {
+                generate()
+                await buildgen()
+            }
+            onload()
             function download(filename, text) {
                 var pom = document.createElement('a');
                 pom.setAttribute('href', text);

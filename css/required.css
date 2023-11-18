@@ -1,0 +1,4 @@
+.required label:not(.unrequired):first-child:after { 
+    color: #d00;
+    content: " *";
+}

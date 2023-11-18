@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="../css/required.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="../js/general-functions.js"></script>
@@ -49,11 +50,11 @@
         <small class="m-4" style="color:#fac769">WARNING: This tool was designed to work on <b>Firefox</b> so errors on Chromium based browsers are expected.</small>
         <div id="form">
             <h3 class="m-3">Options</h3>
-            <div class="form-group col-md-5 m-4">
+            <div class="form-group required col-md-5 m-4">
                 <label for="spritesheet">Spritesheet</label>
                 <input class="form-control" type="file" id="spritesheet" required="true" accept="image/PNG"></input>
             </div>
-            <div class="form-group col-md-5 m-4">
+            <div class="form-group required col-md-5 m-4">
                 <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
                 <select id="spritesheetq" class="form-control form-select" required="true">
                     <optgroup>
@@ -62,11 +63,11 @@
                     </optgroup>
                 </select>
             </div>
-            <div class="form-group col-md-5 m-4">
+            <div class="form-group required col-md-5 m-4">
                 <label for="json">JSON</label>
                 <input class="form-control" type="file" id="json" required="true" accept="application/json"></input>
             </div>
-            <div class="form-group col-md-5 m-4">
+            <div class="form-group required col-md-5 m-4">
                 <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
                 <select id="jsonq" class="form-control form-select" required="true">
                     <optgroup>
