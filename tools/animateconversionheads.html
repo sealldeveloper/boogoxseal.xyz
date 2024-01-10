@@ -85,6 +85,11 @@
                 <small style="color:#999999">Only use this if the head is too high up, this adds a 'buffer' to push the head down (measured in pixels).</small>
                 <input class="form-control" type="number" id="downbuffer" placeholder="20"></input>
             </div>
+            <div class="form-group required col-md-5 m-4">
+                <label for="rowcount">Amount of bodies per row (optional)</label><br>
+                <small style="color:#999999">Only use this if you want to modify how many heads there are per row, for aesthetic purposes.</small>
+                <input class="form-control" type="number" id="rowcount" placeholder="5"></input>
+            </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit" id="submission"></input>
             </div>
@@ -252,8 +257,9 @@
                 count=0
                 newcanvas=$('#fixedspritesheetcanvas')[0]
                 newctx = newcanvas.getContext('2d')
-                newctx.canvas.width = defaultwidth*5
-                newctx.canvas.height = defaultheight+(frame0height+final_buffer)*(Math.ceil(headcount/5))
+                rowcount = (Number($('#rowcount').val()) === 0) ? 5 : Number($('#rowcount').val())
+                newctx.canvas.width = defaultwidth*rowcount
+                newctx.canvas.height = defaultheight+(frame0height+final_buffer)*(Math.ceil(headcount/rowcount))
 
                 // Default
                 drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default",15)
@@ -273,13 +279,15 @@
                 prev_motion=""
                 xm=0
                 ym=0
+                
+                alert(rowcount)
                 for (i in range(headcount)) {
                     i=Number(i)
                     count++
                     x = headcoords[i].x
                     y = headcoords[i].y
                     temphead = heads[i]
-                    imagedataVal = currenty+(final_buffer*(Math.ceil(count/5)))
+                    imagedataVal = currenty+(final_buffer*(Math.ceil(count/rowcount)))
                     newcanvas.getContext('2d').putImageData(temphead,currentx,imagedataVal)
                     fc = 0
                     for (f in newframes) {
@@ -298,12 +306,12 @@
                                 ym = (ym != nym && nym != undefined) ? Number(nym) : ym
                                 xm = xm % 1 != 0 ? Number(xm).toFixed(2) : xm
                                 ym = ym % 1 != 0 ? Number(ym).toFixed(2) : ym
-                                head_y = currenty+(final_buffer*(Math.ceil(count/5)-1))
-                                propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},${xm},${ym}`
+                                head_y = currenty+(final_buffer*(Math.ceil(count/rowcount)-1))
+                                propval = `${currentx-(defaultwidth-frame0width)/rowcount},${head_y},${xm},${ym}`
                                 newframes[fc].prop = propval
                                 
                             } catch (e){
-                                head_y = currenty+(final_buffer*(Math.ceil(count/5)-1))
+                                head_y = currenty+(final_buffer*(Math.ceil(count/rowcount)-1))
                                 propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},0,0`
                                 newframes[fc].prop = propval
                                 console.log(e)
@@ -312,8 +320,8 @@
                         }
                         fc++
                     }
-                    currenty += (count%5 === 0) ? frame0height : 0;
-                    currentx = (count%5 === 0) ? (defaultwidth-frame0width)/2 : currentx+(defaultwidth-frame0width)+frame0width;
+                    currenty += (count%rowcount === 0) ? frame0height : 0;
+                    currentx = (count%rowcount === 0) ? (defaultwidth-frame0width)/2 : currentx+(defaultwidth-frame0width)+frame0width;
                 }
                 headHeightVal = frame0height+final_buffer
                 newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","animeName":"animeName","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${defaultwidth}`,"height":`${defaultheight}`,"headHeight":`${headHeightVal}`,"arrayFrame":newframes}
