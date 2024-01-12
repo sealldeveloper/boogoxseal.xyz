@@ -310,6 +310,9 @@
                                 newframes[fc].prop = propval
                                 
                             } catch (e){
+                                head_y = currenty+(final_buffer*(Math.ceil(count/rowcount)-1))
+                                propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},0,0`
+                                newframes[fc].prop = propval
                                 console.log(e)
                             }
                             
