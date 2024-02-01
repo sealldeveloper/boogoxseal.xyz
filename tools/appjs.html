@@ -434,11 +434,10 @@
             })
             
             $('#enableadvanced').change(function(){
-                var options = $('.advanced-option');
                 var classType = ($('#enableadvanced:checked').length !== 0) ? 'r' : 'a'
-                for (const o of options) {
-                    modifyClass(classType, 'visually-hidden', o)
-                }
+                $('.advanced-option').each(function() {
+                    (classType === 'a') ? $(this).addClass('visually-hidden') : $(this).removeClass('visually-hidden')
+                })
             })
             
             // Colours and renders
