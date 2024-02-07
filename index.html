@@ -45,9 +45,9 @@
 <a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
   </div>
   <div class="container mt-3 text-center">
-    <div class="typewriter"><h1 ><b>SEAL</b> x <b>BOOGO</b></h1></div>
+    <div class="typewriter" ><h1 id="main-text"><b>SEAL</b> x <b>BOOGO</b></h1></div>
     <h3 style="padding-bottom:10px"></h3>
-    <div class="subtypewriter" id="info"><p>We make mods and tools for Incredibox!</p></div>
+    <div class="subtypewriter" id="info"><p>Beatnik Release Countdown</p></div>
     <h3 style="padding-bottom:10px"></h3>
     <a href="https://www.youtube.com/channel/UCLxznCykKtPRzdFmFAAmuXw" target="_blank" rel="noopener noreferrer" class="fab faicon fa-youtube"></a>
     <a href="mailto:contact@boogoxseal.xyz" target="_blank" rel="noopener noreferrer" class="fa-solid faicon fa-envelope"></a>
@@ -56,4 +56,36 @@
   <h3 style="padding-bottom:220px"></h3>
     <h3 style="text-align:center;font-size:10px;font-family: monospace;">Made by <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="titlecard">seal</a></h3>
   </body>
+  <script>
+    var countDownDate = new Date(1707440400000).getTime();
+    function timefunc() {
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("main-text").innerHTML = days + ":" + hours + ":"
+      + minutes + ":" + seconds;
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("main-text").innerHTML = "RELEASED";
+      }
+    }
+    timefunc()
+    var x = setInterval(function(){
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("main-text").innerHTML = days + ":" + hours + ":"
+      + minutes + ":" + seconds;
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("main-text").innerHTML = "RELEASED";
+      }
+    }, 1000);
+    </script>
 </html>
