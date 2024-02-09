@@ -65,11 +65,11 @@
       var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      document.getElementById("main-text").innerHTML = days + ":" + hours + ":"
-      + minutes + ":" + seconds;
+      document.getElementById("main-text").innerHTML = `<a class="enter" href=\"https://www.youtube.com/watch?v=meVzglaWr0Q\" target=\"_blank\">${days}:${hours}:${minutes}:${seconds}</a>`
+      
       if (distance < 0) {
         clearInterval(x);
-        document.getElementById("main-text").innerHTML = "<a href=\"mods/beatnik\" target=\"_blank\">RELEASED</a>";
+        document.getElementById("main-text").innerHTML = "<a class=\"enter\" href=\"mods/beatnik\" target=\"_blank\">RELEASED</a>";
       }
     }
     timefunc()
@@ -80,11 +80,10 @@
       var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      document.getElementById("main-text").innerHTML = days + ":" + hours + ":"
-      + minutes + ":" + seconds;
+      document.getElementById("main-text").innerHTML = `<a class="enter" href=\"https://www.youtube.com/watch?v=meVzglaWr0Q\" target=\"_blank\">${days}:${hours}:${minutes}:${seconds}</a>`
       if (distance < 0) {
         clearInterval(x);
-        document.getElementById("main-text").innerHTML = "<a href=\"mods/beatnik\" target=\"_blank\">RELEASED</a>";
+        document.getElementById("main-text").innerHTML = "<a class=\"enter\" href=\"mods/beatnik\" target=\"_blank\">RELEASED</a>";
       }
     }, 1000);
     </script>
