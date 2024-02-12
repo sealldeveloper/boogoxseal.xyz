@@ -55,30 +55,21 @@
                 <input class="form-control" type="file" id="spritesheet" required="true" accept="image/png"></input>
             </div>
             <div class="form-group required col-md-5 m-4">
-                <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
-                <select id="spritesheetq" class="form-control form-select" required="true">
-                    <optgroup>
-                        <option value="hd">HD</option>
-                        <option value="non-hd" selected="">Non-HD</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="form-group required col-md-5 m-4">
                 <label for="json">JSON</label>
                 <input class="form-control" type="file" id="json" required="true" accept="application/json"></input>
             </div>
             <div class="form-group required col-md-5 m-4">
-                <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
-                <select id="jsonq" class="form-control form-select" required="true">
+                <label for="motionxml">Motion XML</label>
+                <input class="form-control" type="file" id="motionxml" required="true" accept="application/xml,text/xml"></input>
+            </div>
+            <div class="form-group required col-md-5 m-4">
+                <label for="res">HD/Non-HD</label>
+                <select id="res" class="form-control form-select" required="true">
                     <optgroup>
                         <option value="hd">HD</option>
                         <option value="non-hd" selected="">Non-HD</option>
                     </optgroup>
                 </select>
-            </div>
-            <div class="form-group required col-md-5 m-4">
-                <label for="motionxml">Motion XML</label>
-                <input class="form-control" type="file" id="motionxml" required="true" accept="application/xml,text/xml"></input>
             </div>
             <div class="form-group required col-md-5 m-4">
                 <label for="downbuffer">Downwards Buffer (optional)</label><br>
@@ -208,8 +199,9 @@
                 
                 frame0width = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.w
                 frame0height = jsondata.frames[Object.keys(jsondata.frames)[0]].sourceSize.h
-                defaultwidth=164
-                defaultheight=380
+                isHd=($('#res').find(':selected').val()=="hd") ? true : false
+                defaultwidth=isHd?164*2:164
+                defaultheight=isHd?380*2:380
 
                 motion = {}
                 for (i in validframes) {
@@ -234,9 +226,6 @@
                 ctx.drawImage(this,0,0); // Or at whatever offset you like
                 };
                 img.src = imgdata;
-                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "hd") {
-                    frame0width=frame0width*2, frame0height=frame0height*2;
-                }
                 final_buffer = Number($('#downbuffer').val())
                 newframes=[]
                 headcoords=[]
@@ -262,17 +251,17 @@
                 newctx.canvas.height = defaultheight+(frame0height+final_buffer)*(Math.ceil(headcount/rowcount))
 
                 // Default
-                drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,58,defaultheight/2,"Default",15)
+                drawLabelledBox(newctx,"red",0,0,defaultwidth,defaultheight,isHd?58*2:58,defaultheight/2,"Default",isHd?15*2:15)
                 
                 // Headless
-                drawLabelledBox(newctx,"lime",defaultwidth,0,defaultwidth,defaultheight,55+defaultwidth,defaultheight/2,"Headless",15)
+                drawLabelledBox(newctx,"lime",defaultwidth,0,defaultwidth,defaultheight,isHd?(55*2+defaultwidth):(55+defaultwidth),defaultheight/2,"Headless",isHd?15*2:15)
                 
                 // Siloette
-                drawLabelledBox(newctx,"#348af9",defaultwidth*2,0,defaultwidth,defaultheight,48+defaultwidth*2,defaultheight/2,"Silhouette",15)
+                drawLabelledBox(newctx,"#348af9",defaultwidth*2,0,defaultwidth,defaultheight,isHd?(50*2+(defaultwidth*2)):(50+defaultwidth*2),defaultheight/2,"Silhouette",isHd?15*2:15)
 
                 // "Watermark"
-                newctx.font = "13px CozetteVector";
-                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
+                newctx.font = `${isHd?13*2:13}px CozetteVector`;
+                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,isHd?12*2:12)
                 currentx=(defaultwidth-frame0width)/2
                 currenty=defaultheight
                 modified_indexes=[]
@@ -313,7 +302,6 @@
                                 head_y = currenty+(final_buffer*(Math.ceil(count/rowcount)-1))
                                 propval = `${currentx-(defaultwidth-frame0width)/2},${head_y},0,0`
                                 newframes[fc].prop = propval
-                                console.log(e)
                             }
                             
                         }

@@ -55,21 +55,12 @@
                 <input class="form-control" type="file" id="spritesheet" required="true" accept="image/PNG"></input>
             </div>
             <div class="form-group required col-md-5 m-4">
-                <label for="spritesheetq">Is the spritesheet in HD or Non-HD Format?</label>
-                <select id="spritesheetq" class="form-control form-select" required="true">
-                    <optgroup>
-                        <option value="hd">HD</option>
-                        <option value="non-hd" selected="">Non-HD</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="form-group required col-md-5 m-4">
                 <label for="json">JSON</label>
                 <input class="form-control" type="file" id="json" required="true" accept="application/json"></input>
             </div>
             <div class="form-group required col-md-5 m-4">
-                <label for="jsonq">Is the JSON in HD or Non-HD Format?</label>
-                <select id="jsonq" class="form-control form-select" required="true">
+                <label for="res">HD/Non-HD</label>
+                <select id="res" class="form-control form-select" required="true">
                     <optgroup>
                         <option value="hd">HD</option>
                         <option value="non-hd" selected="">Non-HD</option>
@@ -170,20 +161,15 @@
                     ctx.drawImage(this,0,0);
                 };
                 img.src = imgdata;
-                if ($('#spritesheetq').find(':selected').val() === "non-hd" && $('#jsonq').find(':selected').val() === "hd") {
-                    frame0width=frame0width/2, frame0height=frame0height/2;
-                }
-                if ($('#spritesheetq').find(':selected').val() === "hd" && $('#jsonq').find(':selected').val() === "non-hd") {
-                    frame0width=frame0width*2, frame0height=frame0height*2;
-                }
                 newframes=[]
                 headcoords=[]
                 heads=[]
                 prev=[]
                 headcount=0
-                widthfix = 164/frame0width
+                isHd=($('#res').find(':selected').val()=="hd") ? true : false
+                widthfix = (isHd?164*2:164)/frame0width
                 frame0height = frame0height*widthfix
-                frame0width=164
+                frame0width=(isHd?164*2:164)
                 for (i in Object.keys(jsondata.frames)) {
                     frame=jsondata.frames[Object.keys(jsondata.frames)[i]].frame
                     if (!prev.includes(JSON.stringify(frame))) {
@@ -203,17 +189,17 @@
                 newctx.canvas.width = frame0width*rowcount
                 newctx.canvas.height = frame0height*(Math.ceil(headcount/rowcount)+1)
                 // Default
-                drawLabelledBox(newctx,"red",0,0,frame0width,frame0height,58,frame0height/2,"Default",15)
+                drawLabelledBox(newctx,"red",0,0,frame0width,frame0height,isHd?58*2:58,frame0height/2,"Default",isHd?15*2:15)
                 
                 // Headless
-                drawLabelledBox(newctx,"lime",frame0width,0,frame0width,frame0height,55+frame0width,frame0height/2,"Headless",15)
+                drawLabelledBox(newctx,"lime",frame0width,0,frame0width,frame0height,isHd?(55*2)+frame0width:55+frame0width,frame0height/2,"Headless",isHd?15*2:15)
                 
                 // Siloette
-                drawLabelledBox(newctx,"#348af9",frame0width*2,0,frame0width,frame0height,48+frame0width*2,frame0height/2,"Silhouette",15)
+                drawLabelledBox(newctx,"#348af9",frame0width*2,0,frame0width,frame0height,isHD?(48*2)+(frame0width*2):48+frame0width*2,frame0height/2,"Silhouette",isHd?15*2:15)
 
                 // "Watermark"
-                newctx.font = "13px CozetteVector";
-                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,12)
+                newctx.font = `${isHd?13*2:13}px CozetteVector`;
+                newctx.fillText(`sealldeveloper\'s Animate Converter - Heads`,0,isHd?12*2:12)
 
 
                 currentx=0
