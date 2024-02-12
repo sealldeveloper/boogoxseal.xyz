@@ -217,7 +217,7 @@
                         f=newframes[f]
                         if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
                             modified_indexes.push(fc)
-                            newframes[fc].prop = `${isHd?round(currentx/2):round(currenty)},${isHd?round(currentx/2):round(currenty)},0,0`
+                            newframes[fc].prop = `${isHd?Math.round(currentx/2):Math.round(currenty)},${isHd?Math.round(currentx/2):Math.round(currenty)},0,0`
                         }
                         fc++
                     }

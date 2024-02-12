@@ -300,8 +300,8 @@
                                 newframes[fc].prop = propval
                                 
                             } catch (e){
-                                head_y = round(currenty+(final_buffer*(Math.ceil(count/rowcount)-1)))
-                                head_x = round(currentx-(defaultwidth-frame0width)/2)
+                                head_y = Math.round(currenty+(final_buffer*(Math.ceil(count/rowcount)-1)))
+                                head_x = Math.round(currentx-(defaultwidth-frame0width)/2)
                                 propval = `${isHd?head_x/2:head_x},${isHd?head_y/2:head_y},0,0`
                                 newframes[fc].prop = propval
                             }
