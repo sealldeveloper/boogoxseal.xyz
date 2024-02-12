@@ -217,7 +217,7 @@
                         f=newframes[f]
                         if (f.prop == `${x},${y},0,0` && !modified_indexes.includes(fc)) {
                             modified_indexes.push(fc)
-                            newframes[fc].prop = `${currentx},${currenty},0,0`
+                            newframes[fc].prop = `${isHd?round(currentx/2):round(currenty)},${isHd?round(currentx/2):round(currenty)},0,0`
                         }
                         fc++
                     }
@@ -225,7 +225,7 @@
                     currentx = (count%rowcount === 0) ? 0 : currentx+frame0width
                 }
                 if (seperate_count == 2){
-                    newjsondata={"animeName":"generated-from-fla-using-sealldevelopers-tools","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}
+                    newjsondata={"_generated-by-boogoxseal.xyz-tools":"thanks-for-using-them","percentageMax":"0.2","totalFrame":`${newframes.length}`,"width":`${frame0width}`,"height":`${frame0height}`,"headHeight":`${frame0height}`,"arrayFrame":newframes}
                     var zip = new JSZip();
                     zip.file(`generated.json`,JSON.stringify(newjsondata))
                     zip.file(`generated-sprite.png`, zipImg('fixedspritesheetcanvas'), {base64:true})
