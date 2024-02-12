@@ -31,7 +31,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
     <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" integrity="sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas2svg"></script>
     <style>
         td{text-align:center}.th-custom{overflow:auto;font-weight:200;text-align:center;padding-left:5px;padding-right:5px;font-size:28px;margin:10px}body{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;overflow:auto;font-family:monospace;font-weight:500;margin-top:15vh}
     </style>
@@ -106,6 +105,19 @@
                     </div>
                 <div id="icons"></div>
             </div>
+            <div class="form-group col-md-5 m-4">
+                <label for="iconamount">Theme Editor</label>
+                    <div class="row">
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="darkmode-bck">Darkmode Background Colour</label>
+                            <input class="form-control" type="text" data-coloris id="darkmode-bck">
+                        </div>
+                        <div class="form-check m-3 col">
+                            <label class="form-label" for="lightmodemode-bck">Lightmode Background Colour</label>
+                            <input class="form-control" type="text" data-coloris id="lightmode-bck">
+                        </div>
+                    </div>
+            </div>
             <div class="form-group m-4 mt-4" id="submit">
                 <input class="btn btn-primary" type="submit" value="Submit and Generate" id="submissionbuild"></input>
             </div>
@@ -162,6 +174,28 @@
                     for (var x in data1) {
                         try{
                             selector = data1[x].selectorText
+                            if (selector === "#page-splash" || selector === "#box-top #box-bt2-bck" || selector === "body.black" || selector === "#fade-all.white" || selector === "#bck-global" || selector === ".fluid #game #box-bottom" || selector === ".box-popup .box .pop" || selector === ".box-popup.pop-bonus-unlock .box .pop #pointe" || selector === "#pop-setting .container .paramline .ic-info") {
+                                cssbackground = data1[x].style['background-color'].split("(")[1].split(")")[0].split(' ').join('').split(',');
+                                var b = cssbackground.map(function(x){             //For each array element
+                                    x = parseInt(x).toString(16);      //Convert to a base16 string
+                                    return (x.length==1) ? "0"+x : x;  //Add zero if we get only one character
+                                })
+                                hex = "#"+b.join('')
+                                if ($(`#lightmode-bck`).val() === "") $(`#lightmode-bck`).val(hex)
+                                document.querySelector(`#lightmode-bck`).dispatchEvent(new Event('input', { bubbles: true }));
+                                data1[x].style['background-color'] = $(`#lightmode-bck`).val()
+                            }
+                            if (selector === ":root") {
+                                darkmodebck=data1[x].cssText.split("--darkmode-bck:")[1].split(";")[0].replace(' ','').replace('\n','')
+                                if ($(`#darkmode-bck`).val() === "") $(`#darkmode-bck`).val(darkmodebck)
+                                document.querySelector(`#darkmode-bck`).dispatchEvent(new Event('input', { bubbles: true }));
+                                data1[x].style.setProperty("--darkmode-bck", $(`#darkmode-bck`).val())
+
+                                lightmodebck=data1[x].cssText.split("--colBck:")[1].split(";")[0].replace(' ','').replace('\n','')
+                                if ($(`#lightmode-bck`).val() === "") $(`#lightmode-bck`).val(darkmodebck)
+                                document.querySelector(`#lightmode-bck`).dispatchEvent(new Event('input', { bubbles: true }));
+                                data1[x].style.setProperty("--colBck", $(`#lightmode-bck`).val())
+                            }
                             if (selector.includes('#sp-select') && selector.includes('.bul') && selector.includes('.icon#icon')) {
                                 iconid = Number(data1[x].selectorText.split('.icon#icon')[1].split(' ')[0])
                                 cssbackground = data1[x].style['background-color'].split("(")[1].split(")")[0].split(' ').join('').split(',');
