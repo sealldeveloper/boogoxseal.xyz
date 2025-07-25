@@ -292,14 +292,14 @@
             {
                 frame_index_current = i;
                 UpdateSprite();
-                encoder.addFrame(canvas_context);
+                encoder.addFrame(canvas_context, false);
             }
             encoder.finish();
             frame_index_current = curframe;
             UpdateSprite();
 
             var binary_gif = encoder.stream().getData();
-            var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
+	    var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
             window.open(data_url)
             //encoder.download("download.gif");
         }
