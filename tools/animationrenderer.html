@@ -299,6 +299,7 @@
             UpdateSprite();
 
             var binary_gif = encoder.stream().getData();
+		console.log(binary_gif)
 	    var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
             window.open(data_url)
             //encoder.download("download.gif");
