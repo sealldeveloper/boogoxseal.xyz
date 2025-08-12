@@ -38,8 +38,6 @@
     </style>
 </head>
 
-
-
 <body style="background-color:rgb(17, 5, 29) ;">
     <div id="overlay" class="text-center visually-hidden">
         <img width="15%" class="position-absolute top-50 start-50 translate-middle" src="../assets/loading.gif"/>
@@ -50,8 +48,10 @@
 		<a href="../mods">Mods</a>
 		<a href="../about">About Us</a>
 		<a href="https://sealldeveloper.github.io/incredibox-downloads-index/">Mod Index</a>
-<a href='https://ko-fi.com/K3K3LWCC7' target='_blank'><img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' /></a>
-	  </div>
+		<a href='https://ko-fi.com/K3K3LWCC7' target='_blank'>
+			<img height='24' style='border:0px;height:24px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' alt='Buy Me a Coffee at ko-fi.com' />
+		</a>
+	</div>
 	<div class="container mt-3" style="background-color:rgb(29, 8, 49) ; overflow:hidden;	padding-bottom:40px;height:100%;" >
         <div id="title" class="m-4">
             <h1>Incredibox Animation Renderer</h1>
@@ -85,16 +85,16 @@
                 <label for="color">Background Colour</label>
                 <input class="form-control" type="text" data-coloris id="color" value="#000000"></input>
             </div>
-	    <h3 class="m-3">Optional: <b>(WIP)</b></h3>
-	    <div class="form-group col-md-5 m-3">
+	        <h3 class="m-3">Optional: <b>(WIP)</b></h3>
+	        <div class="form-group col-md-5 m-3">
                 <label for="aud">Number of audio files:</label>
                 <select class="form-control form-select" id="aud" name="aud">
                     <option value="1">1 file (one loop)</option>
-		    <option value="1">1 file (two loops)</option>
+		            <option value="1">1 file (two loops)</option>
                     <option value="2">2 files (two loops)</option>
                 </select>
             </div>
-	    <div class="form-group col-md-5 m-3">
+	        <div class="form-group col-md-5 m-3">
                 <label for="audInp">Audio</label>
                 <input class="form-control audio-inputs" type="file" id="audInp1" accept="audio/*"></input>
 		        <input class="form-control audio-inputs" type="file" id="audInp2" accept="audio/*" style="display:none;"></input>
@@ -117,8 +117,8 @@
                     <a class="btn coolButton" role="button" id="frameStepForward">Frame &gt;</a>
                 </div>
             </div>
-		<audio id="audFile1" src="" hidden></audio>
-		<audio id="audFile2" src="" hidden></audio>
+		    <audio id="audFile1" src="" hidden></audio>
+		    <audio id="audFile2" src="" hidden></audio>
         </div>
 	</div>
     <script>
@@ -156,56 +156,63 @@
         var arrayFrame = [[0,0,0,0]];
         var arr;
 
-        function Update() {
-        if (!image.src) return;
-        
-        frame_time_current -= 16;
-        
-        if (frame_time_current <= 0) {
-            frame_time_current += parseInt(frame_time_total);
-            frame_index_current += frame_step;
-            if (frame_index_current >= frame_index_count)
-                frame_index_current = 0;
-            else if (frame_index_current < 0)
-                frame_index_current = frame_index_count - 1;
+        // Ensure image fully loaded before reading dimensions or drawing
+        image_element.onload = function() {
+            image_file_width = image_element.naturalWidth;
+            image_file_height = image_element.naturalHeight;
+            UpdateCanvasSize();
+        };
 
-            UpdateSprite();
-	        UpdateAudio();
-        }
+        function Update() {
+            if (!image_element.src) return;
+            
+            frame_time_current -= 16;
+            
+            if (frame_time_current <= 0) {
+                frame_time_current += parseInt(frame_time_total);
+                frame_index_current += frame_step;
+                if (frame_index_current >= frame_index_count)
+                    frame_index_current = 0;
+                else if (frame_index_current < 0)
+                    frame_index_current = frame_index_count - 1;
+
+                UpdateSprite();
+                UpdateAudio();
+            }
         }
 
         function UpdateSprite() {
-        // frame_index_current = 0 based index
-        if (arrayFrame[frame_index_current]) {
-            var spritePosX = arrayFrame[frame_index_current][0] * res || 1;
-            var spritePosY = arrayFrame[frame_index_current][1] * res || 1;
+            // frame_index_current = 0 based index
+            if (arrayFrame[frame_index_current]) {
+                var spritePosX = arrayFrame[frame_index_current][0] * res || 1;
+                var spritePosY = arrayFrame[frame_index_current][1] * res || 1;
 
-            // sprite position on sheet in pixels
-            var x = arrayFrame[frame_index_current][2] * res || 1;
-            var y = arrayFrame[frame_index_current][3] * res || 1;
+                // sprite position on sheet in pixels
+                var x = arrayFrame[frame_index_current][2] * res || 1;
+                var y = arrayFrame[frame_index_current][3] * res || 1;
 
-            $("#imgInfo").text("Frame: "+(frame_index_current + 1)+" / "+(frame_index_count));
+                $("#imgInfo").text("Frame: "+(frame_index_current + 1)+" / "+(frame_index_count));
 
-            canvas_context.clearRect(0, 0, canvas.width, canvas.height);
-            
-            canvas_context.imageSmoothingEnabled = false;
-            canvas_context.webkitImageSmoothingEnabled = false;
-            canvas_context.mozImageSmoothingEnabled = false;
-            canvas_context.fillStyle = image_background_color;
-            canvas_context.fillRect(0, 0, canvas.width, canvas.height);
-            if ($('#image').attr('src') !== 'undefined') {
-                canvas_context.drawImage(image_element, sheet_spacing_horizontal * res, 0, sheet_sprite_width * res, sheet_sprite_height * res, 0, 0, sheet_sprite_width * res, sheet_sprite_height * res);
-                canvas_context.drawImage(image_element, spritePosX, spritePosY, sheet_sprite_width * res, head_height * res, 0 + x, 0 + y, sheet_sprite_width * res, head_height * res);
-            }
+                canvas_context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                canvas_context.imageSmoothingEnabled = false;
+                // Removed vendor prefixes as Chrome supports standard property
+                canvas_context.fillStyle = image_background_color;
+                canvas_context.fillRect(0, 0, canvas.width, canvas.height);
+                if ($('#image').attr('src') && $('#image').attr('src') !== 'undefined') {
+                    canvas_context.drawImage(image_element, sheet_spacing_horizontal * res, 0, sheet_sprite_width * res, sheet_sprite_height * res, 0, 0, sheet_sprite_width * res, sheet_sprite_height * res);
+                    canvas_context.drawImage(image_element, spritePosX, spritePosY, sheet_sprite_width * res, head_height * res, 0 + x, 0 + y, sheet_sprite_width * res, head_height * res);
+                }
             }
         }
 
-	function UpdateAudio() {
-		current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile2" : "audFile1";
-        (!$("#"+current_aud).attr('src')) ? console.log($("#"+current_aud).attr('src'), current_aud,frame_index_count,frame_index_current) : console.log(current_aud,frame_index_count,frame_index_current)
-        if ($("#"+current_aud).attr('src')) $("#"+current_aud)[0].load()
-        if (aud_len) _("#"+current_aud).currentTime = Math.round((aud_len*frame_index_current)/frame_index_count)
-	}
+        function UpdateAudio() {
+            current_aud = Math.ceil((frame_index_current*2)/frame_index_count) === 2 ? "audFile2" : "audFile1";
+            if ($("#"+current_aud).attr('src'))
+                $("#"+current_aud)[0].load();
+            if (aud_len)
+                $("#"+current_aud)[0].currentTime = Math.round((aud_len*frame_index_current)/frame_index_count);
+        }
 
         function encode64(input) {
             var output = "", i = 0, l = input.length,
@@ -226,46 +233,60 @@
             return output;
         }
 
-
         function LoadImageFromDisk(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#image').attr('src', e.target.result);
-                $('#imgsrc').val(encodeURIComponent(e.target.result));
-                UpdateCanvasSize();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                    $('#imgsrc').val(encodeURIComponent(e.target.result));
+                    // image_element.onload will handle UpdateCanvasSize
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
-        async function LoadAudioFromDisk(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.readAsDataURL(input.files[0]);
-            returnValue = ""
-            reader.onload = function (e) {
-                returnValue = e.target.result
-            };
-            await waitFor(_ => returnValue !== "")
-            return returnValue
+        function LoadJSONFromDisk(input, callback) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    callback(e.target.result);
+                };
+                reader.readAsText(input.files[0]);
+            }
         }
+
+        // Use Promise to properly wait for audio file to load as data URL
+        function LoadAudioFromDisk(input) {
+            return new Promise((resolve, reject) => {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        resolve(e.target.result);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    resolve(null);
+                }
+            });
         }
 
         function UpdateCanvasSize() {
-        var wMinusPadL = image_file_width;
-        sheet_sprite_count_x = Math.floor(wMinusPadL / (sheet_sprite_width + sheet_spacing_horizontal));
-        sheet_padding_right = wMinusPadL - sheet_sprite_count_x * sheet_sprite_width - (sheet_sprite_count_x - 1) * sheet_spacing_horizontal;
-        if (sheet_padding_right >= sheet_sprite_width + sheet_spacing_horizontal)
-        {
-            sheet_sprite_count_x = sheet_sprite_count_x + 1;
-            sheet_padding_right = sheet_padding_right - sheet_sprite_width - sheet_spacing_horizontal;
-        }
+            var wMinusPadL = image_file_width;
+            sheet_sprite_count_x = Math.floor(wMinusPadL / (sheet_sprite_width + sheet_spacing_horizontal));
+            var sheet_padding_right = wMinusPadL - sheet_sprite_count_x * sheet_sprite_width - (sheet_sprite_count_x - 1) * sheet_spacing_horizontal;
+            if (sheet_padding_right >= sheet_sprite_width + sheet_spacing_horizontal)
+            {
+                sheet_sprite_count_x = sheet_sprite_count_x + 1;
+                sheet_padding_right = sheet_padding_right - sheet_sprite_width - sheet_spacing_horizontal;
+            }
 
-        $("#imgCanvas").attr("width", sheet_sprite_width * res);
-        $("#imgCanvas").attr("height", sheet_sprite_height * res);
+            $("#imgCanvas").attr("width", sheet_sprite_width * res);
+            $("#imgCanvas").attr("height", sheet_sprite_height * res);
+            canvas.width = sheet_sprite_width * res;
+            canvas.height = sheet_sprite_height * res;
 
-        UpdateSprite();
+            UpdateSprite();
         }
 
         function SetFrameStep(step) {
@@ -274,7 +295,7 @@
 
         function AssignSettings() {
             $("#color").val(image_background_color);
-            $("#image").attr("src", decodeURIComponent(image_src));
+            if (image_src) $("#image").attr("src", decodeURIComponent(image_src));
             $("#frameStart").val(frame_index_start + 1); // 0 based index (logic) to 1 based index (UI)
             UpdateCanvasSize();
             UpdateSprite();
@@ -282,10 +303,10 @@
 
         function GenerateGif() {
             var encoder = new GIFEncoder();
-                encoder.setRepeat(0);
-                encoder.setDelay(frame_time_total);
-                encoder.setQuality(10);
-            
+            encoder.setRepeat(0);
+            encoder.setDelay(frame_time_total);
+            encoder.setQuality(10);
+
             var curframe = frame_index_current;
             encoder.start();
             for (var i = 0; i < frame_index_count; i++)
@@ -299,137 +320,106 @@
             UpdateSprite();
 
             var binary_gif = encoder.stream().getData();
-	    var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
-            window.open(data_url)
+            var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
+            window.open(data_url);
             //encoder.download("download.gif");
         }
 
-        // register event functions
-        image_file_width = this.naturalWidth;
-        image_file_height = this.naturalHeight;
-        UpdateCanvasSize();
-        
+        // Event handlers
+
         $("#imgInp").change(function() {
-        	LoadImageFromDisk(this);
-		imgName = this.files.item(0).name;
-		splitName = imgName.split("-");
-		res = splitName[splitName.length-1] === "hd.png" ? 2 : 1;
-		$("res").val(res);
+            LoadImageFromDisk(this);
+            let imgName = this.files.item(0).name;
+            let splitName = imgName.split("-");
+            res = splitName[splitName.length-1] === "hd.png" ? 2 : 1;
+            $("#res").val(res);
         });
-        
+
         $("#jsonInp").change(function() {
-        LoadJSONFromDisk(this, (text) => {
-            jsonInp = JSON.parse(text);
-            frame_index_count = jsonInp.totalFrame;
-            sheet_sprite_width = jsonInp.width;
-            sheet_sprite_height = jsonInp.height;
-            head_height = jsonInp.headHeight;
-            arr = jsonInp.arrayFrame;
-	    aud_len = Math.ceil((frame_index_count/2)/(fps === 125 ? 0.024 : 0.030));
-            anime_name = jsonInp.animeName;
-            
-            for (len = arr.length, i = 0; i < len; i++) {
-                var temp = arr[i].prop.split(",");
-                arrayFrame.push([Number(temp[0]), Number(temp[1]), Number(temp[2]), Number(temp[3])]);
-            }
+            LoadJSONFromDisk(this, (text) => {
+                let jsonInp = JSON.parse(text);
+                frame_index_count = jsonInp.totalFrame;
+                sheet_sprite_width = jsonInp.width;
+                sheet_sprite_height = jsonInp.height;
+                head_height = jsonInp.headHeight;
+                arr = jsonInp.arrayFrame;
+                aud_len = Math.ceil((frame_index_count/2)/(fps === 125 ? 0.024 : 0.030));
+                anime_name = jsonInp.animeName;
+                
+                arrayFrame = [[0,0,0,0]];
+                for (let i=0;i<arr.length;i++)
+                {
+                    arrayFrame.push(arr[i]);
+                }
+                frame_index_current = 0;
+                UpdateCanvasSize();
+                UpdateSprite();
+            });
         });
-        });
-        
+
         $("#res").change(function() {
-            res = Number($(this).val());
-            UpdateCanvasSize()
-        });
-        
-        $("#fps").change(function() {
-            fps = Number($(this).val());
-            frame_time_total = fps/3
-        });
-
-	$("#aud").change(function() {
-            aud = Number($(this).val());
-            $("#audInp2").attr("style", "display:"+(aud === 2 ? "block" : "none"));
-        });
-
-	$(".audio-inputs").change(async function() {
-        console.log(this)
-		aud_src = (aud === 2 ? [$("#audInp1"), $("#audInp2")] : [$("#audInp1"), $("#audInp1")]) || [];
-        aud_names = (aud_src[0] === aud_src[1] ? ["#audFile1", "#audFile1"] : ["#audFile1", "#audFile2"]);
-        for (i=0; i<1; i++) {
-            name = aud_names[i];
-            console.log(name, aud_src[i])
-            prevSrc = $(name).attr('src')
-            audio = await LoadAudioFromDisk(aud_src[i][0])
-            $(name).attr('src',audio);    
-        }
-	      
-		UpdateAudio();
-	});
-        
-        $("#color").change(function() {
-        image_background_color = $("#color").val();
-        UpdateSprite();
-        });
-        
-        $("#frameStepForward").click(function() {
-        frame_index_current += 1;
-        if (frame_index_current >= frame_index_count)
-            frame_index_current = 0;
-        UpdateSprite();
-        });
-	    
-        $("#frameStepBack").click(function() {
-            frame_index_current -= 1;
-            if (frame_index_current < 0)
-                frame_index_current = frame_index_count - 1;
+            res = Number($("#res").val());
+            UpdateCanvasSize();
             UpdateSprite();
         });
-        
-	$("#frameStop").click(function() { 
-	    SetFrameStep(0); 
-        if (!$("#"+current_aud)[0].paused) $("#"+current_aud)[0].pause();
-	});
 
-	$("#frameStop").dblclick(function() {
-   	   SetFrameStep(0);
-   	   frame_index_current = 0;
-   	 });
-        
-	$("#framePlayForward").click(function() { 
-	    SetFrameStep(1);
-        UpdateAudio();
-        if ($("#"+current_aud)[0].paused) $("#"+current_aud)[0].play().catch((e)=>{console.log(e)})
-
-	});
-        
-	$("#framePlayBack").click(function() { 
-	    SetFrameStep(-1);  
-	});
-        
-        $("#gif").click(function(){
-            overlay('show');
-            GenerateGif();
-            overlay('hide');
+        $("#fps").change(function() {
+            fps = Number($("#fps").val());
+            frame_time_total = fps / 3;
         });
-    
-        // get default variable values from form inputs
-        image_background_color = $("#color").val();
-        frame_time_total = parseInt($("#fps").val())/3;
-        frame_index_start = parseInt($("#frameStart").val()) - 1; // 1 based index (UI) to 0 based index (logic)
-        sheet_spacing_horizontal = sheet_sprite_width * res;
-        sheet_padding_top = sheet_sprite_height * res;
-        
-        // apply any settings
-        AssignSettings();
-        $('#imgInp').val('');
-        $('#jsonInp').val('');
-        $('#audInp1').val('');
-        $('#audInp2').val('');
-        Coloris({
-            alpha:false
-        })
-        setInterval(Update,16);
+
+        $("#color").change(function() {
+            image_background_color = $("#color").val();
+            UpdateSprite();
+        });
+
+        $("#aud").change(function() {
+            aud = Number($("#aud").val());
+            if (aud === 2) {
+                $("#audInp2").show();
+            } else {
+                $("#audInp2").hide();
+            }
+        });
+
+        $(".audio-inputs").change(async function() {
+            aud_src = (aud === 2 ? [$("#audInp1"), $("#audInp2")] : [$("#audInp1"), $("#audInp1")]) || [];
+            aud_names = (aud_src[0] === aud_src[1] ? ["#audFile1", "#audFile1"] : ["#audFile1", "#audFile2"]);
+            for (let i = 0; i < (aud === 2 ? 2 : 1); i++) {
+                let name = aud_names[i];
+                let audio = await LoadAudioFromDisk(aud_src[i][0]);
+                $(name).attr('src', audio);
+            }
+            UpdateAudio();
+        });
+
+        $("#framePlayBack").click(function() {
+            SetFrameStep(-1);
+        });
+        $("#framePlayForward").click(function() {
+            SetFrameStep(1);
+        });
+        $("#frameStop").click(function() {
+            SetFrameStep(0);
+        });
+        $("#frameStepBack").click(function() {
+            frame_index_current -= 1;
+            if (frame_index_current < 0) frame_index_current = frame_index_count - 1;
+            UpdateSprite();
+        });
+        $("#frameStepForward").click(function() {
+            frame_index_current += 1;
+            if (frame_index_current >= frame_index_count) frame_index_current = 0;
+            UpdateSprite();
+        });
+
+        $("#gif").click(function() {
+            GenerateGif();
+        });
+
+        // Main loop using setInterval instead of requestAnimationFrame for easier frame stepping
+        setInterval(Update, 1000/30);
+
     </script>
-    <h3 style="padding-bottom:5px"></h3>
-    <h3 style="text-align:center;font-size:10px">Made by a <a style="font-size:10px"target="_blank" rel="noopener noreferrer" class="enter">seal</a> and bae ;&rpar;</h3>
 </body>
 </html>
